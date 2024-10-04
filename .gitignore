@@ -1,0 +1,30 @@
+# Logs
+client/logs
+*.log
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/pnpm-debug.log*
+client/lerna-debug.log*
+
+# Node modules and build directories
+client.node_modules
+client.dist
+client.dist-ssr
+client.*.local
+
+# Server environment files
+server/.env
+venv
+__pycache__
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
