@@ -15,7 +15,7 @@ client.*.local
 
 # Server environment files
 server/.env
-server/.venv
+server/venv
 __pycache__
 
 # Editor directories and files
