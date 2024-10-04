@@ -1,2 +1,11 @@
-Guys, Before doing anything, do npm install in client folder(because folder node_modules has too many files in it)
-and you should install venv by yourselves due to the same reason
+---Before starting venv and front-end---
+
+For Front-End:
+
+cd client
+npm install
+
+For Virtual Environment:
+
+- Install venv
+- pip install -r general/requirements.txt
