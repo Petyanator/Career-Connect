@@ -1,0 +1,138 @@
+body {
+    background-color: #0D3B4C;
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.register-form-container {
+    width: 320px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #1A535C;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+
+h2 {
+    color: white;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+
+.input-container {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+
+.input-container input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #335C67;
+    color: white;
+    font-size: 16px;
+}
+
+
+.input-container input::placeholder {
+    color: #ffffff99;
+}
+
+
+p {
+    color: red;
+    font-size: 14px;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background-color: #4ECDC4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: #3BAC9D;
+}
+
+.register-form-container {
+    width: 320px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #1A535C;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #335C67;
+    color: white;
+    font-size: 16px;
+}
+
+
+.input-container input.error {
+    border: 2px solid red;
+}
+
+.input-container input::placeholder {
+    color: #ffffff99;
+}
+
+
+/* .register-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background-color: #4ECDC4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: #3BAC9D;
+}
+ */
+.password-container {
+    position: relative;
+    width: 91%;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 40px; /* Adjust padding to make space for the eye icon */
+}
+
+.toggle-password-icon {
+    position: absolute;
+    right: 1px; /* Align the icon to the right */
+    top: 50%;
+    transform: translateY(-50%); /* Center the icon vertically */
+    cursor: pointer;
+    font-size: 13px; /* Adjust size if needed */
+    color: #666; /* Optional: Customize icon color */
+}
