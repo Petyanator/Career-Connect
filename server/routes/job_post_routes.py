@@ -6,12 +6,15 @@ from models import db  # Assuming SQLAlchemy is initialized in models/__init__.p
 job_post_routes = Blueprint('job_post_routes', __name__)
 
 
+# Define a testing route for verifying the server is running
+@job_post_routes.route('/jobtest')  # Map the URL '/hello' to the home function
+def home():
+    return 'Job Routes Working!'  # Return a simple greeting message
 
 
 
 
-
-@job_post_routes.route('/api/job', methods=['POST'])
+@job_post_routes.route('/api/jobs', methods=['POST'])
 def create_job_posting():
     data = request.get_json()
 
