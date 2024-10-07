@@ -8,7 +8,7 @@ client/pnpm-debug.log*
 client/lerna-debug.log*
 
 # Node modules and build directories
-client.node_modules
+client/node_modules
 client.dist
 client.dist-ssr
 client.*.local
