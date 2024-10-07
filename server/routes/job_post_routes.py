@@ -5,7 +5,13 @@ from models import db  # Assuming SQLAlchemy is initialized in models/__init__.p
 
 job_post_routes = Blueprint('job_post_routes', __name__)
 
-@job_post_routes.route('/api/jobs', methods=['POST'])
+
+
+
+
+
+
+@job_post_routes.route('/api/job', methods=['POST'])
 def create_job_posting():
     data = request.get_json()
 
