@@ -28,8 +28,11 @@ if __name__ == "__main__":
 from flask import Flask
 from routes.job_post_routes import job_post_routes
 from models import db
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS
 
 # Database configuration (MySQL example)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mariadb+pymysql://root:@localhost:3307/career_connect'

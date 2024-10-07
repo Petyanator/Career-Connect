@@ -3,7 +3,14 @@ from flask import Blueprint, request, jsonify
 from models.models import JobPosting  # Assuming your JobPosting model is defined here
 from models import db  # Assuming SQLAlchemy is initialized in models/__init__.py
 
+
+
+
+
 job_post_routes = Blueprint('job_post_routes', __name__)
+
+
+
 
 
 # Define a testing route for verifying the server is running
