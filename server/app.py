@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
 from routes import routes
-
+from models.models import Search
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
