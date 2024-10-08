@@ -1,23 +1,22 @@
-from app import app, db, bcrypt
+from app import app,db, bcrypt
 from flask import jsonify, request
-from models.models import Search_info
-from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import create_access_token, unset_jwt_cookies
-# my_routes_bp = Blueprint("my_routes", __name__)
+from models import Search
+from datetime import datetime
 
-@app.route("/")
-def hello():
-    return "Hello World"
 
-@app.route("/api/job_type", methods=["GET"])
-def show_jobs():
-    search_term = request.args.get('query')
 
-    if search_term:
-        job_types = Search_info.query.filter(Search_info.job_type.ilike(f"%{search_term}%")).all()
+@app.route("/api/search", methods=["GET"])
+def get_job_type():
+    search_term = request.args.get("job_title", "")
 
-        job_type_list = [job.job_type for job in job_types]
+    if not search_term:
+        return jsonify({"error": "Search term missing"}), 400
 
-        return jsonify(job_type_list)
-    else:
-        return jsonify([])
+    # Perform case-insensitive search using ilike
+    job_titles = Search.query.filter(Search.job_title.ilike(f"%{search_term}%")).all()
+
+    if not job_titles:
+        return jsonify({"error": "No job types found"}), 404
+
+    # Return the found job types with a 200 status code
+    return jsonify([job.job_title for job in job_titles]), 200
