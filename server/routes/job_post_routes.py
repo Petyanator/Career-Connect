@@ -4,21 +4,13 @@ from models.models import JobPosting  # Assuming your JobPosting model is define
 from models import db  # Assuming SQLAlchemy is initialized in models/__init__.py
 
 
-
-
-
 job_post_routes = Blueprint('job_post_routes', __name__)
 
 
-
-
-
 # Define a testing route for verifying the server is running
-@job_post_routes.route('/jobtest')  # Map the URL '/hello' to the home function
+@job_post_routes.route('/jobtest')
 def home():
-    return 'Job Routes Working!'  # Return a simple greeting message
-
-
+    return 'Job Routes Working!'
 
 
 @job_post_routes.route('/api/jobs', methods=['POST'])
@@ -47,4 +39,23 @@ def create_job_posting():
         return jsonify({'message': 'Job posted successfully!'}), 201
     except Exception as e:
         db.session.rollback()
+        return jsonify({'message': f'Error occurred: {str(e)}'}), 500
+
+
+# /server/routes/job_post_routes.py
+@job_post_routes.route('/api/jobs', methods=['GET'])
+def get_job_postings():
+    try:
+        jobs = JobPosting.query.all()
+        jobs_list = [{
+            'id': job.id,
+            'job_title': job.job_title,
+            'company': job.company,
+            'salary_range': job.salary_range,
+            'location': job.location,
+            'required_skills': job.required_skills,
+            'description': job.description
+        } for job in jobs]
+        return jsonify(jobs_list), 200
+    except Exception as e:
         return jsonify({'message': f'Error occurred: {str(e)}'}), 500
