@@ -1,6 +1,6 @@
 from app import app,db, bcrypt
 from flask import jsonify, request
-from models import Search
+from models.models import Search
 from datetime import datetime
 
 
