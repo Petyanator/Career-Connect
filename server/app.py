@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from config import Config
+from config import Config, register_models, register_routes
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
@@ -15,8 +15,10 @@ db = SQLAlchemy(app)
 
 jwt = JWTManager(app)
 
-from routes import routes
-from models.models import Search
+register_routes(app)
+
+register_models(app)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
