@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 from flask import Flask
 from flask_cors import CORS
@@ -22,3 +23,24 @@ register_models(app)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+=======
+# /server/app.py (or main Flask file)
+from flask import Flask
+from routes.job_post_routes import job_post_routes
+from models import db
+
+app = Flask(__name__)
+
+# Database configuration (MySQL example)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@localhost/db_name'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize SQLAlchemy
+db.init_app(app)
+
+# Register the job posting routes
+app.register_blueprint(job_post_routes)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+>>>>>>> 32d0c73 (aded routes)

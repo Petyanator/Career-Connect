@@ -1,18 +1,17 @@
-// /src/components/JobPostingForm.jsx
+// /client/src/components/jobposting/JobPosting.jsx
 import React, { useState } from 'react';
 
-const JobPostingForm = () => {
-  // State for form fields
+const JobPosting = () => {
   const [formData, setFormData] = useState({
     jobTitle: '',
     company: '',
     salaryRange: '',
     location: '',
     requiredSkills: '',
-    description: ''
+    description: '',
   });
 
-  // Handle form field change
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -21,10 +20,8 @@ const JobPostingForm = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Send POST request to the Flask backend
     try {
-      const response = await fetch('http://localhost:5000/api/job-postings', {
+      const response = await fetch('http://localhost:5000/api/jobs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,51 +38,52 @@ const JobPostingForm = () => {
           salaryRange: '',
           location: '',
           requiredSkills: '',
-          description: ''
+          description: '',
         });
       } else {
         alert(`Error: ${data.message}`);
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('Failed to post job.');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Job Title:
+      <div>
+        <label>Job Title:</label>
         <input type="text" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
-      </label>
+      </div>
 
-      <label>
-        Company:
+      <div>
+        <label>Company:</label>
         <input type="text" name="company" value={formData.company} onChange={handleChange} required />
-      </label>
+      </div>
 
-      <label>
-        Salary Range:
+      <div>
+        <label>Salary Range:</label>
         <input type="text" name="salaryRange" value={formData.salaryRange} onChange={handleChange} required />
-      </label>
+      </div>
 
-      <label>
-        Location (City):
+      <div>
+        <label>Location:</label>
         <input type="text" name="location" value={formData.location} onChange={handleChange} required />
-      </label>
+      </div>
 
-      <label>
-        Required Skills:
+      <div>
+        <label>Required Skills:</label>
         <input type="text" name="requiredSkills" value={formData.requiredSkills} onChange={handleChange} required />
-      </label>
+      </div>
 
-      <label>
-        Description:
-        <textarea name="description" value={formData.description} onChange={handleChange} required></textarea>
-      </label>
+      <div>
+        <label>Description:</label>
+        <textarea name="description" value={formData.description} onChange={handleChange} required />
+      </div>
 
       <button type="submit">Post Job</button>
     </form>
   );
 };
 
-export default JobPostingForm;
+export default JobPosting;
