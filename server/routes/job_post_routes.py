@@ -1,7 +1,6 @@
 # /server/routes/job_post_routes.py
 from flask import Blueprint, request, jsonify
 from models.models import JobPosting  # Assuming your JobPosting model is defined here
-
 from app import app, db
 
 # job_post_routes = Blueprint('job_post_routes', __name__)
