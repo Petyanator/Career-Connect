@@ -1,19 +1,19 @@
 # /server/routes/job_post_routes.py
 from flask import Blueprint, request, jsonify
 from models.models import JobPosting  # Assuming your JobPosting model is defined here
-from models import db  # Assuming SQLAlchemy is initialized in models/__init__.py
 
+from app import app, db
 
-job_post_routes = Blueprint('job_post_routes', __name__)
+# job_post_routes = Blueprint('job_post_routes', __name__)
 
 
 # Define a testing route for verifying the server is running
-@job_post_routes.route('/jobtest')
+@app.route('/jobtest')
 def home():
     return 'Job Routes Working!'
 
 
-@job_post_routes.route('/api/jobs', methods=['POST'])
+@app.route('/api/jobs', methods=['POST'])
 def create_job_posting():
     data = request.get_json()
 
@@ -43,7 +43,7 @@ def create_job_posting():
 
 
 # /server/routes/job_post_routes.py
-@job_post_routes.route('/api/jobs', methods=['GET'])
+@app.route('/api/jobs', methods=['GET'])
 def get_job_postings():
     try:
         jobs = JobPosting.query.all()

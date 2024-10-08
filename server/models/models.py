@@ -1,5 +1,5 @@
 # /server/models/models.py
-from models import db
+from app import db
 from datetime import datetime
 
 class JobPosting(db.Model):
