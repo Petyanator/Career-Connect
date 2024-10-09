@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
+
 # pip install python-dotenv
-#import redis
+# import redis
 
 load_dotenv()
-
 
 
 class Config:
@@ -22,6 +22,7 @@ def register_routes(app):
         if filename.endswith(".py") and not filename.startswith("__"):
             module_name = f"routes.{filename[:-3]}"
             __import__(module_name)
+
 
 def register_models(app):
     routes_dir = os.path.join(os.path.dirname(__file__), "models")
