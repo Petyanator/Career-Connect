@@ -28,6 +28,9 @@ function App() {
           {/* <Route path="/login" element={<Login />}></Route> */}
           <Route path="/aboutus" element={<AboutUs />}></Route>
           <Route path="/searchbar" element={<SearchBar />}></Route>
+          <Route path="/jobposting" element={<JobPosting />}></Route>
+          <Route path="/jobviewer" element={<JobViewer />}></Route>
+          
           {/* <Route path="/swipe" element={<SwipeJobs />}></Route> */}
         </Routes>
       </BrowserRouter>
