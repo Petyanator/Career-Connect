@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -22,4 +23,3 @@ register_models(app)
 
 if __name__ == "__main__":
     app.run(debug=True)
-

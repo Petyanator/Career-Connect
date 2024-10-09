@@ -1,4 +1,10 @@
 
+import { useState } from 'react'
+import './App.css'
+import JobPosting from './components/JobPosting/JobPosting'
+import JobViewer from './components/JobViewer/JobViewer';
+
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import NavBar from "./components/shared/NavBar";
@@ -12,6 +18,7 @@ import SearchBar from './components/SearchBar'
 function App() {
   return (
     <>
+
       <BrowserRouter>
         <NavBar></NavBar>
         <Routes>
@@ -24,9 +31,6 @@ function App() {
           {/* <Route path="/swipe" element={<SwipeJobs />}></Route> */}
         </Routes>
       </BrowserRouter>
-
-
-
 
     </>
   );
