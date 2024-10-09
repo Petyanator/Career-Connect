@@ -1,5 +1,3 @@
-
-import { useState } from 'react'
 import './App.css'
 import JobPosting from './components/JobPosting/JobPosting'
 import JobViewer from './components/JobViewer/JobViewer';
@@ -13,7 +11,8 @@ import Landing from "./pages/Landing.jsx";
 // import Login from "./components/Login";
 import AboutUs from "./pages/AboutUs.jsx";
 // import SwipeJobs from "./components/JobseekerDecide";
-import SearchBar from './components/SearchBar'
+import SearchBar from './components/SearchBar/SearchBar.jsx'
+import Filter from './components/SearchBar/FilterSystem.jsx';
 
 function App() {
   return (
@@ -30,6 +29,8 @@ function App() {
           <Route path="/searchbar" element={<SearchBar />}></Route>
           <Route path="/jobposting" element={<JobPosting />}></Route>
           <Route path="/jobviewer" element={<JobViewer />}></Route>
+          <Route path="/filter" element={<Filter />}></Route>
+          
           
           {/* <Route path="/swipe" element={<SwipeJobs />}></Route> */}
         </Routes>
