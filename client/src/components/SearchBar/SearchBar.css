@@ -1,66 +1,136 @@
-/* Container for the search bar */
+/* Main container */
 .search-container {
-    width: 100%;
-    max-width: 400px;  /* Adjust to fit larger screens */
-    margin: 0 auto;    /* Center the search bar */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full height of the viewport */
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
-    padding-top: 20rem;
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
 }
 
-/* Style for the input field */
+/* Search Input */
 .search-input {
     width: 100%;
-    padding: 10px;
-    font-size: 16px;
+    padding: 12px 15px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Ensure padding is included in width */
-    margin-bottom: 10px; /* Space between input and results */
-    transition: border-color 0.3s ease;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
-.search-input:focus {
-    border-color: #007bff; /* Blue border on focus */
-    outline: none;         /* Remove default outline */
+/* Form Styling */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-/* Style for the search results */
+.form-group {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.form-input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.form-button:hover {
+    background-color: #45a049;
+}
+
+/* Loading Message */
+.loading-message {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Error Message */
+.error-message {
+    font-size: 16px;
+    color: red;
+    margin-bottom: 20px;
+}
+
+/* Search Results */
 .search-results {
     list-style-type: none;
     padding: 0;
-    margin: 0;
-    max-height: 200px;  /* Limit height for scrolling if many results */
-    overflow-y: auto;   /* Allow scrolling if results exceed height */
+    width: 100%;  /* Make sure results take full width */
 }
 
 .search-result-item {
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.result-card {
+    background-color: white;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    font-size: 16px;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.result-card h3 {
+    margin: 0;
+    font-size: 18px;
     color: #333;
-    cursor: pointer;
 }
 
-.search-result-item:hover {
-    background-color: #f1f1f1; /* Light gray on hover */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Shadow effect on hover */
-}
-
-/* Style for the loading message */
-.loading-message {
+.result-card p {
+    margin: 8px 0;
     font-size: 14px;
     color: #666;
 }
 
-/* Style for the error message */
-.error-message {
-    color: #d9534f; /* Bootstrap-style red for errors */
+/* Media Queries for Responsive Design */
+@media (max-width: 600px) {
+    .search-container {
+        padding: 15px;
+    }
+
+    .form-input, .form-button {
+        font-size: 14px;
+    }
+
+    .result-card h3 {
+        font-size: 16px;
+    }
+
+    .result-card p {
+        font-size: 13px;
+    }
 }

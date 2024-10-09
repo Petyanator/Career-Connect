@@ -11,8 +11,7 @@ import Landing from "./pages/Landing.jsx";
 // import Login from "./components/Login";
 import AboutUs from "./pages/AboutUs.jsx";
 // import SwipeJobs from "./components/JobseekerDecide";
-import SearchBar from './components/SearchBar/SearchBar.jsx'
-import Filter from './components/SearchBar/FilterSystem.jsx';
+import SearchAndFilterSystem from "./components/SearchBar/SearchBar.jsx"
 
 function App() {
   return (
@@ -26,10 +25,10 @@ function App() {
           {/* <Route path="/register" element={<Register />}></Route> */}
           {/* <Route path="/login" element={<Login />}></Route> */}
           <Route path="/aboutus" element={<AboutUs />}></Route>
-          <Route path="/searchbar" element={<SearchBar />}></Route>
+          <Route path="/searchbar" element={<SearchAndFilterSystem />}></Route>
           <Route path="/jobposting" element={<JobPosting />}></Route>
           <Route path="/jobviewer" element={<JobViewer />}></Route>
-          <Route path="/filter" element={<Filter />}></Route>
+          {/* <Route path="/filter" element={<Filter />}></Route> */}
           
           
           {/* <Route path="/swipe" element={<SwipeJobs />}></Route> */}
