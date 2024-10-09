@@ -196,6 +196,61 @@ i.fas.fa-check {
     border-radius: 5px;
 }
 
+.education-section {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: visibility 0.3s ease, height 0.3s ease;
+}
+
+.education-section label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #40434E;
+}
+
+.education-section select,
+.education-section input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #40434E;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #40434E;
+    box-sizing: border-box;
+}
+
+
+
+
+.add-education-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #092734;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.add-education-btn:hover {
+    background-color: #0B3142;
+}
+
+.add-education-btn svg {
+    margin-right: 10px;
+}
+
+
+
 @keyframes checkGrow {
     from {
         font-size: 0px;

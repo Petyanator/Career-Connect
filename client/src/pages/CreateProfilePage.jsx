@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CreateProfilePage.css';
+import { FaPlus } from 'react-icons/fa'; // Add Font Awesome plus icon
 
 function CreateProfilePage({ setProfileData }) {
     const [skills, setSkills] = useState([]);
     const [inputSkill, setInputSkill] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
-    const [education, setEducation] = useState('');
-    const [degreeDetails, setDegreeDetails] = useState('');
-    const [institution, setInstitution] = useState('');
+    const [educationFields, setEducationFields] = useState([
+        { education: '', degreeDetails: '', institution: '' }
+    ]); // For multiple education inputs
     const [gender, setGender] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [dob, setDob] = useState('');
     const [nationality, setNationality] = useState('');
 
-    // State to track input validity
+    // Validation states for all inputs including new education inputs
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
     const [dobValid, setDobValid] = useState(true);
     const [genderValid, setGenderValid] = useState(true);
     const [nationalityValid, setNationalityValid] = useState(true);
     const [skillsValid, setSkillsValid] = useState(true);
-    const [degreeDetailsValid, setDegreeDetailsValid] = useState(true);
-    const [institutionValid, setInstitutionValid] = useState(true);
 
     const [showOverlay, setShowOverlay] = useState(false);
     const [showForm, setShowForm] = useState(true);
@@ -31,6 +30,7 @@ function CreateProfilePage({ setProfileData }) {
 
     const navigate = useNavigate();
 
+    // Handle particle effect
     useEffect(() => {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
@@ -90,7 +90,7 @@ function CreateProfilePage({ setProfileData }) {
         };
     }, []);
 
-
+    // Handle skill input
     const handleSkillChange = (e) => {
         setInputSkill(e.target.value);
     };
@@ -108,7 +108,7 @@ function CreateProfilePage({ setProfileData }) {
         setSkills(updatedSkills);
     };
 
-
+    // Handle profile picture change
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -116,12 +116,19 @@ function CreateProfilePage({ setProfileData }) {
         }
     };
 
-
-    const handleEducationChange = (e) => {
-        setEducation(e.target.value);
+    // Handle education input changes for dynamic fields
+    const handleEducationChange = (index, e) => {
+        const updatedFields = [...educationFields];
+        updatedFields[index][e.target.name] = e.target.value;
+        setEducationFields(updatedFields);
     };
 
+    // Function to add another education field
+    const handleAddEducationField = () => {
+        setEducationFields([...educationFields, { education: '', degreeDetails: '', institution: '' }]);
+    };
 
+    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -133,21 +140,14 @@ function CreateProfilePage({ setProfileData }) {
         const isNationalityValid = !!nationality;
         const isSkillsValid = skills.length >= 3;
 
-        const isDegreeDetailsValid = education && education !== 'High School Diploma' ? !!degreeDetails : true;
-        const isInstitutionValid = education && education !== 'High School Diploma' ? !!institution : true;
-
-        // Update validation state
         setFirstNameValid(isFirstNameValid);
         setLastNameValid(isLastNameValid);
         setDobValid(isDobValid);
         setGenderValid(isGenderValid);
         setNationalityValid(isNationalityValid);
         setSkillsValid(isSkillsValid);
-        setDegreeDetailsValid(isDegreeDetailsValid);
-        setInstitutionValid(isInstitutionValid);
 
-        // Prevent form submission if any field is invalid
-        if (!isFirstNameValid || !isLastNameValid || !isDobValid || !isGenderValid || !isNationalityValid || !isSkillsValid || !isDegreeDetailsValid || !isInstitutionValid) {
+        if (!isFirstNameValid || !isLastNameValid || !isDobValid || !isGenderValid || !isNationalityValid || !isSkillsValid) {
             alert("Please fill out all the required fields.");
             return;
         }
@@ -158,15 +158,12 @@ function CreateProfilePage({ setProfileData }) {
             dob,
             gender,
             nationality,
-            education,
-            degreeDetails,
-            institution,
+            educationFields,
             skills,
             profilePicture: selectedImage,
         };
 
         setProfileData(profileData);
-
         setIsButtonShrinking(true);
 
         setTimeout(() => {
@@ -178,7 +175,6 @@ function CreateProfilePage({ setProfileData }) {
             navigate('/profile');
         }, 4000);
     };
-
 
     return (
         <div className={`create-profile-page ${showForm ? '' : 'hidden-form'}`}>
@@ -242,39 +238,54 @@ function CreateProfilePage({ setProfileData }) {
                         className={!nationalityValid ? 'invalid-input' : ''}
                     />
 
-                    <label htmlFor="education">Education:</label>
-                    <select id="education" value={education} onChange={handleEducationChange}>
-                        <option value="">Select your education level</option>
-                        <option value="High School Diploma">High School Diploma</option>
-                        <option value="Skill Certification">Skill Certification</option>
-                        <option value="Bachelor's Degree">Bachelor's Degree</option>
-                        <option value="Master's Degree">Master's Degree</option>
-                        <option value="PhD">PhD</option>
-                    </select>
 
-                    {education && education !== 'High School Diploma' && (
-                        <>
-                            <label htmlFor="degree-details">Degree/Certification Details:</label>
-                            <input
-                                type="text"
-                                id="degree-details"
-                                placeholder="Degree or Certification"
-                                value={degreeDetails}
-                                onChange={(e) => setDegreeDetails(e.target.value)}
-                                className={!degreeDetailsValid ? 'invalid-input' : ''}
-                            />
+                    {educationFields.map((field, index) => (
+                        <div key={index} className="education-section">
+                            <label htmlFor={`education-${index}`}>Education:</label>
+                            <select
+                                id={`education-${index}`}
+                                name="education"
+                                value={field.education}
+                                onChange={(e) => handleEducationChange(index, e)}
+                            >
+                                <option value="">Select your education level</option>
+                                <option value="High School Diploma">High School Diploma</option>
+                                <option value="Skill Certification">Skill Certification</option>
+                                <option value="Bachelor's Degree">Bachelor's Degree</option>
+                                <option value="Master's Degree">Master's Degree</option>
+                                <option value="PhD">PhD</option>
+                            </select>
 
-                            <label htmlFor="institution">Institution Name:</label>
-                            <input
-                                type="text"
-                                id="institution"
-                                placeholder="Institution"
-                                value={institution}
-                                onChange={(e) => setInstitution(e.target.value)}
-                                className={!institutionValid ? 'invalid-input' : ''}
-                            />
-                        </>
-                    )}
+                            {field.education && field.education !== 'High School Diploma' && (
+                                <>
+                                    <label htmlFor={`degree-details-${index}`}>Degree/Certification Details:</label>
+                                    <input
+                                        type="text"
+                                        id={`degree-details-${index}`}
+                                        name="degreeDetails"
+                                        value={field.degreeDetails}
+                                        placeholder="Degree details"
+                                        onChange={(e) => handleEducationChange(index, e)}
+                                    />
+
+                                    <label htmlFor={`institution-${index}`}>Institution Name:</label>
+                                    <input
+                                        type="text"
+                                        id={`institution-${index}`}
+                                        name="institution"
+                                        value={field.institution}
+                                        placeholder="Institution name"
+                                        onChange={(e) => handleEducationChange(index, e)}
+                                    />
+                                </>
+                            )}
+                        </div>
+                    ))}
+
+
+                    <button type="button" className="add-education-btn" onClick={handleAddEducationField}>
+                        <FaPlus /> Add Education
+                    </button>
 
                     <label htmlFor="skills">Skills (Add at least 3):</label>
                     <div className={`skills-input ${!skillsValid ? 'invalid-input' : ''}`}>
@@ -283,7 +294,7 @@ function CreateProfilePage({ setProfileData }) {
                             id="skills"
                             value={inputSkill}
                             onChange={handleSkillChange}
-                            placeholder="Skill"
+                            placeholder="Enter a skill and press add"
                         />
                         <button onClick={handleAddSkill}>Add Skill</button>
                     </div>

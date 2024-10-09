@@ -17,13 +17,24 @@ function CreateProfileView({ profileData }) {
                     <p><strong>Date of Birth:</strong> {profileData.dob}</p>
                     <p><strong>Gender:</strong> {profileData.gender}</p>
                     <p><strong>Nationality:</strong> {profileData.nationality}</p>
-                    <p><strong>Education:</strong> {profileData.education}</p>
-                    {profileData.degreeDetails && (
+
+                    {/* Loop through the education fields if available */}
+                    {profileData.educationFields && profileData.educationFields.length > 0 && (
                         <>
-                            <p><strong>Degree:</strong> {profileData.degreeDetails}</p>
-                            <p><strong>Institution:</strong> {profileData.institution}</p>
+                            {profileData.educationFields.map((education, index) => (
+                                <div key={index} className="education-entry">
+                                    <p><strong>Education Level:</strong> {education.education}</p>
+                                    {education.degreeDetails && (
+                                        <>
+                                            <p><strong>Degree:</strong> {education.degreeDetails}</p>
+                                            <p><strong>Institution:</strong> {education.institution}</p>
+                                        </>
+                                    )}
+                                </div>
+                            ))}
                         </>
                     )}
+
                     <p><strong>Skills:</strong> {profileData.skills.join(', ')}</p>
                 </div>
             </div>
