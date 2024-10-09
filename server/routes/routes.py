@@ -1,6 +1,6 @@
 from app import app,db, bcrypt
 from flask import jsonify, request
-from models.models import Search
+from models.models import JobPosting
 from datetime import datetime
 
 
@@ -13,7 +13,7 @@ def get_job_type():
         return jsonify({"error": "Search term missing"}), 400
 
     # Perform case-insensitive search using ilike
-    job_titles = Search.query.filter(Search.job_title.ilike(f"%{search_term}%")).all()
+    job_titles = JobPosting.query.filter(JobPosting.job_title.ilike(f"%{search_term}%")).all()
 
     if not job_titles:
         return jsonify({"error": "No job types found"}), 404
