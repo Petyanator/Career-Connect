@@ -4,6 +4,7 @@
     max-width: 400px;  /* Adjust to fit larger screens */
     margin: 0 auto;    /* Center the search bar */
     padding: 20px;
+    padding-top: 20rem;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
