@@ -15,7 +15,6 @@ class Config:
     CORS_HEADERS = "Content-Type"
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
-
 def register_routes(app):
     routes_dir = os.path.join(os.path.dirname(__file__), "routes")
     for filename in os.listdir(routes_dir):
