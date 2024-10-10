@@ -122,7 +122,7 @@ function Register() {
                             required
                         />
                         <span className="toggle-password-icon" onClick={togglePasswordVisibility}>
-                            {showPassword ? "🔒" : "🔓"} {/* New lock icons */}
+                            {showPassword ? "🔒" : "🔓"} {/* Lock icons */}
                         </span>
                     </div>
                 </div>

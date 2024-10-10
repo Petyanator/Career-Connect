@@ -2,18 +2,9 @@ from app import app, bcrypt
 from flask import request, jsonify
 from flask_jwt_extended import create_access_token
 from datetime import datetime
-import pytz
-from models import db, User
-from flask_jwt_extended import (
-    unset_jwt_cookies
-)
+from models.user_model import db, User
+from flask_jwt_extended import unset_jwt_cookies, jwt_required
 
-
-# Set timezone to KST (Korean Standard Time)
-kst = pytz.timezone('Asia/Seoul')
-
-def get_current_time_kst():
-    return datetime.now(kst)
 
 @app.route("/register", methods=["POST"])
 def register_user():
@@ -31,9 +22,12 @@ def register_user():
     email = data.get("email")
     password = data.get("password")
     full_name = data.get("full_name")
-    profile_picture = data.get("profile_picture")
+    # If profile_picture is not provided, use a default value
+    profile_picture = data.get("profile_picture", "default_profile_picture.png")
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    current_time = datetime.utcnow()
 
     new_user = User(
         username=username,
@@ -41,8 +35,8 @@ def register_user():
         password=hashed_password,
         full_name=full_name,
         profile_picture=profile_picture,
-        created_at=get_current_time_kst(),
-        updated_at=get_current_time_kst()
+        created_at=current_time,
+        updated_at=current_time
     )
 
     db.session.add(new_user)
@@ -52,6 +46,13 @@ def register_user():
 
     return jsonify({"user": new_user.to_json(), "access_token": access_token}), 201
 
+
+""" @app.route("/profile", methods=["GET"])
+@jwt_required()
+def my_profile():
+    response_body = {"name": "Logged in user", "email": "loggedInUser@gmail.com"}
+
+    return jsonify(response_body), 200 """
 
 @app.route("/login", methods=["POST"])
 def login_user():
