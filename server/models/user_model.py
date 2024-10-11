@@ -15,7 +15,7 @@ class User(db.Model):
     full_name = db.Column(db.String(100), nullable=True)
     profile_picture = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=get_seoul_time)
-    updated_at = db.Column(db.DateTime, default=get_seoul_time, onupdate=get_seoul_time)
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
     
     def to_json(self):
         return {

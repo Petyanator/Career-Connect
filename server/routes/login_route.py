@@ -10,6 +10,7 @@ from flask_jwt_extended import unset_jwt_cookies, jwt_required
 def register_user():
     data = request.get_json()
 
+    # Check if username or email already exists
     user_exists = User.query.filter_by(username=data.get("username")).first()
     email_exists = User.query.filter_by(email=data.get("email")).first()
 
@@ -18,6 +19,7 @@ def register_user():
     if email_exists:
         return jsonify({"error": "Email already exists"}), 409
 
+    # Get user input
     username = data.get("username")
     email = data.get("email")
     password = data.get("password")
@@ -25,25 +27,26 @@ def register_user():
     # If profile_picture is not provided, use a default value
     profile_picture = data.get("profile_picture", "default_profile_picture.png")
 
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    # Hash the password
+    hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
-    current_time = datetime.utcnow()
-
+    # Create a new user object (timestamps handled by the database)
     new_user = User(
         username=username,
         email=email,
         password=hashed_password,
         full_name=full_name,
         profile_picture=profile_picture,
-        created_at=current_time,
-        updated_at=current_time
     )
 
+    # Add to the database and commit
     db.session.add(new_user)
     db.session.commit()
 
+    # Create an access token
     access_token = create_access_token(identity=username)
 
+    # Return the new user and access token
     return jsonify({"user": new_user.to_json(), "access_token": access_token}), 201
 
 
@@ -53,6 +56,7 @@ def my_profile():
     response_body = {"name": "Logged in user", "email": "loggedInUser@gmail.com"}
 
     return jsonify(response_body), 200 """
+
 
 @app.route("/login", methods=["POST"])
 def login_user():
@@ -75,27 +79,25 @@ def login_user():
     return jsonify({"access_token": access_token, "message": "Login successful"}), 200
 
 
-
-
 @app.route("/logout", methods=["POST"])
 def logout_user():
     response = jsonify({"message": "Logout successful"})
     unset_jwt_cookies(response)
-    
+
     return response, 200
 
 
 @app.route("/token", methods=["POST"])
 def create_token():
     data = request.get_json()
-    
+
     user = User.query.filter_by(username=data.get("username")).first()
-    
+
     if user is None:
         return jsonify({"error": "Invalid username"}), 401
     if not bcrypt.check_password_hash(user.password, data.get("password")):
         return jsonify({"error": "Invalid password"}), 401
-    
+
     access_token = create_access_token(identity=user.user_id)
-    
-    return jsonify({"access_token":  access_token}), 200
+
+    return jsonify({"access_token": access_token}), 200

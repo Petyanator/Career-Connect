@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import "./Register.css";
 
@@ -14,7 +14,7 @@ function Register() {
     const [passwordMatch, setPasswordMatch] = useState(true);
     const [isPasswordValid, setIsPasswordValid] = useState(true);
     const [usernameTaken, setUsernameTaken] = useState(false);
-    const [registrationError, setRegistrationError] = useState("");
+    const [emailTaken, setEmailTaken] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -24,6 +24,22 @@ function Register() {
     const validatePassword = (password) => {
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         return passwordRegex.test(password);
+    };
+
+    // Check if username or email already exists
+    const checkUsernameOrEmail = async (name, value) => {
+        try {
+            const response = await axios.post("http://localhost:5000/check-username-email", {
+                [name]: value,
+            });
+            if (name === "username") {
+                setUsernameTaken(response.data.usernameTaken);
+            } else if (name === "email") {
+                setEmailTaken(response.data.emailTaken);
+            }
+        } catch (error) {
+            console.error("Error checking username/email", error);
+        }
     };
 
     const handleChange = (e) => {
@@ -40,17 +56,17 @@ function Register() {
             setPasswordMatch(value === formData.password);
         }
 
-        if (name === "username") {
-            setUsernameTaken(false);
+        if (name === "username" || name === "email") {
+            checkUsernameOrEmail(name, value);
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (passwordMatch && isPasswordValid) {
+        if (passwordMatch && isPasswordValid && !usernameTaken && !emailTaken) {
             registerUser(formData);
         } else {
-            console.log("Passwords do not match or password is invalid");
+            console.log("Form is invalid or username/email is taken");
         }
     };
 
@@ -58,15 +74,8 @@ function Register() {
         try {
             const response = await axios.post("http://localhost:5000/register", data);
             console.log(response.data);
-            setRegistrationError("");
         } catch (error) {
-            if (error.response && error.response.status === 409) {
-                setUsernameTaken(true);
-                setRegistrationError("Username already exists!");
-            } else {
-                console.error("Registration error", error);
-                setRegistrationError("Failed to register, please try again later.");
-            }
+            console.error("Registration error", error);
         }
     };
 
@@ -97,6 +106,7 @@ function Register() {
                         onChange={handleChange}
                         required
                     />
+                    {emailTaken && <p style={{ color: "red" }}>Email is already registered!</p>}
                 </div>
 
                 {/* Full Name */}
@@ -122,7 +132,7 @@ function Register() {
                             required
                         />
                         <span className="toggle-password-icon" onClick={togglePasswordVisibility}>
-                            {showPassword ? "🔒" : "🔓"} {/* Lock icons */}
+                            {showPassword ? "🔒" : "🔓"}
                         </span>
                     </div>
                 </div>
@@ -145,16 +155,14 @@ function Register() {
                             required
                         />
                         <span className="toggle-password-icon" onClick={togglePasswordVisibility}>
-                            {showPassword ? "🔒" : "🔓"} {/* Same icon for confirm password */}
+                            {showPassword ? "🔒" : "🔓"}
                         </span>
                     </div>
                 </div>
 
                 {!passwordMatch && <p style={{ color: "red" }}>Passwords do not match!</p>}
                 
-                {registrationError && <p style={{ color: "red" }}>{registrationError}</p>}
-                
-                <button type="submit" className="register-btn">
+                <button type="submit" className="register-btn" disabled={usernameTaken || emailTaken}>
                     Register
                 </button>
             </form>
