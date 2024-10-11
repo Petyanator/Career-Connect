@@ -6,25 +6,22 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 
 function App() {
-  const {token,  removeToken, setToken } = UserToken();
+  const { token, removeToken, setToken } = UserToken();
   return (
     <>
-    <BrowserRouter>
-     <Routes>
-     <Route path="/home" element={<Home />} />
-     <Route
-              path="/login"
-              element={<Login setToken={setToken} />}
-            ></Route>
-      <Route path="/register" element={<Register></Register>}></Route>
-      <Route path="/logout" element={<Logout></Logout>}></Route>
-      <Route></Route>
-     </Routes>
-    
-    </BrowserRouter>
-
+      <BrowserRouter>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route
+            path="/login"
+            element={<Login setToken={setToken} />}
+          ></Route>
+          <Route path="/register" element={<Register></Register>}></Route>
+          <Route path="/logout" element={<Logout setToken={removeToken} />}></Route>
+        </Routes>
+      </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

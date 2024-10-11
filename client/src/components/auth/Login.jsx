@@ -38,8 +38,8 @@ function Login() {
             console.log(response.data);
 
             if (response.status === 200) {
-                // Save token using UserToken hook
-                setToken(response.data.access_token);
+                // Save token using UserToken hook (store JWT token)
+                setToken(response.data.access_token); 
                 setLoginSuccess(true);
                 setAlertMessage("Login successful!");
                 navigate('/home'); // Navigate to profile page
@@ -60,11 +60,11 @@ function Login() {
     };
 
     useEffect(() => {
-        const storedToken = token;
+        const storedToken = localStorage.getItem("token")
         if (storedToken) {
             setLoginSuccess(true);
             setAlertMessage("You are already logged in."); // Alert if the user is already logged in
-            navigate('/home'); // Navigate to home if already logged in
+            navigate('/login'); // Navigate to home if already logged in
         }
     }, [token, navigate]);
 
