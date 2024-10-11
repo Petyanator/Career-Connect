@@ -56,19 +56,24 @@ def my_profile():
 
 @app.route("/login", methods=["POST"])
 def login_user():
-    data = request.get_json()
+    data = request.get_json()  # Get the JSON payload from the request
     username = data.get("username")
     password = data.get("password")
 
+    # Check if the username exists
     user = User.query.filter_by(username=username).first()
-
     if not user:
         return jsonify({"error": "Invalid username or password"}), 401
 
+    # Check if the password matches the hashed password in the database
     if not bcrypt.check_password_hash(user.password, password):
         return jsonify({"error": "Invalid username or password"}), 401
 
-    return jsonify({"message": "Successful login", "user": user.to_json()}), 200
+    # Generate access token after successful login
+    access_token = create_access_token(identity=user.username)
+
+    return jsonify({"access_token": access_token, "message": "Login successful"}), 200
+
 
 
 

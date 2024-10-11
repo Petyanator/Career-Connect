@@ -1,21 +1,19 @@
 import { useState } from "react";
 
-
 function UserToken() {
     // Function to get the token from local storage
     function getToken() {
         const tokenString = localStorage.getItem("token");
 
-        // Ensure the token is neither "undefined" nor null and is a valid JSON string
         if (!tokenString || tokenString === "undefined") {
-            return null; // Return null if no valid token is found
+            return null;
         }
         
         try {
-            return JSON.parse(tokenString); // Parse the token if it's valid
+            return JSON.parse(tokenString);
         } catch (error) {
             console.error("Failed to parse token:", error);
-            return null; // Return null if parsing fails
+            return null;
         }
     }
 
@@ -36,7 +34,7 @@ function UserToken() {
     return {
         setToken: saveToken,
         token,
-        removeToken,
+        removeToken, // Ensure this is returned correctly
     };
 }
 

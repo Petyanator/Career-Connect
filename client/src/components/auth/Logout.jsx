@@ -3,30 +3,28 @@ import { Link } from "react-router-dom";
 import "./Logout.css";
 
 function Logout({ removeToken }) {
-  function logout() {
-    try {
-      axios
-        .post("http://localhost:5000/logout")
-        .then((response) => {
-          response.data.access_token = removeToken();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      console.log("Logout attempt");
+    async function logout() {
+        try {
+            const response = await axios.post("http://localhost:5000/logout");
+            
+            if (response.status === 200) {
+                removeToken();  // Call to remove token from local storage
+                console.log("Token removed from local storage");
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
+        } finally {
+            console.log("Logout attempt completed");
+        }
     }
-  }
 
-  return (
-    <li className="navbar-item">
-      <Link className="navbar-link" onClick={logout} to="/home">
-        Logout
-      </Link>
-    </li>
-  );
+    return (
+        <li className="navbar-item">
+            <Link className="navbar-link" onClick={logout} to="/login">
+                Logout
+            </Link>
+        </li>
+    );
 }
 
 export default Logout;

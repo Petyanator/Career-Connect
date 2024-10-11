@@ -38,11 +38,16 @@ function Login() {
             console.log(response.data);
 
             if (response.status === 200) {
-                // Save token using UserToken hook (store JWT token)
-                setToken(response.data.access_token); 
-                setLoginSuccess(true);
-                setAlertMessage("Login successful!");
-                navigate('/home'); // Navigate to profile page
+                const accessToken = response.data.access_token; // Extract the access token
+
+                if (accessToken) {
+                    setToken(accessToken); // Save the access token in localStorage
+                    setLoginSuccess(true);
+                    setAlertMessage("Login successful!");
+                    navigate('/home'); // Navigate to profile page
+                } else {
+                    setLoginError("Failed to retrieve access token.");
+                }
             } else {
                 setLoginError("Invalid username or password");
             }
@@ -60,11 +65,11 @@ function Login() {
     };
 
     useEffect(() => {
-        const storedToken = localStorage.getItem("token")
+        const storedToken = localStorage.getItem("token");
         if (storedToken) {
             setLoginSuccess(true);
             setAlertMessage("You are already logged in."); // Alert if the user is already logged in
-            navigate('/login'); // Navigate to home if already logged in
+            navigate('/home'); // Navigate to home if already logged in
         }
     }, [token, navigate]);
 

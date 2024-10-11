@@ -17,7 +17,7 @@ function App() {
             element={<Login setToken={setToken} />}
           ></Route>
           <Route path="/register" element={<Register></Register>}></Route>
-          <Route path="/logout" element={<Logout setToken={removeToken} />}></Route>
+          <Route path="/logout" element={<Logout removeToken={removeToken} />}></Route>
         </Routes>
       </BrowserRouter>
     </>
