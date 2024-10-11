@@ -2,21 +2,44 @@ from app import app,db, bcrypt
 from flask import jsonify, request
 from models.models import JobPosting
 from datetime import datetime
+import re
 
+@app.route("/api/filter", methods=["GET"])
+def get_filters():
+    job_title = request.args.get("job_title", "")
+    salary_range = request.args.get("salary_range", "")
+    location = request.args.get("location", "")
+    required_skills = request.args.get("required_skills", "")
+    
+    query = JobPosting.query
 
+    # Filter by job title if provided
+    if job_title:
+        query = query.filter(JobPosting.job_title.ilike(f"%{job_title}%"))
 
-@app.route("/api/search", methods=["GET"])
-def get_job_type():
-    search_term = request.args.get("job_title", "")
+    # Filter by salary range if provided
+    if salary_range:
+        min_salary = extract_min_salary(salary_range)
+        query = query.filter(JobPosting.salary_range.ilike(f"%{min_salary}%"))
 
-    if not search_term:
-        return jsonify({"error": "Search term missing"}), 400
+    # Filter by location if provided
+    if location:
+        query = query.filter(JobPosting.location.ilike(f"%{location}%"))
 
-    # Perform case-insensitive search using ilike
-    job_titles = JobPosting.query.filter(JobPosting.job_title.ilike(f"%{search_term}%")).all()
+    # Filter by required skills if provided
+    if required_skills:
+        query = query.filter(JobPosting.required_skills.ilike(f"%{required_skills}%"))
 
-    if not job_titles:
-        return jsonify({"error": "No job types found"}), 404
+    # Get filtered results
+    results = query.all()
 
-    # Return the found job types with a 200 status code
-    return jsonify([job.job_title for job in job_titles]), 200
+    # Convert results to a list of dictionaries
+    jobs = [job.to_dict() for job in results]
+
+    return jsonify(jobs)
+
+# Helper function to extract minimum salary
+def extract_min_salary(salary_str):
+    # Extracts the first part (before dash) of the salary string
+    salary_parts = salary_str.split('-')
+    return salary_parts[0].strip() if salary_parts else salary_str
