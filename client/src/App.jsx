@@ -1,4 +1,14 @@
 
+import Register from "./components/auth/Register.jsx";
+import Login from "./components/auth/Login.jsx";
+import Logout from "./components/auth/Logout.jsx";
+import UserToken from "./components/Token/UserToken.jsx";
+import Home from "./pages/Home.jsx";
+
+
+            
+            
+            
 import SearchAndFilterSystem from "./components/SearchBar/SearchBar.jsx"
 import { useState } from 'react';
 import './App.css';
@@ -32,6 +42,15 @@ function App() {
           <Route path="/create-profile" element={<CreateProfilePage setProfileData={setProfileData} />} />
           <Route path="/profile" element={<CreateProfileView profileData={profileData} />} />
 
+                 <Route path="/home" element={<Home />} />
+          <Route
+            path="/login"
+            element={<Login setToken={setToken} />}
+          ></Route>
+          <Route path="/register" element={<Register></Register>}></Route>
+          <Route path="/logout" element={<Logout removeToken={removeToken} />}></Route>
+
+
 
         </Routes>
       </BrowserRouter>
@@ -39,4 +58,6 @@ function App() {
   );
 }
 
+
 export default App;
+

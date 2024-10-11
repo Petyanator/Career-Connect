@@ -1,3 +1,4 @@
+
 from app import app,db, bcrypt
 from flask import jsonify, request
 from models.models import JobPosting
@@ -43,3 +44,4 @@ def extract_min_salary(salary_str):
     # Extracts the first part (before dash) of the salary string
     salary_parts = salary_str.split('-')
     return salary_parts[0].strip() if salary_parts else salary_str
+
