@@ -2,7 +2,7 @@ from app import app, bcrypt
 from flask import request, jsonify
 from flask_jwt_extended import create_access_token
 from datetime import datetime
-from models.user_model import db, User
+from models.models import db, User
 from flask_jwt_extended import unset_jwt_cookies, jwt_required
 
 
@@ -24,8 +24,6 @@ def register_user():
     email = data.get("email")
     password = data.get("password")
     full_name = data.get("full_name")
-    # If profile_picture is not provided, use a default value
-    profile_picture = data.get("profile_picture", "default_profile_picture.png")
 
     # Hash the password
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
@@ -36,9 +34,8 @@ def register_user():
         email=email,
         password=hashed_password,
         full_name=full_name,
-        profile_picture=profile_picture,
     )
-
+    print(new_user)
     # Add to the database and commit
     db.session.add(new_user)
     db.session.commit()
@@ -49,13 +46,6 @@ def register_user():
     # Return the new user and access token
     return jsonify({"user": new_user.to_json(), "access_token": access_token}), 201
 
-
-""" @app.route("/profile", methods=["GET"])
-@jwt_required()
-def my_profile():
-    response_body = {"name": "Logged in user", "email": "loggedInUser@gmail.com"}
-
-    return jsonify(response_body), 200 """
 
 
 @app.route("/login", methods=["POST"])

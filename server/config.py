@@ -32,10 +32,3 @@ def register_models(app):
 
 
 
-# def register_job_post_routes(app):
-#     routes_dir = os.path.join(os.path.dirname(__file__), "routes")
-#     for filename in os.listdir(routes_dir):
-#         if filename.endswith(".py") and not filename.startswith("__"):
-#             module_name = f"job_post_routes.{filename[:-3]}"
-#             __import__(module_name)
-

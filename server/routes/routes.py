@@ -5,6 +5,12 @@ from models.models import JobPosting
 from datetime import datetime
 import re
 
+@app.route("/demo")
+def hello():
+    return "hello"
+
+
+
 @app.route("/api/filter", methods=["GET"])
 def get_filters():
     job_title = request.args.get("job_title", "")
