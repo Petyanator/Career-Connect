@@ -20,7 +20,7 @@ function Logout({ removeToken }) {
 
     return (
         <li className="navbar-item">
-            <Link className="navbar-link" onClick={logout} to="/login">
+            <Link className="navbar-link" onClick={logout} to="/home">
                 Logout
             </Link>
         </li>

@@ -44,7 +44,7 @@ function Login() {
                     setToken(accessToken); // Save the access token in localStorage
                     setLoginSuccess(true);
                     setAlertMessage("Login successful!");
-                    navigate('/home'); // Navigate to profile page
+                    navigate('/home'); // Navigate to home page
                 } else {
                     setLoginError("Failed to retrieve access token.");
                 }
