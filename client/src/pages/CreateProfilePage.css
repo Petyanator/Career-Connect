@@ -4,15 +4,9 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-html,
-body {
+html, body {
     margin: 0;
     padding: 0;
-    height: 100%;
-}
-
-body {
-    margin: 0;
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -109,12 +103,18 @@ input[type="file"] {
 
 .skills-input input {
     flex: 1;
-    padding: 10px;
+    padding: 30px;
     font-size: 1rem;
+    width: 20rem;
+}
+
+#skills{
+  width: 400px;
 }
 
 .skills-input button {
-    padding: 10px 15px;
+    width: 25%;
+    padding: 10px 5px;
     background-color: #092734;
     color: #fff;
     border: none;

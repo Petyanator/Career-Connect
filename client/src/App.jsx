@@ -8,7 +8,6 @@ import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import CreateProfilePage from './pages/CreateProfilePage';
 import CreateProfileView from './pages/CreateProfileView';
-
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Logout from './components/auth/Logout';
@@ -30,9 +29,9 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/home" element={<Landing />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/aboutus" element={<AboutUs />} />
-          <Route path="/searchbar" element={<SearchBar />} />
+          <Route path="/searchbar" element={<SearchAndFilterSystem />} />
           <Route path="/jobposting" element={<JobPosting />} />
           <Route path="/jobviewer" element={<JobViewer />} />
           <Route path="/create-profile" element={<CreateProfilePage setProfileData={setProfileData} />} />
