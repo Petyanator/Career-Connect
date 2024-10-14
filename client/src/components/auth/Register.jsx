@@ -10,6 +10,7 @@ function Register() {
         user_type: "", // Add user_type to formData state
         password: "",
         confirmPassword: "",
+        profileType: "",  // Add profileType field
     });
 
     const [passwordMatch, setPasswordMatch] = useState(true);
@@ -17,6 +18,7 @@ function Register() {
     const [usernameTaken, setUsernameTaken] = useState(false);
     const [emailTaken, setEmailTaken] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [profileSelected, setProfileSelected] = useState(false);  // State to check if profile is selected
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -59,11 +61,15 @@ function Register() {
         if (name === "username" || name === "email") {
             checkUsernameOrEmail(name, value);
         }
+
+        if (name === "profileType") {
+            setProfileSelected(true);  // Mark profile selection as done
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (passwordMatch && isPasswordValid && !usernameTaken && !emailTaken) {
+        if (passwordMatch && isPasswordValid && !usernameTaken && !emailTaken && profileSelected) {
             registerUser(formData);
         } else {
             console.log("Form is invalid or username/email is taken");
@@ -117,6 +123,7 @@ function Register() {
                         placeholder="Full Name"
                         value={formData.full_name}
                         onChange={handleChange}
+                        required
                     />
                 </div>
 
@@ -177,8 +184,35 @@ function Register() {
 
                 {!passwordMatch && <p style={{ color: "red" }}>Passwords do not match!</p>}
 
-                <button type="submit" className="register-btn" disabled={usernameTaken || emailTaken}>
-                    Register
+
+                {/* Profile Type Selection */}
+                <div className="profile-type-container">
+                    <label>
+                        <input
+                            type="radio"
+                            name="profileType"
+                            value="Employer"
+                            checked={formData.profileType === "Employer"}
+                            onChange={handleChange}
+                            required
+                        />
+                        Employer
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            name="profileType"
+                            value="Job Seeker"
+                            checked={formData.profileType === "Job Seeker"}
+                            onChange={handleChange}
+                            required
+                        />
+                        Job Seeker
+                    </label>
+                    {!profileSelected && <p style={{ color: "red" }}>Please select a profile type.</p>}
+                </div>
+
+                <button type="submit" className="register-btn" disabled={usernameTaken || emailTaken || !profileSelected}> Register
                 </button>
             </form>
         </div>
