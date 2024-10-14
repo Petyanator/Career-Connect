@@ -24,15 +24,17 @@ body {
 
 #particles-js {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
+    width: 100%;
+    height: 100%;
     background-color: #092734;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    z-index: -1;
 }
 
-.create-profile-page {
+
+.employer-create-profile-page {
     position: relative;
     z-index: 1;
     padding: 20px;
@@ -46,17 +48,16 @@ body {
     transition: visibility 0.3s ease, height 0.3s ease;
 }
 
-
-.create-profile-page.hidden-form {
+.employer-create-profile-page.hidden-form {
     height: 0;
     visibility: hidden;
 }
 
-.create-profile-page.hidden-form form {
+.employer-create-profile-page.hidden-form form {
     display: none;
 }
 
-.create-profile-page h1 {
+.employer-create-profile-page h1 {
     text-align: center;
     margin-bottom: 20px;
     color: #40434E;
@@ -69,15 +70,19 @@ form {
 }
 
 input[type="text"],
-input[type="date"],
-select,
-input[type="file"] {
+input[type="file"],
+textarea {
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #40434E;
     border-radius: 5px;
     background-color: #FFFFFA;
     color: #40434E;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
 }
 
 .image-preview {
@@ -90,69 +95,6 @@ input[type="file"] {
     border-radius: 5%;
     object-fit: cover;
     border: 2px solid #0B3142;
-}
-
-.gender-input {
-    margin-bottom: 15px;
-}
-
-.gender-input label {
-    margin-right: 15px;
-    color: #40434E;
-}
-
-.skills-input {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.skills-input input {
-    flex: 1;
-    padding: 10px;
-    font-size: 1rem;
-}
-
-.skills-input button {
-    padding: 10px 15px;
-    background-color: #092734;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 15px;
-}
-
-.skills-input button:hover {
-    background-color: #0B3142;
-}
-
-.skills-list {
-    margin-bottom: 15px;
-}
-
-.skill-item {
-    display: inline-block;
-    background-color: #40434E;
-    color: #FFFFFA;
-    padding: 5px 10px;
-    margin: 5px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    position: relative;
-}
-
-.delete-skill {
-    background: none;
-    border: none;
-    color: #FFFFFF;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-.delete-skill:hover {
-    color: #FF0000;
 }
 
 .submit-btn {
@@ -169,6 +111,7 @@ input[type="file"] {
     background-color: #0B3142;
 }
 
+
 .overlay {
     height: 70px;
     width: 70px;
@@ -182,6 +125,7 @@ input[type="file"] {
     justify-content: center;
     align-items: center;
     border: 2px solid transparent;
+    z-index: 1000;
     animation: borderFill 2s forwards;
 }
 
@@ -202,41 +146,11 @@ i.fas.fa-check {
     border-radius: 5px;
 }
 
-.education-section {
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: visibility 0.3s ease, height 0.3s ease;
-}
-
-.education-section label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 5px;
-    color: #40434E;
-}
-
-.education-section select,
-.education-section input[type="text"] {
-    width: 100%;
-    padding: 10px;
+.preference-section {
     margin-bottom: 15px;
-    border: 1px solid #40434E;
-    border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #40434E;
-    box-sizing: border-box;
 }
 
-
-
-
-.add-education-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.add-preference-btn {
     padding: 10px 15px;
     background-color: #092734;
     color: #fff;
@@ -244,17 +158,91 @@ i.fas.fa-check {
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 15px;
-    transition: background-color 0.3s ease;
 }
 
-.add-education-btn:hover {
+.add-preference-btn:hover {
     background-color: #0B3142;
 }
 
-.add-education-btn svg {
-    margin-right: 10px;
+.preference-item {
+    display: inline-block;
+    background-color: #092734;
+    color: #FFFFFA;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    position: relative;
 }
 
+.delete-preference {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.delete-preference:hover {
+    color: #FF0000;
+}
+
+.benefit-section {
+    margin-bottom: 15px;
+}
+
+.add-benefit-btn {
+    padding: 10px 15px;
+    background-color: #092734;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.add-benefit-btn:hover {
+    background-color: #0B3142;
+}
+
+.benefits-list {
+    margin-bottom: 15px;
+}
+
+.benefit-item {
+    display: inline-block;
+    background-color: #092734;
+    color: #FFFFFA;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.delete-benefit {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.delete-benefit:hover {
+    color: #FF0000;
+}
+
+input:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
 
 
 @keyframes checkGrow {

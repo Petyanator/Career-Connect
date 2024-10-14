@@ -9,11 +9,13 @@ import Landing from './pages/Landing.jsx';
 import AboutUs from './pages/AboutUs.jsx';
 import SearchBar from './components/SearchBar';
 import CreateProfilePage from './pages/CreateProfilePage';
-import CreateProfileView from './pages/CreateProfileView'; // Import CreateProfileView
+import CreateProfileView from './pages/CreateProfileView';
+import EmployerCreateProfile from './pages/EmployerCreateProfile';
+import EmployerProfileView from './pages/EmployerProfileView';
 
 function App() {
-  const [profileData, setProfileData] = useState(null);  // State to hold profile data
-
+  const [profileData, setProfileData] = useState(null);
+  const [employerProfileData, setEmployerProfileData] = useState(null);
   return (
     <>
       <BrowserRouter>
@@ -27,7 +29,8 @@ function App() {
           <Route path="/jobviewer" element={<JobViewer />} />
           <Route path="/create-profile" element={<CreateProfilePage setProfileData={setProfileData} />} />
           <Route path="/profile" element={<CreateProfileView profileData={profileData} />} />
-
+          <Route path="/employer-create-profile" element={<EmployerCreateProfile setEmployerProfileData={setEmployerProfileData} />} />
+          <Route path="/employer-profile" element={<EmployerProfileView employerProfileData={employerProfileData} />} />
         </Routes>
       </BrowserRouter>
     </>
