@@ -1,0 +1,72 @@
+/* General container styles for the About Us section */
+.about-us-container {
+  background-color: #f8f9fa; /* Soft background for readability */
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 90px 90px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+/* Styling for the main heading */
+.about-us-container h1 {
+  font-size: 3rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Styling for the main paragraph */
+.about-us-container p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #555;
+  text-align: justify;
+  max-width: 900px;
+  margin: 0 auto;
+  text-indent: 40px; /* Indent for new paragraphs */
+}
+
+/* Emphasize buzzwords */
+.about-us-container p strong {
+  color: #ff6b6b; /* Accent color for emphasis */
+  font-weight: 600;
+}
+
+/* Company name styling */
+.about-us-container p .company-name {
+  color: #007bff; /* Blue for company name */
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Emphasize mission, vision, and other buzzwords */
+.about-us-container p .buzzword {
+  color: #28a745; /* Green for mission, vision, etc. */
+  font-weight: 600;
+}
+
+/* Adding a subtle hover effect on the text */
+.about-us-container p:hover {
+  color: #333;
+  transition: color 0.3s ease;
+}
+.start-now-btn-container {
+  display: flex;
+  justify-content: center; /* Centers the button horizontally */
+  margin-top: 20px; /* Optional: Add some space above the button */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-us-container h1 {
+    font-size: 2.5rem;
+  }
+
+  .about-us-container p {
+    font-size: 1.1rem;
+    text-indent: 20px;
+  }
+}

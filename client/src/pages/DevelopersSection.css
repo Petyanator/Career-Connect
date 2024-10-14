@@ -1,0 +1,46 @@
+/* Developers Section Container */
+.developers-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+  padding: 40px 0;
+}
+
+/* Individual Developer Card */
+.developer-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+/* Developer Image */
+.developer-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+/* Developer Name */
+.developer-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Developer Role */
+.developer-role {
+  font-size: 1rem;
+  color: #555;
+  text-align: center;
+  white-space: nowrap; /* Prevent text from wrapping to a new line */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds '...' if the text is too long */
+}
