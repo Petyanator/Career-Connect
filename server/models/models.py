@@ -6,7 +6,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"), primary_key = True, autoincrement=True)
     username = db.Column(db.String(50), nullable = False)
     email = db.Column(db.String(100), nullable = False)
-    password = db.Column(db.String(50), nullable = False)
+    password = db.Column(db.String(75), nullable = False)
     full_name = db.Column(db.String(100), nullable = False)
     user_type = db.Column(db.String(255), nullable = False)
     created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
