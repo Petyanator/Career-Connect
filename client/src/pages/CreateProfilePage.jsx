@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './CreateProfilePage.css';
 import { FaPlus } from 'react-icons/fa'; // Add Font Awesome plus icon
 
@@ -129,10 +130,10 @@ function CreateProfilePage({ setProfileData }) {
     };
 
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Check if fields are valid
+        // Validatiom
         const isFirstNameValid = !!firstName;
         const isLastNameValid = !!lastName;
         const isDobValid = !!dob;
@@ -152,28 +153,74 @@ function CreateProfilePage({ setProfileData }) {
             return;
         }
 
+        // Assume you have access to the current user's ID
+        const user_id = currentUser.id; // Replace with your actual user ID retrieval logic
+
+        // Convert selectedImage to base64 if necessary
+        let profile_pic = null;
+        if (selectedImage) {
+            // Check if selectedImage is a File object
+            if (selectedImage instanceof File) {
+                profile_pic = await convertImageToBase64(selectedImage);
+            } else {
+                // If it's already a base64 string or URL
+                profile_pic = selectedImage;
+            }
+        }
+
+        // Prepare education data
+        // If educationFields is an array, convert it to a list or keep as is
+        const education = educationFields; // Assuming it's in the correct format
+
         const profileData = {
-            firstName,
-            lastName,
+            user_id,
+            profile_pic,
+            first_name: firstName,
+            last_name: lastName,
             dob,
             gender,
             nationality,
-            educationFields,
+            education,
             skills,
-            profilePicture: selectedImage,
         };
 
         setProfileData(profileData);
         setIsButtonShrinking(true);
 
-        setTimeout(() => {
-            setShowForm(false);
-            setShowOverlay(true);
-        }, 800);
+        try {
+            // Send data to the backend
+            const response = await axios.post('http://your_backend_url/api/job_seeker/create_profile', profileData);
 
-        setTimeout(() => {
-            navigate('/profile');
-        }, 4000);
+            if (response.status === 201) {
+                // Success
+                setTimeout(() => {
+                    setShowForm(false);
+                    setShowOverlay(true);
+                }, 800);
+
+                setTimeout(() => {
+                    navigate('/profile');
+                }, 4000);
+            } else {
+                // Handle unexpected response
+                alert('An error occurred while creating your profile.');
+                setIsButtonShrinking(false);
+            }
+        } catch (error) {
+            console.error('Error creating profile:', error);
+            alert('An error occurred while creating your profile.');
+            setIsButtonShrinking(false);
+        }
+    };
+
+    // Utility function to convert image file to base64
+    const convertImageToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
     };
 
     return (
