@@ -7,6 +7,7 @@ function Register() {
         username: "",
         email: "",
         full_name: "",
+        user_type: "", // Add user_type to formData state
         password: "",
         confirmPassword: "",
     });
@@ -26,7 +27,6 @@ function Register() {
         return passwordRegex.test(password);
     };
 
-    // Check if username or email already exists
     const checkUsernameOrEmail = async (name, value) => {
         try {
             const response = await axios.post("http://localhost:5000/check-username-email", {
@@ -120,6 +120,21 @@ function Register() {
                     />
                 </div>
 
+                {/* User Type */}
+                <div className="input-container">
+                    <label htmlFor="user_type">User Type:</label>
+                    <select
+                        name="user_type"
+                        value={formData.user_type}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select User Type</option>
+                        <option value="job_seeker">Job Seeker</option>
+                        <option value="employer">Employer</option>
+                    </select>
+                </div>
+
                 {/* Password */}
                 <div className="input-container">
                     <div className="password-container">
@@ -161,7 +176,7 @@ function Register() {
                 </div>
 
                 {!passwordMatch && <p style={{ color: "red" }}>Passwords do not match!</p>}
-                
+
                 <button type="submit" className="register-btn" disabled={usernameTaken || emailTaken}>
                     Register
                 </button>

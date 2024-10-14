@@ -35,33 +35,21 @@ function Login() {
 
         try {
             const response = await axios.post("http://localhost:5000/login", formData);
-            console.log(response.data);
-
-            if (response.status === 200) {
-                const accessToken = response.data.access_token; // Extract the access token
-
-                if (accessToken) {
-                    setToken(accessToken); // Save the access token in localStorage
-                    setLoginSuccess(true);
-                    setAlertMessage("Login successful!");
-                    navigate('/home'); // Navigate to profile page
-                } else {
-                    setLoginError("Failed to retrieve access token.");
-                }
-            } else {
-                setLoginError("Invalid username or password");
+            const accessToken = response.data.access_token;
+        
+            if (accessToken) {
+                setToken(accessToken);
+                setLoginSuccess(true);
+                setAlertMessage("Login successful!");
+                navigate('/home'); 
             }
         } catch (error) {
             console.error("Login error", error);
-            if (error.response) {
-                setLoginError("Invalid username or password");
-            } else {
-                setLoginError("Failed to login, please try again later.");
-            }
+            setLoginError(error.response?.data?.error || "Invalid username or password.");
         } finally {
-            setLoginAttempt((prev) => prev + 1); // Increment login attempts
-            console.log("Logins attempted: " + (loginAttempt + 1)); // Log attempts
+            setLoginAttempt((prev) => prev + 1);
         }
+        
     };
 
     useEffect(() => {
@@ -71,7 +59,7 @@ function Login() {
             setAlertMessage("You are already logged in."); // Alert if the user is already logged in
             navigate('/home'); // Navigate to home if already logged in
         }
-    }, [token, navigate]);
+    }, [navigate]);
 
     return (
         <div className="login-form-container">

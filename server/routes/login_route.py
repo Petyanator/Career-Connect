@@ -24,27 +24,33 @@ def register_user():
     email = data.get("email")
     password = data.get("password")
     full_name = data.get("full_name")
+    user_type = data.get("user_type")  # Extract user_type from request
+
+    if user_type not in ["job_seeker", "employer"]:
+        return jsonify({"error": "Invalid user type"}), 400
 
     # Hash the password
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
-    # Create a new user object (timestamps handled by the database)
+    # Create a new user object
     new_user = User(
         username=username,
         email=email,
         password=hashed_password,
         full_name=full_name,
+        user_type=user_type  # Store user_type in the database
     )
-    print(new_user)
-    # Add to the database and commit
+
+    # Add the new user to the database
     db.session.add(new_user)
     db.session.commit()
 
-    # Create an access token
+    # Create an access token for the new user
     access_token = create_access_token(identity=username)
 
     # Return the new user and access token
     return jsonify({"user": new_user.to_json(), "access_token": access_token}), 201
+
 
 
 
@@ -64,7 +70,7 @@ def login_user():
         return jsonify({"error": "Invalid username or password"}), 401
 
     # Generate access token after successful login
-    access_token = create_access_token(identity=user.username)
+    access_token = create_access_token(identity=username)
 
     return jsonify({"access_token": access_token, "message": "Login successful"}), 200
 
