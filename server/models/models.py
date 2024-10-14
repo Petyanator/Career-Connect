@@ -19,7 +19,7 @@ class User(db.Model):
         "password": self.password,
         "full_name": self.full_name,
         }
-    
+
 class Notification(db.Model):
     __tablename__ = "notifications"
     notification_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
@@ -34,12 +34,12 @@ class Notification(db.Model):
             "employer_id": self.employer_id,
             "read_at": self.read_at
         }
-    
+
 class JobSeeker(db.Model):
     __tablename__ = "job_seekers"
     job_seeker_id = db.Column(db.Integer, primary_key = True,  autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
-    profile_pic = db.Column(db.String(255), nullable = False)
+    profile_pic = db.Column(db.String(255), nullable = True)
     first_name = db.Column(db.String(100), nullable = False)
     last_name = db.Column(db.String(100), nullable = False)
     dob = db.Column(db.Date)
@@ -61,7 +61,7 @@ class JobSeeker(db.Model):
             "education": self.education,
             "skills": self.skills
         }
-    
+
 class JobPosting(db.Model):
     __tablename__ = "job_posting"
     job_posting_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
@@ -88,7 +88,7 @@ class JobPosting(db.Model):
         }
     def __repr__(self):
         return f'<JobPosting {self.job_title}>'
-    
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -97,7 +97,7 @@ class JobPosting(db.Model):
             'location': self.location,
             'required_skills': self.required_skills,
         }
-    
+
     class Employer(db.Model):
         __tablename__ = "employer"
         employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
@@ -110,7 +110,7 @@ class JobPosting(db.Model):
                 "user_id": self.user_id,
                 "company_name": self.company_name,
             }
-        
+
 class Application(db.Model):
     __tablename__ = "applications"
     application_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
@@ -129,4 +129,3 @@ class Application(db.Model):
             "employer_status": self.employer_status,
             "created_at": self.created_at.isoformat(),
         }
-            

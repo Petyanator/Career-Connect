@@ -71,7 +71,7 @@ def login_user():
 
     # Generate access token after successful login
     access_token = create_access_token(identity=username)
-
+    print(access_token)
     return jsonify({"access_token": access_token, "message": "Login successful"}), 200
 
 

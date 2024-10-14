@@ -16,7 +16,7 @@ def get_filters():
     salary_range = request.args.get("salary_range", "")
     location = request.args.get("location", "")
     required_skills = request.args.get("required_skills", "")
-    
+
     query = JobPosting.query
 
     # Filter by job title if provided
@@ -49,5 +49,3 @@ def extract_min_salary(salary_str):
     # Extract the first part (before dash) of the salary string
     salary_parts = salary_str.split('-')
     return salary_parts[0].strip() if salary_parts else salary_str
-
-
