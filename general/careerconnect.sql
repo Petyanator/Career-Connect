@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2024 at 10:23 AM
+-- Generation Time: Oct 14, 2024 at 01:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,6 +66,18 @@ CREATE TABLE `job_posting` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `job_posting`
+--
+
+INSERT INTO `job_posting` (`job_posting_id`, `employer_id`, `title`, `salary`, `location`, `skills`, `describtion`, `created_at`, `updated_at`) VALUES
+(19, 0, 'Software Engineer', '$80,000 - $100,000', 'New York, NY', 'Python, React, SQL', 'Looking for a skilled Software Engineer to join our team.', '2024-10-14 04:32:59', '2024-10-14 04:32:59'),
+(20, 0, 'Project Manager', '$90,000 - $110,000', 'San Francisco, CA', 'Leadership, Agile, Scrum', 'Seeking a Project Manager to oversee software development projects.', '2024-10-14 04:32:59', '2024-10-14 04:32:59'),
+(21, 0, 'Data Scientist', '$95,000 - $120,000', 'Chicago, IL', 'Python, R, Machine Learning', 'Join our analytics team as a Data Scientist.', '2024-10-14 04:32:59', '2024-10-14 04:32:59'),
+(22, 0, 'UI/UX Designer', '$70,000 - $85,000', 'Los Angeles, CA', 'Figma, Adobe XD, User Research', 'Looking for a creative UI/UX Designer to enhance our product.', '2024-10-14 04:32:59', '2024-10-14 04:32:59'),
+(23, 0, 'Full Stack Developer', '$85,000 - $105,000', 'Austin, TX', 'JavaScript, Node.js, MongoDB', 'Seeking a Full Stack Developer with a passion for coding and problem-solving.', '2024-10-14 04:32:59', '2024-10-14 04:32:59'),
+(24, 0, 'DevOps Engineer', '$100,000 - $130,000', 'Seattle, WA', 'AWS, Docker, Kubernetes', 'We are looking for a DevOps Engineer to streamline our deployment processes.', '2024-10-14 04:32:59', '2024-10-14 04:32:59');
+
 -- --------------------------------------------------------
 
 --
@@ -108,9 +120,9 @@ CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(75) NOT NULL,
   `full_name` varchar(100) NOT NULL,
-  `user_type` int(11) NOT NULL,
+  `user_type` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -180,7 +192,7 @@ ALTER TABLE `employer`
 -- AUTO_INCREMENT for table `job_posting`
 --
 ALTER TABLE `job_posting`
-  MODIFY `job_posting_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `job_posting_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `job_seekers`
@@ -198,7 +210,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
@@ -210,30 +222,6 @@ ALTER TABLE `users`
 ALTER TABLE `applications`
   ADD CONSTRAINT `applications_to_job_postings` FOREIGN KEY (`job_posting_id`) REFERENCES `job_posting` (`job_posting_id`),
   ADD CONSTRAINT `applications_to_job_seekers` FOREIGN KEY (`job_seeker_id`) REFERENCES `job_seekers` (`job_seeker_id`);
-
---
--- Constraints for table `employer`
---
-ALTER TABLE `employer`
-  ADD CONSTRAINT `employer_to_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `job_posting`
---
-ALTER TABLE `job_posting`
-  ADD CONSTRAINT `job_postings_to_employers` FOREIGN KEY (`employer_id`) REFERENCES `employer` (`employer_id`);
-
---
--- Constraints for table `job_seekers`
---
-ALTER TABLE `job_seekers`
-  ADD CONSTRAINT `job_seekers_to_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE;
-
---
--- Constraints for table `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `users_to_jobseekers` FOREIGN KEY (`user_id`) REFERENCES `job_seekers` (`job_seeker_id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
