@@ -1,5 +1,6 @@
 // /client/src/components/jobposting/JobPosting.jsx
 import React, { useState } from 'react';
+import './JobPosting.css'
 
 const JobPosting = () => {
   const [formData, setFormData] = useState({
@@ -50,7 +51,8 @@ const JobPosting = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className = "container">
+    <form onSubmit={handleSubmit} className = "formJobPosting">
       <div>
         <label>Job Title:</label>
         <input type="text" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
@@ -83,6 +85,7 @@ const JobPosting = () => {
 
       <button type="submit">Post Job</button>
     </form>
+    </div>
   );
 };
 

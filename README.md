@@ -4,6 +4,7 @@ For Front-End:
 
 cd client
 npm install
+npm install react-icons
 
 For Virtual Environment:
 
