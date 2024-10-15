@@ -2,7 +2,8 @@
 from flask import Blueprint, request, jsonify, current_app as app
 from werkzeug.utils import secure_filename
 import os
-import MySQLdb
+import base64
+import pymysql as MySQLdb
 from datetime import datetime
 
 job_seeker_create_profile_bp = Blueprint('job_seeker_create_profile_bp', __name__)
@@ -46,7 +47,6 @@ def create_profile():
         # Handle profile picture upload
         profile_pic_path = None
         if profile_pic and profile_pic.startswith('data:image/'):
-            import base64
             img_data = profile_pic.split(',')[1]
             img_data = base64.b64decode(img_data)
             filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
