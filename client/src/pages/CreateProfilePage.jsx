@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './CreateProfilePage.css';
@@ -70,6 +70,16 @@ function CreateProfilePage({ setProfileData }) {
         setEducationFields([...educationFields, { education: '', degreeDetails: '', institution: '' }]);
     };
 
+    // Utility function to convert image file to base64
+    const convertImageToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -113,16 +123,19 @@ function CreateProfilePage({ setProfileData }) {
             dob,
             gender,
             nationality,
-            education: educationFields.map(field => `${field.education} in ${field.degreeDetails} at ${field.institution}`),// Properly formatted for backend as a list of strings
+            education,  // Properly formatted for backend as a list of strings
             skills,  // Already a list of strings
         };
 
         setProfileData(profileData);
         setIsButtonShrinking(true);
 
+        console.log("Submitting profile data:", profileData);  // Debug log
+
         try {
             // Retrieve JWT token from storage (adjust as needed)
             const token = localStorage.getItem('jwtToken'); // Ensure the token is correctly stored
+            console.log("JWT Token:", token);  // Debug log
 
             // Send data to the backend
             const response = await axios.post('http://localhost:5000/api/job_seeker/create_profile', profileData, {
@@ -130,6 +143,8 @@ function CreateProfilePage({ setProfileData }) {
                     'Authorization': `Bearer ${token}`,
                 },
             });
+
+            console.log("Server response:", response.data);  // Debug log
 
             if (response.status === 201) {
                 // Success
@@ -153,16 +168,6 @@ function CreateProfilePage({ setProfileData }) {
         }
     };
 
-    // Utility function to convert image file to base64
-    const convertImageToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    };
-
     return (
         <div>
             {/* Particle effect container */}
@@ -182,7 +187,7 @@ function CreateProfilePage({ setProfileData }) {
                             </div>
                         )}
 
-                        {/* First Name */}
+                        {/* Other form fields for first name, last name, dob, etc. */}
                         <label htmlFor="first-name">First Name:</label>
                         <input
                             type="text"
@@ -193,7 +198,6 @@ function CreateProfilePage({ setProfileData }) {
                             className={!firstNameValid ? 'invalid-input' : ''}
                         />
 
-                        {/* Last Name */}
                         <label htmlFor="last-name">Last Name:</label>
                         <input
                             type="text"
@@ -204,7 +208,6 @@ function CreateProfilePage({ setProfileData }) {
                             className={!lastNameValid ? 'invalid-input' : ''}
                         />
 
-                        {/* Date of Birth */}
                         <label htmlFor="dob">Date of Birth:</label>
                         <input
                             type="date"
@@ -214,7 +217,6 @@ function CreateProfilePage({ setProfileData }) {
                             className={!dobValid ? 'invalid-input' : ''}
                         />
 
-                        {/* Gender */}
                         <label>Gender:</label>
                         <div className={`gender-input ${!genderValid ? 'invalid-input' : ''}`}>
                             <label>
@@ -225,7 +227,6 @@ function CreateProfilePage({ setProfileData }) {
                             </label>
                         </div>
 
-                        {/* Nationality */}
                         <label htmlFor="nationality">Nationality:</label>
                         <input
                             type="text"
