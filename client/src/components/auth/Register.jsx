@@ -1,222 +1,221 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./Register.css";
 
 function Register() {
-    const [formData, setFormData] = useState({
-        username: "",
-        email: "",
-        full_name: "",
-        user_type: "", // Add user_type to formData state
-        password: "",
-        confirmPassword: "",
-        profileType: "",  // Add profileType field
-    });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    full_name: "",
+    user_type: "", // Add user_type to formData state
+    password: "",
+    confirmPassword: "",
+  });
 
-    const [passwordMatch, setPasswordMatch] = useState(true);
-    const [isPasswordValid, setIsPasswordValid] = useState(true);
-    const [usernameTaken, setUsernameTaken] = useState(false);
-    const [emailTaken, setEmailTaken] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [profileSelected, setProfileSelected] = useState(false);  // State to check if profile is selected
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [usernameTaken, setUsernameTaken] = useState(false);
+  const [emailTaken, setEmailTaken] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-    const validatePassword = (password) => {
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        return passwordRegex.test(password);
-    };
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
 
-    const checkUsernameOrEmail = async (name, value) => {
-        try {
-            const response = await axios.post("http://localhost:5000/check-username-email", {
-                [name]: value,
-            });
-            if (name === "username") {
-                setUsernameTaken(response.data.usernameTaken);
-            } else if (name === "email") {
-                setEmailTaken(response.data.emailTaken);
-            }
-        } catch (error) {
-            console.error("Error checking username/email", error);
-        }
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+    if (name === "password") {
+      setPasswordMatch(value === formData.confirmPassword);
+      setIsPasswordValid(validatePassword(value));
+    } else if (name === "confirmPassword") {
+      setPasswordMatch(value === formData.password);
+    }
+  };
 
-        if (name === "password") {
-            setPasswordMatch(value === formData.confirmPassword);
-            setIsPasswordValid(validatePassword(value));
-        } else if (name === "confirmPassword") {
-            setPasswordMatch(value === formData.password);
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!passwordMatch || !isPasswordValid) {
+      setErrorMessage(
+        "Please ensure the password criteria are met and passwords match."
+      );
+      return;
+    }
 
-        if (name === "username" || name === "email") {
-            checkUsernameOrEmail(name, value);
-        }
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/register",
+        formData
+      );
+      if (response.status === 201) {
+        setRegistrationSuccess(true);
+        setErrorMessage("");
 
-        if (name === "profileType") {
-            setProfileSelected(true);  // Mark profile selection as done
-        }
-    };
+        // Save the access token to localStorage or state management (e.g., Redux)
+        const { access_token } = response.data;
+        localStorage.setItem("access_token", access_token);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (passwordMatch && isPasswordValid && !usernameTaken && !emailTaken && profileSelected) {
-            registerUser(formData);
+        // Optionally, redirect the user to the login page or home page after registration
+        console.log("User registered successfully:", response.data.user);
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 409) {
+          const errorMsg = error.response.data.error;
+          if (errorMsg.includes("Username")) {
+            setUsernameTaken(true);
+          } else if (errorMsg.includes("Email")) {
+            setEmailTaken(true);
+          }
+          setErrorMessage(errorMsg);
+        } else if (error.response.status === 400) {
+          setErrorMessage("Invalid user type.");
         } else {
-            console.log("Form is invalid or username/email is taken");
+          setErrorMessage("An error occurred during registration.");
         }
-    };
+      } else {
+        setErrorMessage("An error occurred. Please try again later.");
+      }
+    }
+  };
 
-    const registerUser = async (data) => {
-        try {
-            const response = await axios.post("http://localhost:5000/register", data);
-            console.log(response.data);
-        } catch (error) {
-            console.error("Registration error", error);
-        }
-    };
+  return (
+    <div className="register-form-container">
+      <h2>Register</h2>
+      {registrationSuccess ? (
+        <p style={{ color: "green" }}>
+          Registration successful! You can now log in.
+        </p>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          {/* Username */}
+          <div className="input-container">
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+            {usernameTaken && (
+              <p style={{ color: "red" }}>Username is already taken!</p>
+            )}
+          </div>
 
-    return (
-        <div className="register-form-container">
-            <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                {/* Username */}
-                <div className="input-container">
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        required
-                    />
-                    {usernameTaken && <p style={{ color: "red" }}>Username is already taken!</p>}
-                </div>
+          {/* Email */}
+          <div className="input-container">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            {emailTaken && (
+              <p style={{ color: "red" }}>Email is already registered!</p>
+            )}
+          </div>
 
-                {/* Email */}
-                <div className="input-container">
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                    {emailTaken && <p style={{ color: "red" }}>Email is already registered!</p>}
-                </div>
+          {/* Full Name */}
+          <div className="input-container">
+            <input
+              type="text"
+              name="full_name"
+              placeholder="Full Name"
+              value={formData.full_name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-                {/* Full Name */}
-                <div className="input-container">
-                    <input
-                        type="text"
-                        name="full_name"
-                        placeholder="Full Name"
-                        value={formData.full_name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+          {/* User Type */}
+          <div className="input-container">
+            <label htmlFor="user_type">User Type:</label>
+            <select
+              name="user_type"
+              value={formData.user_type}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select User Type</option>
+              <option value="job_seeker">Job Seeker</option>
+              <option value="employer">Employer</option>
+            </select>
+          </div>
 
-                {/* User Type */}
-                <div className="input-container">
-                    <label htmlFor="user_type">User Type:</label>
-                    <select
-                        name="user_type"
-                        value={formData.user_type}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Select User Type</option>
-                        <option value="job_seeker">Job Seeker</option>
-                        <option value="employer">Employer</option>
-                    </select>
-                </div>
+          {/* Password */}
+          <div className="input-container">
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <span
+                className="toggle-password-icon"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? "🔒" : "🔓"}
+              </span>
+            </div>
+          </div>
 
-                {/* Password */}
-                <div className="input-container">
-                    <div className="password-container">
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            placeholder="Password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                        <span className="toggle-password-icon" onClick={togglePasswordVisibility}>
-                            {showPassword ? "🔒" : "🔓"}
-                        </span>
-                    </div>
-                </div>
+          {!isPasswordValid && (
+            <p style={{ color: "red" }}>
+              Password must be at least 8 characters long and contain at least
+              one letter, one number, and one special character.
+            </p>
+          )}
 
-                {!isPasswordValid && (
-                    <p style={{ color: "red" }}>
-                        Password must be at least 8 characters long and contain at least one letter, one number, and one special character.
-                    </p>
-                )}
+          {/* Confirm Password */}
+          <div className="input-container">
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+              <span
+                className="toggle-password-icon"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? "🔒" : "🔓"}
+              </span>
+            </div>
+          </div>
 
-                {/* Confirm Password */}
-                <div className="input-container">
-                    <div className="password-container">
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            name="confirmPassword"
-                            placeholder="Confirm Password"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            required
-                        />
-                        <span className="toggle-password-icon" onClick={togglePasswordVisibility}>
-                            {showPassword ? "🔒" : "🔓"}
-                        </span>
-                    </div>
-                </div>
+          {!passwordMatch && (
+            <p style={{ color: "red" }}>Passwords do not match!</p>
+          )}
 
-                {!passwordMatch && <p style={{ color: "red" }}>Passwords do not match!</p>}
-
-
-                {/* Profile Type Selection */}
-                <div className="profile-type-container">
-                    <label>
-                        <input
-                            type="radio"
-                            name="profileType"
-                            value="Employer"
-                            checked={formData.profileType === "Employer"}
-                            onChange={handleChange}
-                            required
-                        />
-                        Employer
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="profileType"
-                            value="Job Seeker"
-                            checked={formData.profileType === "Job Seeker"}
-                            onChange={handleChange}
-                            required
-                        />
-                        Job Seeker
-                    </label>
-                    {!profileSelected && <p style={{ color: "red" }}>Please select a profile type.</p>}
-                </div>
-
-                <button type="submit" className="register-btn" disabled={usernameTaken || emailTaken || !profileSelected}> Register
-                </button>
-            </form>
-        </div>
-    );
+          <button type="submit" className="register-btn">
+            Register
+          </button>
+        </form>
+      )}
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+    </div>
+  );
 }
 
 export default Register;
