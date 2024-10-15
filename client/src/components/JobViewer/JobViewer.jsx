@@ -1,23 +1,21 @@
 // /client/src/components/jobviewer/JobViewer.jsx
-import React, { useState, useEffect } from 'react';
-import './JobViewer.css'
-
+import React, { useState, useEffect } from "react";
+import "./JobViewer.css";
 
 const JobViewer = () => {
-  const [jobs, setJobs] = useState([]); // Store all job postings
-  const [currentIndex, setCurrentIndex] = useState(0); // Track current job index
+  const [jobs, setJobs] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // Fetch job postings from the backend (Flask)
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/jobs');
+        const response = await fetch("http://localhost:5000/api/jobs");
         const data = await response.json();
         setJobs(data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching jobs:', error);
+        console.error("Error fetching jobs:", error);
         setLoading(false);
       }
     };
@@ -51,10 +49,18 @@ const JobViewer = () => {
     <div className="job-viewer">
       <div className="job-card">
         <h3>{currentJob.job_title}</h3>
-        <p><strong>Company:</strong> {currentJob.company}</p>
-        <p><strong>Location:</strong> {currentJob.location}</p>
-        <p><strong>Salary:</strong> {currentJob.salary_range}</p>
-        <p><strong>Required Skills:</strong> {currentJob.required_skills}</p>
+        <p>
+          <strong>Company:</strong> {currentJob.company}
+        </p>
+        <p>
+          <strong>Location:</strong> {currentJob.location}
+        </p>
+        <p>
+          <strong>Salary:</strong> {currentJob.salary_range}
+        </p>
+        <p>
+          <strong>Required Skills:</strong> {currentJob.required_skills}
+        </p>
         <p>{currentJob.description}</p>
       </div>
 
