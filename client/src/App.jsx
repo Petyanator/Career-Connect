@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 // import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -21,15 +21,22 @@ import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
 function App() {
   const [profileData, setProfileData] = useState(null);
   const [employerProfileData, setEmployerProfileData] = useState(null);
-  const { token, removeToken } = UserToken(); // State for user token
+  const { token, setToken } = UserToken(); // State for user token
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!token); // Update state based on whether a token exists
+  }, [token]);
+
   const handleLogout = () => {
-    removeToken(); // Clear the token on logout
+    setToken(null); // Clear the token
+    setIsLoggedIn(false); // Update the login state
   };
   return (
     <>
       <BrowserRouter>
-        <NavBar token={token} onLogout={handleLogout} />
-        {/* Pass token and logout handler to NavBar */}
+        <NavBar isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/aboutus" element={<AboutUs />} />
@@ -58,7 +65,11 @@ function App() {
               <EmployerProfileView employerProfileData={employerProfileData} />
             }
           />
-          <Route path="/login" element={<Login />} />
+
+          <Route
+            path="/login"
+            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+          />
           <Route path="/register" element={<Register />} />
           <Route
             path="/job-seeker-dashboard"
