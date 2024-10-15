@@ -1,15 +1,15 @@
-// /client/src/components/jobposting/JobPosting.jsx
 import React, { useState } from 'react';
-import './JobPosting.css'
+import './JobPosting.css';
 
 const JobPosting = () => {
   const [formData, setFormData] = useState({
-    jobTitle: '',
-    company: '',
-    salaryRange: '',
-    location: '',
-    requiredSkills: '',
-    description: '',
+    job_posting_id: null,
+    employer_id: null,  // Add job_posting_id as null
+    title: '',              // Updated to match the model's title
+    salary: '',             // Updated to match the model's salary
+    location: '',           // Matches the model's location
+    skills: '',             // Updated to match the model's skills
+    description: '',        // Matches the model's description
   });
 
   // Handle input changes
@@ -27,18 +27,19 @@ const JobPosting = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData),  // Send the form data as JSON
       });
 
       const data = await response.json();
       if (response.ok) {
         alert('Job posted successfully!');
         setFormData({
-          jobTitle: '',
-          company: '',
-          salaryRange: '',
+          job_posting_id: null,
+          employer_id: null,  // Reset job_posting_id
+          title: '',              // Reset to initial state
+          salary: '',
           location: '',
-          requiredSkills: '',
+          skills: '',
           description: '',
         });
       } else {
@@ -51,40 +52,64 @@ const JobPosting = () => {
   };
 
   return (
-    <div className = "container">
-    <form onSubmit={handleSubmit} className = "formJobPosting">
-      <div>
-        <label>Job Title:</label>
-        <input type="text" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
-      </div>
+    <div className="container">
+      <form onSubmit={handleSubmit} className="formJobPosting">
+        <div>
+          <label>Job Title:</label>
+          <input
+            type="text"
+            name="title"  // Match model's title
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Company:</label>
-        <input type="text" name="company" value={formData.company} onChange={handleChange} required />
-      </div>
+        <div>
+          <label>Salary:</label>
+          <input
+            type="text"
+            name="salary"  // Match model's salary
+            value={formData.salary}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Salary Range:</label>
-        <input type="text" name="salaryRange" value={formData.salaryRange} onChange={handleChange} required />
-      </div>
+        <div>
+          <label>Location:</label>
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Location:</label>
-        <input type="text" name="location" value={formData.location} onChange={handleChange} required />
-      </div>
+        <div>
+          <label>Skills:</label>
+          <input
+            type="text"
+            name="skills"  // Match model's skills
+            value={formData.skills}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Required Skills:</label>
-        <input type="text" name="requiredSkills" value={formData.requiredSkills} onChange={handleChange} required />
-      </div>
+        <div>
+          <label>Description:</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-      <div>
-        <label>Description:</label>
-        <textarea name="description" value={formData.description} onChange={handleChange} required />
-      </div>
-
-      <button type="submit">Post Job</button>
-    </form>
+        <button type="submit">Post Job</button>
+      </form>
     </div>
   );
 };

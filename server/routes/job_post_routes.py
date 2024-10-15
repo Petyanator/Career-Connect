@@ -1,6 +1,6 @@
 # /server/routes/job_post_routes.py
 from flask import Blueprint, request, jsonify
-from models.models import JobPosting  # Assuming your JobPosting model is defined here
+from models.models import JobPosting, Application  # Assuming your JobPosting model is defined here
 from app import app, db
 
 # job_post_routes = Blueprint('job_post_routes', __name__)
@@ -17,28 +17,32 @@ def create_job_posting():
     data = request.get_json()
 
     # Simple validation (you can enhance this)
-    required_fields = ['jobTitle', 'company', 'salaryRange', 'location', 'requiredSkills', 'description']
-    if not all(field in data and data[field] for field in required_fields):
+    required_fields = ['title', 'salary', 'location', 'skills', 'description']
+    if not all(field in data and data[field] is not None for field in required_fields):
         return jsonify({'message': 'Missing required fields'}), 400
 
-    # Create a new job posting instance using SQLAlchemy (Make sure to install)
+    # Create a new job posting instance using SQLAlchemy
     new_job_post = JobPosting(
-        job_title=data['jobTitle'],
-        company=data['company'],
-        salary_range=data['salaryRange'],
-        location=data['location'],
-        required_skills=data['requiredSkills'],
-        description=data['description']
+        job_posting_id=data['job_posting_id'],
+        employer_id=data['employer_id'],  # Set the job posting ID (can be null)
+        title=data['title'],                     # Set the title of the job posting
+        salary=data['salary'],                   # Set the salary of the job
+        location=data['location'],               # Set the location of the job
+        skills=data['skills'],                   # Set the required skills for the job
+        description=data['description']          # Set the description of the job
     )
 
     # Save to the database
     try:
-        db.session.add(new_job_post)
-        db.session.commit()
-        return jsonify({'message': 'Job posted successfully!'}), 201
+        db.session.add(new_job_post)  # Add the new job posting to the current session
+        db.session.commit()            # Commit the session to save changes to the database
+
+        return jsonify({'message': 'Job posted successfully!', 'job': new_job_post.to_json()}), 201
     except Exception as e:
-        db.session.rollback()
+        db.session.rollback()           # Rollback the session in case of error
         return jsonify({'message': f'Error occurred: {str(e)}'}), 500
+
+
 
 
 # /server/routes/job_post_routes.py
@@ -47,9 +51,8 @@ def get_job_postings():
     try:
         jobs = JobPosting.query.all()
         jobs_list = [{
-            'id': job.id,
+            'job_posting_id': job.job_posting_id,
             'job_title': job.job_title,
-            'company': job.company,
             'salary_range': job.salary_range,
             'location': job.location,
             'required_skills': job.required_skills,
