@@ -17,16 +17,21 @@ def create_profile():
     try:
         # Get JSON data from request
         data = request.get_json()
+        # print test
+        print(f"data = {data}")
+
 
         # Get user_id from JWT
         user_id = get_jwt_identity()
+
+        #print test
         print(f"user_id from JWT: {user_id}")
-        print(f"Data received: {data}")
 
         # Validate required fields
         required_fields = ['first_name', 'last_name', 'dob', 'gender', 'nationality', 'education', 'skills']
         for field in required_fields:
             if not data.get(field):
+                print(f"Missing the fields: {field}")
                 return jsonify({'error': f'Missing required field: {field}'}), 400
 
         # Extract fields from request data

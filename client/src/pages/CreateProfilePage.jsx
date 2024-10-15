@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './CreateProfilePage.css';
 import { FaPlus } from 'react-icons/fa';
+import UserToken from '../components/Token/UserToken';  // Import the UserToken hook
 
 function CreateProfilePage({ setProfileData }) {
     const [skills, setSkills] = useState([]);
@@ -112,7 +113,7 @@ function CreateProfilePage({ setProfileData }) {
             dob,
             gender,
             nationality,
-            education,  // Properly formatted for backend as a list of strings
+            education: educationFields.map(field => `${field.education} in ${field.degreeDetails} at ${field.institution}`),// Properly formatted for backend as a list of strings
             skills,  // Already a list of strings
         };
 
@@ -248,8 +249,8 @@ function CreateProfilePage({ setProfileData }) {
                                     <option value="">Select your education level</option>
                                     <option value="High School Diploma">High School Diploma</option>
                                     <option value="Skill Certification">Skill Certification</option>
-                                    <option value="Bachelor's Degree">Bachelor's Degree</option>
-                                    <option value="Master's Degree">Master's Degree</option>
+                                    <option value="Bachelors Degree">Bachelor's Degree</option>
+                                    <option value="Masters Degree">Master's Degree</option>
                                     <option value="PhD">PhD</option>
                                 </select>
 
