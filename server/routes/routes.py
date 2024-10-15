@@ -5,9 +5,9 @@ from models.models import JobPosting
 from datetime import datetime
 import re
 
-@app.route("/demo")
+@app.route("/")
 def hello():
-    return "hello"
+    return "hello. routes are working. "
 
 
 @app.route("/api/filter", methods=["GET"])
