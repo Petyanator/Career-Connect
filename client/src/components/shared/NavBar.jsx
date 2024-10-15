@@ -1,51 +1,52 @@
 import { Link } from "react-router-dom";
 import "./NavBar.css";
-// import { useState, useEffect } from "react";
-// import UserToken from "./UserToken";
-// import Logout from "./Logout";
 
-function NavBar() {
-  //   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  //   const { token, removeToken } = UserToken();
-
-  //   useEffect(() => {
-  //     if (token) {
-  //       setIsAuthenticated(true);
-  //     } else {
-  //       setIsAuthenticated(false);
-  //     }
-  //   }, [token]);
+function NavBar({ token, onLogout }) {
   return (
-    <>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/" className="navbar-link">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/aboutus" className="navbar-link">
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="navbar-link">
-                Register
-              </Link>
-            </li>
-            <li>
-              <Link to="/login" className="navbar-link">
-                Login
-              </Link>
-            </li>
-
-            {/* {isAuthenticated && <Logout removeToken={removeToken} />} */}
-          </ul>
-        </nav>
-      </div>
-    </>
+    <div>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/" className="navbar-link">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/aboutus" className="navbar-link">
+              About Us
+            </Link>
+          </li>
+          {token ? ( // If token exists, show logout and profile
+            <>
+              <li>
+                <Link to="/profile" className="navbar-link">
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <button onClick={onLogout} className="navbar-link">
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            // If no token, show register and login
+            <>
+              <li>
+                <Link to="/register" className="navbar-link">
+                  Register
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className="navbar-link">
+                  Login
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </nav>
+    </div>
   );
 }
 
