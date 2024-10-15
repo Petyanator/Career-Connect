@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import "./notifications.css";
+import "./notification.css"; // Import your notification.css
 
+// Initialize Socket.IO connection
 const socket = io("http://localhost:5000");
 
-const Notifications = () => {
-  const [notifications, setNotifications] = useState([]);
+const Notification = () => {
+  const [jobSeekerNotifications, setJobSeekerNotifications] = useState([]);
+  const [employerNotifications, setEmployerNotifications] = useState([]);
 
+  // Fetch notifications and listen to new notifications via Socket.IO
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetch("/api/notifications");
-        const data = await response.json();
-        setNotifications(data);
+        const jobSeekerResponse = await fetch("/api/notifications/job-seeker");
+        const jobSeekerData = await jobSeekerResponse.json();
+        setJobSeekerNotifications(jobSeekerData);
+
+        const employerResponse = await fetch("/api/notifications/employer");
+        const employerData = await employerResponse.json();
+        setEmployerNotifications(employerData);
       } catch (error) {
         console.error("Failed to fetch notifications", error);
       }
@@ -20,8 +27,13 @@ const Notifications = () => {
 
     fetchNotifications();
 
+    // Listen for real-time notifications
     socket.on("connect_request", (newNotification) => {
-      setNotifications((prev) => [newNotification, ...prev]);
+      if (newNotification.user_type === "job_seeker") {
+        setJobSeekerNotifications((prev) => [newNotification, ...prev]);
+      } else if (newNotification.user_type === "employer") {
+        setEmployerNotifications((prev) => [newNotification, ...prev]);
+      }
     });
 
     return () => {
@@ -31,18 +43,44 @@ const Notifications = () => {
   }, []);
 
   return (
-    <div className="notifications-container">
-      <h2>Notifications</h2>
-      <ul>
-        {notifications.map((notification, index) => (
-          <li key={index}>
-            <p>{notification.sender_name} sent you a connect request.</p>
-            <small>{new Date(notification.created_at).toLocaleString()}</small>
-          </li>
-        ))}
-      </ul>
+    <div className="notification-container">
+      {/* Job Seeker Notifications Section */}
+      <div className="job-seeker-notifications">
+        <h2>Job Seeker Notifications</h2>
+        <div className="notification-tabs">
+          <button className="tab">Connect</button>
+          <button className="tab">Pending</button>
+          <button className="tab">! (Alert)</button>
+        </div>
+        <div className="notification-list">
+          {jobSeekerNotifications.map((notification, index) => (
+            <div key={index} className="notification-item">
+              {notification.message}
+              <small>
+                {new Date(notification.created_at).toLocaleString()}
+              </small>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Employer Notifications Section */}
+      <div className="employer-notifications">
+        <h2>Employer Notifications</h2>
+        <div className="notification-list">
+          {employerNotifications.map((notification, index) => (
+            <div key={index} className="notification-item">
+              Job Post Application{" "}
+              <span className="notification-number">{index + 1}</span>
+              <small>
+                {new Date(notification.created_at).toLocaleString()}
+              </small>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Notifications;
+export default Notification;

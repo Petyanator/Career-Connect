@@ -1,49 +1,61 @@
-/* notifications.css */
-.notifications-container {
-  max-width: 600px;
-  margin: 0 auto;
+.notification-container {
+  display: flex;
+  justify-content: space-between;
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.notifications-container h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
+.job-seeker-notifications,
+.employer-notifications {
+  width: 45%;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-.notifications-container ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.notifications-container ul li {
-  padding: 15px;
+.notification-tabs {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  background-color: #fff;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
 }
 
-.notifications-container ul li:hover {
-  background-color: #f0f0f0;
+.tab {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  background-color: #f4f4f4;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
-.notifications-container ul li p {
-  font-size: 16px;
-  color: #555;
-  margin: 0;
+.tab:hover {
+  background-color: #ddd;
 }
 
-.notifications-container ul li small {
+.notification-list {
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-number {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-weight: bold;
+}
+
+small {
   display: block;
-  margin-top: 5px;
   font-size: 12px;
   color: #999;
-  text-align: right;
 }
