@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './CreateProfilePage.css';
-import { FaPlus } from 'react-icons/fa'; // Add Font Awesome plus icon
+import { FaPlus } from 'react-icons/fa';
 
 function CreateProfilePage({ setProfileData }) {
     const [skills, setSkills] = useState([]);
@@ -10,14 +10,14 @@ function CreateProfilePage({ setProfileData }) {
     const [selectedImage, setSelectedImage] = useState(null);
     const [educationFields, setEducationFields] = useState([
         { education: '', degreeDetails: '', institution: '' }
-    ]); // For multiple education inputs
+    ]);
     const [gender, setGender] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [dob, setDob] = useState('');
     const [nationality, setNationality] = useState('');
 
-    // Validation states for all inputs including new education inputs
+    // Validation states
     const [firstNameValid, setFirstNameValid] = useState(true);
     const [lastNameValid, setLastNameValid] = useState(true);
     const [dobValid, setDobValid] = useState(true);
@@ -30,66 +30,6 @@ function CreateProfilePage({ setProfileData }) {
     const [isButtonShrinking, setIsButtonShrinking] = useState(false);
 
     const navigate = useNavigate();
-
-    // Handle particle effect
-    useEffect(() => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
-        script.async = true;
-        document.body.appendChild(script);
-
-        script.onload = () => {
-            window.particlesJS('particles-js', {
-                particles: {
-                    number: {
-                        value: 80,
-                        density: { enable: true, value_area: 800 },
-                    },
-                    color: { value: '#ffffff' },
-                    shape: {
-                        type: 'circle',
-                        stroke: { width: 0, color: '#000000' },
-                        polygon: { nb_sides: 5 },
-                    },
-                    opacity: { value: 0.5, anim: { enable: false } },
-                    size: { value: 3, random: true, anim: { enable: false } },
-                    line_linked: {
-                        enable: true,
-                        distance: 150,
-                        color: '#ffffff',
-                        opacity: 0.4,
-                        width: 1,
-                    },
-                    move: {
-                        enable: true,
-                        speed: 6,
-                        direction: 'none',
-                        random: false,
-                        straight: false,
-                        out_mode: 'out',
-                        bounce: false,
-                    },
-                },
-                interactivity: {
-                    detect_on: 'canvas',
-                    events: {
-                        onhover: { enable: true, mode: 'grab' },
-                        onclick: { enable: true, mode: 'push' },
-                    },
-                    modes: {
-                        grab: { distance: 140, line_linked: { opacity: 1 } },
-                        bubble: { distance: 400, size: 40 },
-                        repulse: { distance: 200 },
-                    },
-                },
-                retina_detect: true,
-            });
-        };
-
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, []);
 
     // Handle skill input
     const handleSkillChange = (e) => {
@@ -113,7 +53,7 @@ function CreateProfilePage({ setProfileData }) {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setSelectedImage(URL.createObjectURL(file));
+            setSelectedImage(file); // Store the File object
         }
     };
 
@@ -133,7 +73,7 @@ function CreateProfilePage({ setProfileData }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validatiom
+        // Validation
         const isFirstNameValid = !!firstName;
         const isLastNameValid = !!lastName;
         const isDobValid = !!dob;
@@ -153,43 +93,42 @@ function CreateProfilePage({ setProfileData }) {
             return;
         }
 
-        // Assume you have access to the current user's ID
-        const user_id = currentUser.id; // Replace with your actual user ID retrieval logic
-
         // Convert selectedImage to base64 if necessary
         let profile_pic = null;
         if (selectedImage) {
-            // Check if selectedImage is a File object
-            if (selectedImage instanceof File) {
-                profile_pic = await convertImageToBase64(selectedImage);
-            } else {
-                // If it's already a base64 string or URL
-                profile_pic = selectedImage;
-            }
+            profile_pic = await convertImageToBase64(selectedImage);
         }
 
         // Prepare education data
-        // If educationFields is an array, convert it to a list or keep as is
-        const education = educationFields; // Assuming it's in the correct format
+        const education = educationFields.map(field => {
+            const { education, degreeDetails, institution } = field;
+            return `${education} in ${degreeDetails} at ${institution}`;
+        });
 
         const profileData = {
-            user_id,
             profile_pic,
             first_name: firstName,
             last_name: lastName,
             dob,
             gender,
             nationality,
-            education,
-            skills,
+            education,  // Properly formatted for backend as a list of strings
+            skills,  // Already a list of strings
         };
 
         setProfileData(profileData);
         setIsButtonShrinking(true);
 
         try {
+            // Retrieve JWT token from storage (adjust as needed)
+            const token = localStorage.getItem('jwtToken'); // Ensure the token is correctly stored
+
             // Send data to the backend
-            const response = await axios.post('http://your_backend_url/api/job_seeker/create_profile', profileData);
+            const response = await axios.post('http://localhost:5000/api/job_seeker/create_profile', profileData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
 
             if (response.status === 201) {
                 // Success
@@ -225,7 +164,7 @@ function CreateProfilePage({ setProfileData }) {
 
     return (
         <div>
-            {/* Div for particle effect */}
+            {/* Particle effect container */}
             <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div>
 
             {/* Form section */}
@@ -233,14 +172,16 @@ function CreateProfilePage({ setProfileData }) {
                 {showForm && (
                     <form onSubmit={handleSubmit}>
                         <h1>Create Your Profile</h1>
+                        {/* Profile Picture */}
                         <label htmlFor="profile-picture">Profile Picture:</label>
                         <input type="file" accept="image/jpeg, image/png" id="profile-picture" onChange={handleImageChange} />
                         {selectedImage && (
                             <div className="image-preview">
-                                <img src={selectedImage} alt="Profile Preview" style={{ width: '100px', height: '80px' }} />
+                                <img src={URL.createObjectURL(selectedImage)} alt="Profile Preview" style={{ width: '100px', height: '80px' }} />
                             </div>
                         )}
 
+                        {/* First Name */}
                         <label htmlFor="first-name">First Name:</label>
                         <input
                             type="text"
@@ -251,16 +192,18 @@ function CreateProfilePage({ setProfileData }) {
                             className={!firstNameValid ? 'invalid-input' : ''}
                         />
 
-                        <label htmlFor="second-name">Second Name:</label>
+                        {/* Last Name */}
+                        <label htmlFor="last-name">Last Name:</label>
                         <input
                             type="text"
-                            id="second-name"
-                            placeholder="Second name"
+                            id="last-name"
+                            placeholder="Last name"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
                             className={!lastNameValid ? 'invalid-input' : ''}
                         />
 
+                        {/* Date of Birth */}
                         <label htmlFor="dob">Date of Birth:</label>
                         <input
                             type="date"
@@ -270,6 +213,7 @@ function CreateProfilePage({ setProfileData }) {
                             className={!dobValid ? 'invalid-input' : ''}
                         />
 
+                        {/* Gender */}
                         <label>Gender:</label>
                         <div className={`gender-input ${!genderValid ? 'invalid-input' : ''}`}>
                             <label>
@@ -280,6 +224,7 @@ function CreateProfilePage({ setProfileData }) {
                             </label>
                         </div>
 
+                        {/* Nationality */}
                         <label htmlFor="nationality">Nationality:</label>
                         <input
                             type="text"
@@ -290,9 +235,10 @@ function CreateProfilePage({ setProfileData }) {
                             className={!nationalityValid ? 'invalid-input' : ''}
                         />
 
+                        {/* Education Fields */}
                         {educationFields.map((field, index) => (
                             <div key={index} className="education-section">
-                                <label htmlFor={`education-${index}`}>Education:</label>
+                                <label htmlFor={`education-${index}`}>Education Level:</label>
                                 <select
                                     id={`education-${index}`}
                                     name="education"
@@ -337,6 +283,7 @@ function CreateProfilePage({ setProfileData }) {
                             <FaPlus /> Add Education
                         </button>
 
+                        {/* Skills */}
                         <label htmlFor="skills">Skills (Add at least 3):</label>
                         <div className={`skills-input ${!skillsValid ? 'invalid-input' : ''}`}>
                             <input
@@ -359,6 +306,7 @@ function CreateProfilePage({ setProfileData }) {
                             ))}
                         </div>
 
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             className={`submit-btn ${isButtonShrinking ? 'shrinking' : ''}`}
@@ -368,6 +316,7 @@ function CreateProfilePage({ setProfileData }) {
                     </form>
                 )}
 
+                {/* Success Overlay */}
                 {showOverlay && (
                     <div className="overlay show">
                         <i className="fas fa-check"></i>
@@ -375,8 +324,7 @@ function CreateProfilePage({ setProfileData }) {
                 )}
             </div>
         </div>
-    )
+    );
 }
-
 
 export default CreateProfilePage;

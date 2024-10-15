@@ -46,12 +46,10 @@ def register_user():
     db.session.commit()
 
     # Create an access token for the new user
-    access_token = create_access_token(identity=username)
+    access_token = create_access_token(identity=new_user.user_id)  # Use user_id as identity
 
     # Return the new user and access token
     return jsonify({"user": new_user.to_json(), "access_token": access_token}), 201
-
-
 
 
 @app.route("/login", methods=["POST"])
@@ -70,7 +68,7 @@ def login_user():
         return jsonify({"error": "Invalid username or password"}), 401
 
     # Generate access token after successful login
-    access_token = create_access_token(identity=username)
+    access_token = create_access_token(identity=user.user_id)  # Use user_id as identity
     print(access_token)
     return jsonify({"access_token": access_token, "message": "Login successful"}), 200
 
@@ -94,6 +92,6 @@ def create_token():
     if not bcrypt.check_password_hash(user.password, data.get("password")):
         return jsonify({"error": "Invalid password"}), 401
 
-    access_token = create_access_token(identity=user.user_id)
+    access_token = create_access_token(identity=user.user_id)  # Use user_id as identity
 
     return jsonify({"access_token": access_token}), 200
