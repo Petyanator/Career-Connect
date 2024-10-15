@@ -3,11 +3,6 @@ from app import app,db, bcrypt
 from flask import jsonify, request
 from models.models import JobPosting
 from datetime import datetime
-import re
-
-@app.route("/demo")
-def hello():
-    return "hello"
 
 
 @app.route("/api/filter", methods=["GET"])

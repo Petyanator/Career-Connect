@@ -69,8 +69,11 @@ def login_user():
 
     # Generate access token after successful login
     access_token = create_access_token(identity=user.user_id)  # Use user_id as identity
-    print(access_token)
-    return jsonify({"access_token": access_token, "message": "Login successful"}), 200
+    user_type = user.user_type  # Get user type from the user object
+
+    # Return the access token and user type in the response
+    return jsonify({"access_token": access_token, "user_type": user_type, "message": "Login successful"}), 200
+    
 
 
 @app.route("/logout", methods=["POST"])

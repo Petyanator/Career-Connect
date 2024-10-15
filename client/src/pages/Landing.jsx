@@ -26,12 +26,16 @@ function Landing() {
 
   return (
     <>
-      <div className="landing-container">
-        <img src={"./src/components/pictures/banner2.jpg"} alt="Banner" />
+      <div className="landing-page-container">
+        <img
+          src={"./src/components/pictures/banner2.jpg"}
+          alt="Career Connect Banner"
+          className="landing-banner"
+        />
         <div className="landing-overlay">
-          <h1>Career Connect</h1>
+          <h1 className="landing-title">Career Connect</h1>
           <button
-            className="start-now-btn"
+            className="landing-start-now-button"
             onClick={() => navigate("/register")}
           >
             Start Now
@@ -39,118 +43,85 @@ function Landing() {
         </div>
       </div>
 
-      <div className="user-reviews">
+      <div className="user-reviews-section">
         {/* Left Arrow */}
-        <div className="arrow-container">
-          <button className="scroll-arrow left-arrow" onClick={scrollLeft}>
-            &#8592;
+        <div className="reviews-arrow-container">
+          <button
+            className="reviews-scroll-arrow left-arrow"
+            onClick={scrollLeft}
+          >
+            &#8592; {/* Left Arrow */}
           </button>
 
           {/* Reviews Wrapper */}
-          <div className="reviews-wrapper" ref={reviewsWrapperRef}>
-            <div className="review-card">
-              <div className="review">
-                <p>{"Career Connect helped me land my dream job!"}</p>
-                <p>-John Doe</p>
+          <div className="reviews-container" ref={reviewsWrapperRef}>
+            {/* Review Cards */}
+            {[
+              "Career Connect helped me land my dream job!",
+              "A fantastic platform for connecting professionals.",
+              "I love the simple interface.",
+              "Their resources helped me sharpen my resume.",
+              "Great customer support and easy-to-use platform!",
+            ].map((review, index) => (
+              <div className="review-card" key={index}>
+                <div className="review-text">
+                  <p>{review}</p>
+                  <p>-User {index + 1}</p>
+                </div>
               </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"A fantastic platform for connecting professionals."}</p>
-                <p>-Jane Smith</p>
-              </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"I love the simple interface."}</p>
-                <p>-Michael Lee</p>
-              </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"Their resources helped me sharpen my resume."}</p>
-                <p>-Sarah Connor</p>
-              </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"Great customer support and easy-to-use platform!"}</p>
-                <p>-David Kim</p>
-              </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"Career Connect helped me land my dream job!"}</p>
-                <p>-John Doe</p>
-              </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"A fantastic platform for connecting professionals."}</p>
-                <p>-Jane Smith</p>
-              </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"I love the simple interface."}</p>
-                <p>-Michael Lee</p>
-              </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"Their resources helped me sharpen my resume."}</p>
-                <p>-Sarah Connor</p>
-              </div>
-            </div>
-            <div className="review-card">
-              <div className="review">
-                <p>{"Great customer support and easy-to-use platform!"}</p>
-                <p>-David Kim</p>
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* Right Arrow */}
-          <button className="scroll-arrow right-arrow" onClick={scrollRight}>
-            &#8594;
+          <button
+            className="reviews-scroll-arrow right-arrow"
+            onClick={scrollRight}
+          >
+            &#8594; {/* Right Arrow */}
           </button>
         </div>
       </div>
+
       {/* Companies Section */}
-      <div className="companies">
-        <h2>Companies we have worked with:</h2>
-        <div className="logos-container">
-          <div className="companies-logo">Google</div>
-          <div className="companies-logo">Amazon</div>
-          <div className="companies-logo">Facebook</div>
-          <div className="companies-logo">Microsoft</div>
+      <div className="partner-companies-section">
+        <h2 className="partner-companies-title">
+          Companies we have worked with:
+        </h2>
+        <div className="companies-logos-container">
+          {["Google", "Amazon", "Facebook", "Microsoft"].map(
+            (company, index) => (
+              <div className="company-logo" key={index}>
+                {company}
+              </div>
+            )
+          )}
         </div>
       </div>
 
       {/* Site Map / Footer */}
-      <div className="site-map">
-        <div className="legal-list">
-          <h3>Legal</h3>
-          <ul>
-            <li>Privacy</li>
-            <li>Consumer Health Data</li>
-            <li>Privacy Policy</li>
-            <li>Terms</li>
-            <li>Intellectual Property</li>
+      <div className="footer-site-map">
+        <div className="footer-legal-list">
+          <h3 className="footer-title">Legal</h3>
+          <ul className="footer-list">
+            <li className="footer-list-item">Privacy</li>
+            <li className="footer-list-item">Consumer Health Data</li>
+            <li className="footer-list-item">Privacy Policy</li>
+            <li className="footer-list-item">Terms</li>
+            <li className="footer-list-item">Intellectual Property</li>
           </ul>
         </div>
-        <div className="career-list">
-          <h3>Careers</h3>
-          <ul>
-            <li>Career Portal</li>
-            <li>Tech Blog</li>
+        <div className="footer-careers-list">
+          <h3 className="footer-title">Careers</h3>
+          <ul className="footer-list">
+            <li className="footer-list-item">Career Portal</li>
+            <li className="footer-list-item">Tech Blog</li>
           </ul>
         </div>
-        <div className="faq-list">
-          <h3>FAQ</h3>
-          <ul>
-            <li>Frequently Asked</li>
-            <li>Contact</li>
+        <div className="footer-faq-list">
+          <h3 className="footer-title">FAQ</h3>
+          <ul className="footer-list">
+            <li className="footer-list-item">Frequently Asked</li>
+            <li className="footer-list-item">Contact</li>
           </ul>
         </div>
       </div>
