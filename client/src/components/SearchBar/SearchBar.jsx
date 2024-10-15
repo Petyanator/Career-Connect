@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './SearchBar.css';  // Import the CSS file
+import './SearchBar.css'; // Import your CSS for styling
 
 function SearchAndFilterSystem() {
     const [input, setInput] = useState("");
@@ -7,44 +7,85 @@ function SearchAndFilterSystem() {
     const [location, setLocation] = useState("");
     const [requiredSkills, setRequiredSkills] = useState("");
     const [results, setResults] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Fetch job postings from the database
-    const fetchJobPostings = async () => {
+    const getTokenFromLocalStorage = () => {
+        return localStorage.getItem('token'); // Replace 'token' with your key if different
+    };
+
+    const buildQueryParams = () => {
+        const query = new URLSearchParams();
+        if (input.trim()) query.append("job_title", input);
+        if (salaryRange.trim()) query.append("salary_range", salaryRange);
+        if (location.trim()) query.append("location", location);
+        if (requiredSkills.trim()) query.append("required_skills", requiredSkills);
+        console.log("Query Params:", query.toString()); // Debugging log
+        return query.toString();
+    };
+
+    const fetchFilteredJobPostings = async () => {
         setLoading(true);
+        setError(null);
+
+        const token = getTokenFromLocalStorage();
+        console.log("Authorization Token:", token); // Debugging log
+
+        if (!token) {
+            setError("Authorization token is missing");
+            setLoading(false);
+            return;
+        }
+
         try {
-            const response = await fetch(`http://127.0.0.1:5000/api/job_postings`); // Adjust endpoint as needed
-            if (!response.ok) throw new Error("Failed to fetch job postings");
+            const queryString = buildQueryParams();
+            const response = await fetch(`http://127.0.0.1:5000/api/filter?${queryString}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to fetch job postings");
+            }
+
             const json = await response.json();
-            setResults(json);  // Set the results from the database
-            setCurrentIndex(0);  // Reset to the first result
+            setResults(json);
         } catch (error) {
             setError(error.message);
-            setResults([]);
+            setResults([]); // Clear results on error
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchJobPostings(); // Fetch job postings on component mount
+        fetchFilteredJobPostings(); // Fetch jobs on mount
     }, []);
 
     const handleFilterSubmit = (e) => {
         e.preventDefault();
-        // You can implement filtering logic here if needed
+        fetchFilteredJobPostings(); // Fetch results based on filter inputs
+    };
+
+    const handleClearFilters = () => {
+        setInput("");
+        setSalaryRange("");
+        setLocation("");
+        setRequiredSkills("");
+        setResults([]); // Clear results when filters are reset
     };
 
     return (
         <div className="search-container">
             <form className="filter-form" onSubmit={handleFilterSubmit}>
-                <div className='form-group'>
-                    <label htmlFor="jobTitle" className='form-label'>Job Title:</label>
+                <div className="form-group">
+                    <label htmlFor="jobTitle" className="form-label">Job Title:</label>
                     <input
                         type="text"
-                        id='jobTitle'
+                        id="jobTitle"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Search for job titles..."
@@ -57,9 +98,9 @@ function SearchAndFilterSystem() {
                         type="text"
                         id="salaryRange"
                         value={salaryRange}
-                        className="form-input"
                         onChange={(e) => setSalaryRange(e.target.value)}
                         placeholder="Enter salary range (e.g., 50K - 70K)"
+                        className="form-input"
                     />
                 </div>
                 <div className="form-group">
@@ -68,9 +109,9 @@ function SearchAndFilterSystem() {
                         type="text"
                         id="location"
                         value={location}
-                        className="form-input"
                         onChange={(e) => setLocation(e.target.value)}
                         placeholder="Enter location"
+                        className="form-input"
                     />
                 </div>
                 <div className="form-group">
@@ -79,20 +120,22 @@ function SearchAndFilterSystem() {
                         type="text"
                         id="requiredSkills"
                         value={requiredSkills}
-                        className="form-input"
                         onChange={(e) => setRequiredSkills(e.target.value)}
                         placeholder="Enter required skills"
+                        className="form-input"
                     />
                 </div>
                 <button type="submit" className="form-button">Search</button>
+                <button type="button" className="form-button" onClick={handleClearFilters}>Clear</button>
             </form>
 
-            {loading && <p className="loading-message">Loading...</p>}
-            {error && <p className="error-message">{error}</p>}
+            {loading && <p>Loading...</p>}
+            {error && <p className="error">{error}</p>}
+            {!loading && results.length === 0 && <p>No job postings found.</p>}
 
             {results.length > 0 && (
                 <div className="result-cards-container">
-                    {results.map((job, index) => (
+                    {results.map((job) => (
                         <div className="result-card" key={job.job_posting_id}>
                             <h3>{job.title}</h3>
                             <p><strong>Location:</strong> {job.location}</p>

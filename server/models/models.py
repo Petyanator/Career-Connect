@@ -67,15 +67,15 @@ class JobSeeker(db.Model):
 
 class JobPosting(db.Model):
     __tablename__ = "job_posting"
-    job_posting_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    job_posting_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     employer_id = db.Column(db.Integer, db.ForeignKey("employer.employer_id"))
-    title = db.Column(db.String(255), nullable = False)
-    salary = db.Column(db.String(255), nullable = False)
-    location = db.Column(db.String(255), nullable = False)
-    skills = db.Column(db.Text, nullable = False)
-    description = db.Column(db.Text, nullable = False)
-    created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
-    updated_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
+    title = db.Column(db.String(255), nullable=False)
+    salary = db.Column(db.String(255), nullable=False)
+    location = db.Column(db.String(255), nullable=False)
+    skills = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, server_default=db.func.now(), onupdate=db.func.now())  # Automatically update on modification
 
     def to_json(self):
         return {
@@ -89,19 +89,21 @@ class JobPosting(db.Model):
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }
+
     def __repr__(self):
-        return f'<JobPosting {self.job_title}>'
+        return f'<JobPosting {self.title}>'  # Corrected to access title
 
     def to_dict(self):
         return {
             'job_posting_id': self.job_posting_id,
             'employer_id': self.employer_id,
-            'job_title': self.job_title,
-            'salary_range': self.salary_range,
+            'title': self.title,  # Corrected to match field name
+            'salary': self.salary,  # Corrected to match field name
             'location': self.location,
-            'required_skills': self.required_skills,
+            'skills': self.skills,  # Corrected to match field name
             'description': self.description
         }
+
 
     class Employer(db.Model):
         __tablename__ = "employer"
