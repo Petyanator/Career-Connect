@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
 import "./Login.css";
 import UserToken from "../Token/UserToken.jsx";
 
@@ -7,6 +8,7 @@ function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loginError, setLoginError] = useState("");
   const { setToken } = UserToken();
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,14 +24,27 @@ function Login() {
       );
       if (response.status === 200) {
         const accessToken = response.data.access_token;
+        const userType = response.data.user_type; // Assuming user_type is returned by the API
+
+        console.log("User Type:", userType); // Log userType for debugging
+        console.log("accesstoken:", accessToken); // Log userType for debugging
+
         if (accessToken) {
           setToken(accessToken);
-          window.location.href = "/"; // Redirect to home page
+
+          // Redirect to the appropriate dashboard based on user type
+          if (userType === "job_seeker") {
+            navigate("/job-seeker-dashboard");
+          } else if (userType === "employer") {
+            navigate("/employer-dashboard");
+          } else {
+            setLoginError("User type is not recognized.");
+          }
         } else {
           setLoginError("Failed to retrieve access token.");
         }
       } else {
-        setLoginError("Invalid username or password");
+        setLoginError("Invalid username or password.");
       }
     } catch (error) {
       console.error("Login error:", error); // Log the error for debugging

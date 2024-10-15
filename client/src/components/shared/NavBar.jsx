@@ -19,8 +19,8 @@ function NavBar({ token, onLogout }) {
           {token ? ( // If token exists, show logout and profile
             <>
               <li>
-                <Link to="/profile" className="navbar-link">
-                  Profile
+                <Link to="/dashboard" className="navbar-link">
+                  Dashboard
                 </Link>
               </li>
               <li>
