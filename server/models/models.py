@@ -72,7 +72,7 @@ class JobPosting(db.Model):
     salary = db.Column(db.String(255), nullable = False)
     location = db.Column(db.String(255), nullable = False)
     skills = db.Column(db.Text, nullable = False)
-    describtion = db.Column(db.Text, nullable = False)
+    description = db.Column(db.Text, nullable = False)
     created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
     updated_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
 
@@ -84,7 +84,7 @@ class JobPosting(db.Model):
             "salary": self.salary,
             "location": self.location,
             "skills": self.skills,
-            "describtion": self.describtion,
+            "description": self.description,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }

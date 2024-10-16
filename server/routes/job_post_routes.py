@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 from models.models import JobPosting  # Assuming your JobPosting model is defined here
 from app import app, db
 
-# job_post_routes = Blueprint('job_post_routes', __name__)
+job_post_routes = Blueprint('job_post_routes', __name__)
 
 
 
@@ -18,11 +18,10 @@ def create_job_posting():
 
     # Create a new job posting instance using SQLAlchemy (Make sure to install)
     new_job_post = JobPosting(
-        job_title=data['jobTitle'],
-        company=data['company'],
-        salary_range=data['salaryRange'],
+        title=data['jobTitle'],  # Match to 'title' in model
+        salary=data['salaryRange'],  # Match to 'salary' in model
         location=data['location'],
-        required_skills=data['requiredSkills'],
+        skills=data['requiredSkills'],  # Match to 'skills' in model
         description=data['description']
     )
 
