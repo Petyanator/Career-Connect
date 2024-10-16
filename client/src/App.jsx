@@ -23,19 +23,30 @@ function App() {
   const [employerProfileData, setEmployerProfileData] = useState(null);
   const { token, setToken } = UserToken(); // State for user token
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userType, setUserType] = useState(
+    localStorage.getItem("userType") || null
+  );
 
   useEffect(() => {
     setIsLoggedIn(!!token); // Update state based on whether a token exists
+    const storedUserType = localStorage.getItem("userType");
+    setUserType(storedUserType);
   }, [token]);
 
   const handleLogout = () => {
     setToken(null); // Clear the token
-    setIsLoggedIn(false); // Update the login state
+    setIsLoggedIn(false);
+    setUserType(null);
+    localStorage.removeItem("userType"); // Update the login state
   };
   return (
     <>
       <BrowserRouter>
-        <NavBar isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+        <NavBar
+          isLoggedIn={isLoggedIn}
+          userType={userType}
+          handleLogout={handleLogout}
+        />
 
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -65,10 +76,11 @@ function App() {
               <EmployerProfileView employerProfileData={employerProfileData} />
             }
           />
-
           <Route
             path="/login"
-            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+            element={
+              <Login setIsLoggedIn={setIsLoggedIn} setUserType={setUserType} />
+            }
           />
           <Route path="/register" element={<Register />} />
           <Route
