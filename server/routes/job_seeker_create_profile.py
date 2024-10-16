@@ -5,6 +5,7 @@ import os
 import base64
 import pymysql as MySQLdb
 from datetime import datetime
+from app import app, db
 
 job_seeker_create_profile_bp = Blueprint('job_seeker_create_profile_bp', __name__)
 

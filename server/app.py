@@ -20,9 +20,16 @@ register_routes(app)
 
 register_models(app)
 
-# register_job_post_routes(app)
+
 
 from routes import job_post_routes
+from routes import job_seeker_create_profile
+from routes import employer_create_profile
+
+# app.py
 
 if __name__ == "__main__":
+    print("Available routes:")
+    for rule in app.url_map.iter_rules():
+        print(rule)
     app.run(debug=True)

@@ -1,32 +1,31 @@
-# routes/employer_create_profile.py
-from flask import Blueprint, request, jsonify, current_app as app
+# /server/routes/employer_create_profile.py
+from flask import request, jsonify
+from app import app, db
+from models.models import Employer  
+import base64
 from werkzeug.utils import secure_filename
 import os
-import base64
-import pymysql as MySQLdb
 from datetime import datetime
 
-employer_create_profile_bp = Blueprint('employer_create_profile_bp', __name__)
-
-def get_db_connection():
-    return MySQLdb.connect(
-        host='your_database_host',
-        user='your_database_user',
-        passwd='your_database_password',
-        db='careerconnect',
-        charset='utf8mb4'
-    )
-
-@employer_create_profile_bp.route('/api/employer/create_profile', methods=['POST'])
+@app.route('/api/employer/create_profile', methods=['POST'])
 def create_employer_profile():
     try:
         data = request.get_json()
-
-        # Extract and validate data
-        required_fields = ['company_name', 'about_company', 'contact']
+        print("Received data:", data)
+        
+        # Simple validation for required fields
+        required_fields = ['user_id', 'company_name', 'about_company', 'contact']
         for field in required_fields:
             if not data.get(field):
                 return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        # Extract and process data
+        user_id = data['user_id']
+        print("User ID:", user_id)
+
+        # Check if user_id is missing or None
+        if not user_id:
+            return jsonify({'error': 'User ID is missing or None'}), 400
 
         company_name = data['company_name']
         company_logo = data.get('company_logo')  # Optional
@@ -36,49 +35,25 @@ def create_employer_profile():
         contact = data['contact']
 
         # Convert lists to comma-separated strings if necessary
-        if isinstance(preferential_treatment, list):
-            preferential_treatment = ','.join(preferential_treatment)
-        if isinstance(company_benefits, list):
-            company_benefits = ','.join(company_benefits)
+        preferential_treatment = ','.join(preferential_treatment) if isinstance(preferential_treatment, list) else preferential_treatment
+        company_benefits = ','.join(company_benefits) if isinstance(company_benefits, list) else company_benefits
 
-        # Handle company logo upload
-        company_logo_path = None
-        if company_logo and company_logo.startswith('data:image/'):
-            img_data = company_logo.split(',')[1]
-            img_data = base64.b64decode(img_data)
-            filename = secure_filename(f"{company_name}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            with open(filepath, 'wb') as f:
-                f.write(img_data)
-            company_logo_path = filepath
-        elif company_logo:
-            company_logo_path = company_logo  # URL or existing path
+        # Create a new Employer instance
+        new_employer = Employer(
+            user_id=user_id,  # Make sure user_id is passed
+            company_name=company_name,
+            company_logo=company_logo,
+            about_company=about_company,
+            preferential_treatment=preferential_treatment,
+            company_benefits=company_benefits,
+            contact=contact
+        )
 
-        # Insert into database
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        insert_query = """
-            INSERT INTO employers
-            (company_name, company_logo, about_company, preferential_treatment, company_benefits, contact)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """
-        cursor.execute(insert_query, (
-            company_name,
-            company_logo_path or '',
-            about_company,
-            preferential_treatment,
-            company_benefits,
-            contact
-        ))
-        conn.commit()
-
-        cursor.close()
-        conn.close()
-
-        return jsonify({'message': 'Employer profile created successfully'}), 201
+        # Save to the database
+        db.session.add(new_employer)
+        db.session.commit()
+        return jsonify({'message': 'Employer profile created successfully!'}), 201
 
     except Exception as e:
-        # Log the exception (you can use logging module)
-        print(f"Error: {e}")
-        return jsonify({'error': 'An error occurred while creating the employer profile.'}), 500
+        db.session.rollback()
+        return jsonify({'error': f'Error occurred: {str(e)}'}), 500
