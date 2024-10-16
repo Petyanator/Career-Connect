@@ -9,9 +9,10 @@ function SearchAndFilterSystem() {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentIndex, setCurrentIndex] = useState(0); // Track current card
 
     const getTokenFromLocalStorage = () => {
-        return localStorage.getItem('token'); // Replace 'token' with your key if different
+        return localStorage.getItem('token');
     };
 
     const buildQueryParams = () => {
@@ -20,7 +21,6 @@ function SearchAndFilterSystem() {
         if (salaryRange.trim()) query.append("salary_range", salaryRange);
         if (location.trim()) query.append("location", location);
         if (requiredSkills.trim()) query.append("required_skills", requiredSkills);
-        console.log("Query Params:", query.toString()); // Debugging log
         return query.toString();
     };
 
@@ -29,8 +29,6 @@ function SearchAndFilterSystem() {
         setError(null);
 
         const token = getTokenFromLocalStorage();
-        console.log("Authorization Token:", token); // Debugging log
-
         if (!token) {
             setError("Authorization token is missing");
             setLoading(false);
@@ -41,9 +39,7 @@ function SearchAndFilterSystem() {
             const queryString = buildQueryParams();
             const response = await fetch(`http://127.0.0.1:5000/api/filter?${queryString}`, {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
+                headers: { 'Authorization': `Bearer ${token}` },
             });
 
             if (!response.ok) {
@@ -55,19 +51,41 @@ function SearchAndFilterSystem() {
             setResults(json);
         } catch (error) {
             setError(error.message);
-            setResults([]); // Clear results on error
+            setResults([]);
         } finally {
             setLoading(false);
         }
     };
 
-    useEffect(() => {
-        fetchFilteredJobPostings(); // Fetch jobs on mount
-    }, []);
+    const handleApplication = async (job_posting_id, action) => {
+        const token = getTokenFromLocalStorage();
+    
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/apply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ job_posting_id, action }), // No need to pass job_seeker_id
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to update application status");
+            }
+    
+            const data = await response.json();
+            alert(data.message); // Notify user
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    };
+    
 
     const handleFilterSubmit = (e) => {
         e.preventDefault();
-        fetchFilteredJobPostings(); // Fetch results based on filter inputs
+        fetchFilteredJobPostings();
     };
 
     const handleClearFilters = () => {
@@ -75,12 +93,21 @@ function SearchAndFilterSystem() {
         setSalaryRange("");
         setLocation("");
         setRequiredSkills("");
-        setResults([]); // Clear results when filters are reset
+        setResults([]);
+    };
+
+    const handlePrevious = () => {
+        if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
+    };
+
+    const handleNext = () => {
+        if (currentIndex < results.length - 1) setCurrentIndex(currentIndex + 1);
     };
 
     return (
         <div className="search-container">
             <form className="filter-form" onSubmit={handleFilterSubmit}>
+                {/* Filter Inputs */}
                 <div className="form-group">
                     <label htmlFor="jobTitle" className="form-label">Job Title:</label>
                     <input
@@ -129,22 +156,36 @@ function SearchAndFilterSystem() {
                 <button type="button" className="form-button" onClick={handleClearFilters}>Clear</button>
             </form>
 
+            {/* Job Posting Cards */}
             {loading && <p>Loading...</p>}
             {error && <p className="error">{error}</p>}
             {!loading && results.length === 0 && <p>No job postings found.</p>}
 
             {results.length > 0 && (
-                <div className="result-cards-container">
-                    {results.map((job) => (
-                        <div className="result-card" key={job.job_posting_id}>
-                            <h3>{job.title}</h3>
-                            <p><strong>Location:</strong> {job.location}</p>
-                            <p><strong>Salary:</strong> {job.salary}</p>
-                            <p><strong>Required Skills:</strong> {job.skills}</p>
-                            <p><strong>Description:</strong> {job.description}</p>
-                            <p><strong>Posted On:</strong> {new Date(job.created_at).toLocaleDateString()}</p>
-                        </div>
-                    ))}
+                <div className="result-card">
+                    <h3>{results[currentIndex].title}</h3>
+                    <p><strong>Location:</strong> {results[currentIndex].location}</p>
+                    <p><strong>Salary:</strong> {results[currentIndex].salary}</p>
+                    <p><strong>Required Skills:</strong> {results[currentIndex].skills}</p>
+                    <p><strong>Description:</strong> {results[currentIndex].description}</p>
+                    <p><strong>Posted On:</strong> {new Date(results[currentIndex].created_at).toLocaleDateString()}</p>
+
+                    <div className="button-group">
+                        <button
+                            onClick={() => handleApplication(results[currentIndex].job_posting_id, 'accept')}
+                            className="accept-button"
+                        >
+                            Accept
+                        </button>
+                        <button
+                            onClick={() => handleApplication(results[currentIndex].job_posting_id, 'reject')}
+                            className="reject-button"
+                        >
+                            Reject
+                        </button>
+                        <button onClick={handlePrevious} className="previous-button">Previous</button>
+                        <button onClick={handleNext} className="next-button">Next</button>
+                    </div>
                 </div>
             )}
         </div>
