@@ -49,8 +49,8 @@ class JobSeeker(db.Model):
     dob = db.Column(db.Date, nullable=False)
     gender = db.Column(db.String(30), nullable=False)
     nationality = db.Column(db.String(255), nullable=False)
-    education = db.Column(db.Text, nullable=False)  # JSON string of education
-    skills = db.Column(db.Text, nullable=False)  # JSON string of skills
+    education = db.Column(db.String(255), nullable=False)  # JSON string of education
+    skills = db.Column(db.String(255), nullable=False)  # JSON string of skills
 
     def to_json(self):
         return {
@@ -70,13 +70,13 @@ class JobPosting(db.Model):
     __tablename__ = "job_posting"
     job_posting_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     employer_id = db.Column(db.Integer, db.ForeignKey("employer.employer_id"))
-    title = db.Column(db.String(255), nullable=False)
-    salary = db.Column(db.String(255), nullable=False)
-    location = db.Column(db.String(255), nullable=False)
-    skills = db.Column(db.Text, nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
-    updated_at = db.Column(db.TIMESTAMP, server_default=db.func.now(), onupdate=db.func.now())  # Automatically update on modification
+    title = db.Column(db.String(255), nullable = False)
+    salary = db.Column(db.String(255), nullable = False)
+    location = db.Column(db.String(255), nullable = False)
+    skills = db.Column(db.Text, nullable = False)
+    description = db.Column(db.Text, nullable = False)
+    created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
 
     def to_json(self):
         return {
