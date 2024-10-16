@@ -1,52 +1,53 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 import "./NavBar.css";
 
-function NavBar({ token, onLogout }) {
+function NavBar({ isLoggedIn, handleLogout }) {
+  const navigate = useNavigate();
+  const handleLogoutAndNavigate = () => {
+    handleLogout(); // Call the logout function
+    navigate("/"); // Then navigate to the home page
+  };
   return (
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/" className="navbar-link">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/aboutus" className="navbar-link">
-              About Us
-            </Link>
-          </li>
-          {token ? ( // If token exists, show logout and profile
-            <>
-              <li>
-                <Link to="/dashboard" className="navbar-link">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <button onClick={onLogout} className="navbar-link">
-                  Logout
-                </button>
-              </li>
-            </>
-          ) : (
-            // If no token, show register and login
-            <>
-              <li>
-                <Link to="/register" className="navbar-link">
-                  Register
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" className="navbar-link">
-                  Login
-                </Link>
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
-    </div>
+    <nav>
+      <ul>
+        <li>
+          <Link className="navbar-link" to="/">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link className="navbar-link" to="/aboutus">
+            About Us
+          </Link>
+        </li>
+        {isLoggedIn ? (
+          <>
+            <li>
+              <Link className="navbar-link" to="/job-seeker-dashboard">
+                Dashboard
+              </Link>
+            </li>
+            <li>
+              <button onClick={handleLogoutAndNavigate}>Logout</button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link className="navbar-link" to="/register">
+                Register
+              </Link>
+            </li>
+            <li>
+              <Link className="navbar-link" to="/login">
+                Login
+              </Link>
+            </li>
+          </>
+        )}
+      </ul>
+    </nav>
   );
 }
 
