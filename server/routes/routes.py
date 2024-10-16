@@ -5,7 +5,7 @@ from models.models import JobPosting,Application,JobSeeker
 from datetime import datetime
 import re
 from flask_jwt_extended import jwt_required, get_jwt_identity
-@app.route("/demo")
+@app.route("/")
 def hello():
     return "hello"
 
@@ -32,7 +32,7 @@ def filter_job_postings():
 
     results = query.all()
     jobs = [job.to_json() for job in results]
-    
+
     if not jobs:
         return jsonify({"message": "No job postings found."}), 404
 
@@ -46,7 +46,7 @@ def extract_salary_range(salary_str):
         return min_salary, max_salary
     except (IndexError, ValueError):
         return None, None  # Return None for both if parsing fails
-    
+
 @app.route('/api/update_status', methods=['PUT'])
 def update_application_status():
     data = request.json
