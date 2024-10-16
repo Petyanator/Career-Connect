@@ -24,9 +24,6 @@ register_models(app)
 
 from routes import job_post_routes
 from routes import job_seeker_create_profile
-from routes import employer_create_profile
-
-# app.py
 
 if __name__ == "__main__":
     print("Available routes:")

@@ -19,6 +19,7 @@ class User(db.Model):
         "email": self.email,
         "password": self.password,
         "full_name": self.full_name,
+        "user_type": self.user_type
         }
 
 class Notification(db.Model):
@@ -89,6 +90,47 @@ class JobPosting(db.Model):
         }
     def __repr__(self):
         return f'<JobPosting {self.job_title}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'job_title': self.job_title,
+            'salary_range': self.salary_range,
+            'location': self.location,
+            'required_skills': self.required_skills,
+        }
+
+    class Employer(db.Model):
+        __tablename__ = "employer"
+        employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+        user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+        company_name = db.Column(db.Integer)
+
+        def to_json(self):
+            return {
+                "employer_id": self.employer_id,
+                "user_id": self.user_id,
+                "company_name": self.company_name,
+            }
+
+class Application(db.Model):
+    __tablename__ = "applications"
+    application_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
+    job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
+    job_seeker_status = db.Column(db.Integer)
+    employer_status = db.Column(db.Integer)
+    created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
+
+    def to_json(self):
+        return {
+            "application_id": self.application_id,
+            "job_posting_id": self.job_posting_id,
+            "job_seeker_id": self.job_seeker_id,
+            "job_seeker_status": self.job_seeker_status,
+            "employer_status": self.employer_status,
+            "created_at": self.created_at.isoformat(),
+        }
 
     def to_dict(self):
         return {

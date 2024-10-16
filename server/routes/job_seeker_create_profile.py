@@ -1,51 +1,55 @@
-# routes/job_seeker_create_profile.py
-from flask import Blueprint, request, jsonify, current_app as app
+from flask import Blueprint, request, jsonify
 from werkzeug.utils import secure_filename
 import os
 import base64
-import pymysql as MySQLdb
 from datetime import datetime
-from app import app, db
+from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
+from models.models import db, JobSeeker
+from app import app
+import json
 
 job_seeker_create_profile_bp = Blueprint('job_seeker_create_profile_bp', __name__)
 
-def get_db_connection():
-    return MySQLdb.connect(
-        host='your_database_host',
-        user='your_database_user',
-        passwd='your_database_password',
-        db='careerconnect',
-        charset='utf8mb4'
-    )
-
-@job_seeker_create_profile_bp.route('/api/job_seeker/create_profile', methods=['POST'])
+# Profile creation route
+@app.route('/api/job_seeker/create_profile', methods=['POST'])
+@jwt_required()
 def create_profile():
     try:
+        # Get JSON data from request
         data = request.get_json()
 
-        # Extract and validate data
-        required_fields = ['first_name', 'last_name', 'dob', 'gender', 'nationality', 'education', 'skills'] # no "user_id" just for testing purposes
+        # Get user_id from JWT
+        user_id = get_jwt_identity()
+        print(f"user_id from JWT: {user_id}")
+        print(f"Data received: {data}")
+
+        # Validate required fields
+        required_fields = ['first_name', 'last_name', 'dob', 'gender', 'nationality', 'education', 'skills']
         for field in required_fields:
             if not data.get(field):
                 return jsonify({'error': f'Missing required field: {field}'}), 400
 
-        user_id = data['user_id']
-        profile_pic = data.get('profile_pic')  # Optional
-        first_name = data['first_name']
-        last_name = data['last_name']
-        dob = data['dob']
-        gender = data['gender']
-        nationality = data['nationality']
-        education = data['education']
-        skills = data['skills']
+        # Extract fields from request data
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        dob_str = data.get('dob')
+        dob = datetime.strptime(dob_str, '%Y-%m-%d').date()
+        gender = data.get('gender')
+        nationality = data.get('nationality')
 
-        # Convert lists to comma-separated strings if necessary
+        # Handle education (ensure it's stored as valid JSON)
+        education = data.get('education')
         if isinstance(education, list):
-            education = ','.join(education)
-        if isinstance(skills, list):
-            skills = ','.join(skills)
+            education = json.dumps(education)  # Convert list to JSON string
 
-        # Handle profile picture upload
+        # Handle skills (ensure it's stored as valid JSON)
+        skills = data.get('skills')
+        if isinstance(skills, list):
+            skills = json.dumps(skills)  # Convert list to JSON string
+
+        profile_pic = data.get('profile_pic')
+
+        # Handle profile picture (if provided)
         profile_pic_path = None
         if profile_pic and profile_pic.startswith('data:image/'):
             img_data = profile_pic.split(',')[1]
@@ -56,36 +60,27 @@ def create_profile():
                 f.write(img_data)
             profile_pic_path = filepath
         elif profile_pic:
-            profile_pic_path = profile_pic  # URL or existing path
+            profile_pic_path = profile_pic  # If it's a URL or existing file path
 
-        # Insert into database
-        conn = get_db_connection()
-        cursor = conn.cursor()
+        # Create a new JobSeeker object
+        new_job_seeker = JobSeeker(
+            user_id=user_id,
+            first_name=first_name,
+            last_name=last_name,
+            dob=dob,
+            gender=gender,
+            nationality=nationality,
+            education=education,  # Properly formatted JSON string
+            skills=skills,  # Properly formatted JSON string
+            profile_pic=profile_pic_path or ''
+        )
 
-        insert_query = """
-            INSERT INTO job_seekers
-            (user_id, profile_pic, first_name, last_name, dob, gender, nationality, education, skills)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """
-        cursor.execute(insert_query, (
-            user_id,
-            profile_pic_path or '',
-            first_name,
-            last_name,
-            dob,
-            gender,
-            nationality,
-            education,
-            skills
-        ))
-        conn.commit()
+        # Save new profile to the database
+        db.session.add(new_job_seeker)
+        db.session.commit()
 
-        cursor.close()
-        conn.close()
-
-        return jsonify({'message': 'Profile created successfully'}), 201
+        return jsonify({'message': 'Profile created successfully', 'profile': new_job_seeker.to_json()}), 201
 
     except Exception as e:
-        # Log the exception (you can use logging module)
         print(f"Error: {e}")
         return jsonify({'error': 'An error occurred while creating the profile.'}), 500
