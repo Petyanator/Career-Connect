@@ -3,12 +3,16 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
 import "./Login.css";
 import UserToken from "../Token/UserToken.jsx";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
+import "./Login.css";
+import UserToken from "../Token/UserToken.jsx";
 
-function Login() {
+function Login({ setIsLoggedIn }) {
+  // Accept setIsLoggedIn as a prop
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loginError, setLoginError] = useState("");
   const { setToken } = UserToken();
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,15 +28,12 @@ function Login() {
       );
       if (response.status === 200) {
         const accessToken = response.data.access_token;
-        const userType = response.data.user_type; // Assuming user_type is returned by the API
-
-        console.log("User Type:", userType); // Log userType for debugging
-        console.log("accesstoken:", accessToken); // Log userType for debugging
+        const userType = response.data.user_type;
 
         if (accessToken) {
           setToken(accessToken);
+          setIsLoggedIn(true); // Update the login status
 
-          // Redirect to the appropriate dashboard based on user type
           if (userType === "job_seeker") {
             navigate("/job-seeker-dashboard");
           } else if (userType === "employer") {
@@ -47,7 +48,7 @@ function Login() {
         setLoginError("Invalid username or password.");
       }
     } catch (error) {
-      console.error("Login error:", error); // Log the error for debugging
+      console.error("Login error:", error);
       setLoginError("Invalid username or password.");
     }
   };

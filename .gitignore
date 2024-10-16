@@ -18,6 +18,7 @@ client.*.local
 server/.env
 venv
 __pycache__
+.env
 
 # Editor directories and files
 .vscode/*

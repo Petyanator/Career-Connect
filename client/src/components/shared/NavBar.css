@@ -7,6 +7,7 @@ nav {
   left: 0;
   width: 100%; /* Ensures the navbar spans the full width of the page */ /* Makes sure the navbar is always on top of other elements */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+  z-index: 1000;
 }
 
 /* Remove default list styling */

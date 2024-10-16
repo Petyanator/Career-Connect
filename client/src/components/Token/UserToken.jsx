@@ -1,40 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function UserToken() {
-  // Function to get the token from local storage
-  function getToken() {
-      const tokenString = localStorage.getItem("token");
+  // Get the initial token from local storage
+  const getToken = () => localStorage.getItem("token");
 
-      if (!tokenString || tokenString === "undefined") {
-          return null;
-      }
+  // Initialize state with the token from local storage
+  const [token, setTokenState] = useState(getToken());
 
-      try {
-          return JSON.parse(tokenString);
-      } catch (error) {
-          console.error("Failed to parse token:", error);
-          return null;
-      }
-  }
+  // Update local storage and state when the token changes
+  const setToken = (userToken) => {
+    if (userToken) {
+      localStorage.setItem("token", userToken); // Store token in local storage
+    } else {
+      localStorage.removeItem("token"); // Remove token from local storage if null
+    }
+    setTokenState(userToken); // Update the state
+  };
 
-  const [token, setToken] = useState(getToken());
-
-  // Function to save the token
-  function saveToken(userToken) {
-      localStorage.setItem("token", JSON.stringify(userToken));
-      setToken(userToken);
-  }
-
-  // Function to remove the token
-  function removeToken() {
-      localStorage.removeItem("token");
-      setToken(null);
-  }
+  // Optional: useEffect to synchronize state with local storage
+  useEffect(() => {
+    const currentToken = getToken();
+    if (currentToken !== token) {
+      setTokenState(currentToken);
+    }
+  }, []); // Runs only once when the component mounts
 
   return {
-      setToken: saveToken,
-      token,
-      removeToken, // Ensure this is returned correctly
+    token,
+    setToken,
   };
 }
 
