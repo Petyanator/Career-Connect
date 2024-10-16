@@ -1,51 +1,53 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 import "./NavBar.css";
-// import { useState, useEffect } from "react";
-// import UserToken from "./UserToken";
-// import Logout from "./Logout";
 
-function NavBar() {
-  //   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  //   const { token, removeToken } = UserToken();
-
-  //   useEffect(() => {
-  //     if (token) {
-  //       setIsAuthenticated(true);
-  //     } else {
-  //       setIsAuthenticated(false);
-  //     }
-  //   }, [token]);
+function NavBar({ isLoggedIn, handleLogout }) {
+  const navigate = useNavigate();
+  const handleLogoutAndNavigate = () => {
+    handleLogout(); // Call the logout function
+    navigate("/"); // Then navigate to the home page
+  };
   return (
-    <>
-      <div>
-        <nav>
-          <ul>
+    <nav>
+      <ul>
+        <li>
+          <Link className="navbar-link" to="/">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link className="navbar-link" to="/aboutus">
+            About Us
+          </Link>
+        </li>
+        {isLoggedIn ? (
+          <>
             <li>
-              <Link to="/" className="navbar-link">
-                Home
+              <Link className="navbar-link" to="/job-seeker-dashboard">
+                Dashboard
               </Link>
             </li>
             <li>
-              <Link to="/aboutus" className="navbar-link">
-                About Us
-              </Link>
+              <button onClick={handleLogoutAndNavigate}>Logout</button>
             </li>
+          </>
+        ) : (
+          <>
             <li>
-              <Link to="/register" className="navbar-link">
+              <Link className="navbar-link" to="/register">
                 Register
               </Link>
             </li>
             <li>
-              <Link to="/login" className="navbar-link">
+              <Link className="navbar-link" to="/login">
                 Login
               </Link>
             </li>
-
-            {/* {isAuthenticated && <Logout removeToken={removeToken} />} */}
-          </ul>
-        </nav>
-      </div>
-    </>
+          </>
+        )}
+      </ul>
+    </nav>
   );
 }
 

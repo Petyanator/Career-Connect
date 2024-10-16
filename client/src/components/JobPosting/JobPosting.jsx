@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import './JobPosting.css';
+// /client/src/components/jobposting/JobPosting.jsx
+import { useState } from "react";
+import "./JobPosting.css";
 
 const JobPosting = () => {
   const [formData, setFormData] = useState({
-    job_posting_id: null,
-    employer_id: null,  // Add job_posting_id as null
-    title: '',              // Updated to match the model's title
-    salary: '',             // Updated to match the model's salary
-    location: '',           // Matches the model's location
-    skills: '',             // Updated to match the model's skills
-    description: '',        // Matches the model's description
+    jobTitle: "",
+    company: "",
+    salaryRange: "",
+    location: "",
+    requiredSkills: "",
+    description: "",
   });
 
   // Handle input changes
@@ -22,32 +22,31 @@ const JobPosting = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/jobs', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/jobs", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),  // Send the form data as JSON
       });
 
       const data = await response.json();
       if (response.ok) {
-        alert('Job posted successfully!');
+        alert("Job posted successfully!");
         setFormData({
-          job_posting_id: null,
-          employer_id: null,  // Reset job_posting_id
-          title: '',              // Reset to initial state
-          salary: '',
-          location: '',
-          skills: '',
-          description: '',
+          jobTitle: "",
+          company: "",
+          salaryRange: "",
+          location: "",
+          requiredSkills: "",
+          description: "",
         });
       } else {
         alert(`Error: ${data.message}`);
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Failed to post job.');
+      console.error("Error:", error);
+      alert("Failed to post job.");
     }
   };
 
@@ -58,19 +57,30 @@ const JobPosting = () => {
           <label>Job Title:</label>
           <input
             type="text"
-            name="title"  // Match model's title
-            value={formData.title}
+            name="jobTitle"
+            value={formData.jobTitle}
             onChange={handleChange}
             required
           />
         </div>
 
         <div>
-          <label>Salary:</label>
+          <label>Company:</label>
           <input
             type="text"
-            name="salary"  // Match model's salary
-            value={formData.salary}
+            name="company"
+            value={formData.company}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div>
+          <label>Salary Range:</label>
+          <input
+            type="text"
+            name="salaryRange"
+            value={formData.salaryRange}
             onChange={handleChange}
             required
           />
@@ -88,11 +98,11 @@ const JobPosting = () => {
         </div>
 
         <div>
-          <label>Skills:</label>
+          <label>Required Skills:</label>
           <input
             type="text"
-            name="skills"  // Match model's skills
-            value={formData.skills}
+            name="requiredSkills"
+            value={formData.requiredSkills}
             onChange={handleChange}
             required
           />

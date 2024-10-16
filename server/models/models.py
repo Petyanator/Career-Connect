@@ -19,6 +19,7 @@ class User(db.Model):
         "email": self.email,
         "password": self.password,
         "full_name": self.full_name,
+        "user_type": self.user_type
         }
 
 class Notification(db.Model):

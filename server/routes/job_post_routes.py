@@ -6,11 +6,6 @@ from app import app, db
 # job_post_routes = Blueprint('job_post_routes', __name__)
 
 
-# Define a testing route for verifying the server is running
-@app.route('/jobtest')
-def home():
-    return 'Job Routes Working!'
-
 
 @app.route('/api/jobs', methods=['POST'])
 def create_job_posting():
