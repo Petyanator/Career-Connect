@@ -130,13 +130,14 @@ function CreateProfilePage({ setProfileData }) {
 
     try {
       // Retrieve JWT token from storage
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token', response.data.access_token);
       console.log("JWT Token:", token);
       console.log("Payload being sent:", profileData);
       // Send data to the backend
       const response = await axios.post('http://localhost:5000/api/job_seeker/create_profile', profileData, {
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 

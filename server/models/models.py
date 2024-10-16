@@ -59,7 +59,7 @@ class JobSeeker(db.Model):
             "dob": self.dob.isoformat(),  # Convert date to string
             "gender": self.gender,
             "nationality": self.nationality,
-            "education": self.education,  # Convert JSON string to Python list
+            "education": json.loads(self.education),  # Convert JSON string to Python list
             "skills": json.loads(self.skills)  # Convert JSON string to Python list
         }
 
