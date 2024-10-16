@@ -20,7 +20,6 @@ def create_profile():
         # print test
         print(f"data = {data}")
 
-
         # Get user_id from JWT
         user_id = get_jwt_identity()
 

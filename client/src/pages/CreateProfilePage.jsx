@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './CreateProfilePage.css';
 import { FaPlus } from 'react-icons/fa';
 
@@ -79,7 +78,7 @@ function CreateProfilePage({ setProfileData }) {
     });
   };
 
-  // Handle form submission
+  // Handle form submission using fetch
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -130,20 +129,29 @@ function CreateProfilePage({ setProfileData }) {
 
     try {
       // Retrieve JWT token from storage
-      const token = localStorage.getItem('token', response.data.access_token);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('No token found');
+        return;
+      }
+
       console.log("JWT Token:", token);
       console.log("Payload being sent:", profileData);
-      // Send data to the backend
-      const response = await axios.post('http://localhost:5000/api/job_seeker/create_profile', profileData, {
+
+      // Send data to the backend using fetch
+      const response = await fetch('http://localhost:5000/api/job_seeker/create_profile', {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(profileData),
       });
 
-      console.log("Server response:", response.data);
+      const data = await response.json();
 
-      if (response.status === 201) {
+      if (response.ok) {
+        console.log("Server response:", data);
         // Success
         setTimeout(() => {
           setShowForm(false);
@@ -154,7 +162,7 @@ function CreateProfilePage({ setProfileData }) {
           navigate('/profile');
         }, 4000);
       } else {
-        alert('An error occurred while creating your profile.');
+        alert(`An error occurred: ${data.message}`);
         setIsButtonShrinking(false);
       }
     } catch (error) {

@@ -47,8 +47,8 @@ class JobSeeker(db.Model):
     dob = db.Column(db.Date, nullable=False)
     gender = db.Column(db.String(30), nullable=False)
     nationality = db.Column(db.String(255), nullable=False)
-    education = db.Column(db.Text, nullable=False)  # JSON string of education
-    skills = db.Column(db.Text, nullable=False)  # JSON string of skills
+    education = db.Column(db.String(255), nullable=False)  # JSON string of education
+    skills = db.Column(db.String(255), nullable=False)  # JSON string of skills
 
     def to_json(self):
         return {
