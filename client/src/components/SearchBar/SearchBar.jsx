@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import './SearchBar.css';  // Import the CSS file
+import { useState, useEffect } from 'react';
+import './SearchBar.css'; // Import your CSS for styling
 
 function SearchAndFilterSystem() {
     const [input, setInput] = useState("");
@@ -7,25 +7,48 @@ function SearchAndFilterSystem() {
     const [location, setLocation] = useState("");
     const [requiredSkills, setRequiredSkills] = useState("");
     const [results, setResults] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentIndex, setCurrentIndex] = useState(0); // Track current card
 
-    const fetchData = async (jobTitle = "", salaryRange = "", location = "", requiredSkills = "") => {
+    const getTokenFromLocalStorage = () => {
+        return localStorage.getItem('token');
+    };
+
+    const buildQueryParams = () => {
+        const query = new URLSearchParams();
+        if (input.trim()) query.append("job_title", input);
+        if (salaryRange.trim()) query.append("salary_range", salaryRange);
+        if (location.trim()) query.append("location", location);
+        if (requiredSkills.trim()) query.append("required_skills", requiredSkills);
+        return query.toString();
+    };
+
+    const fetchFilteredJobPostings = async () => {
         setLoading(true);
-        const queryParams = new URLSearchParams({
-            job_title: jobTitle,
-            salary_range: salaryRange,
-            location: location,
-            required_skills: requiredSkills
-        }).toString();
+        setError(null);
+
+        const token = getTokenFromLocalStorage();
+        if (!token) {
+            setError("Authorization token is missing");
+            setLoading(false);
+            return;
+        }
 
         try {
-            const response = await fetch(`http://127.0.0.1:5000/api/filter?${queryParams}`);
-            if (!response.ok) throw new Error("No results found");
+            const queryString = buildQueryParams();
+            const response = await fetch(`http://127.0.0.1:5000/api/filter?${queryString}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to fetch job postings");
+            }
+
             const json = await response.json();
             setResults(json);
-            setCurrentIndex(0);  // Reset to the first result
         } catch (error) {
             setError(error.message);
             setResults([]);
@@ -34,93 +57,77 @@ function SearchAndFilterSystem() {
         }
     };
 
-    const handleJobTitleChange = (value) => {
-        setInput(value);
-        fetchData(value, salaryRange, location, requiredSkills);
+    const handleApplication = async (job_posting_id, action) => {
+        const token = getTokenFromLocalStorage();
+    
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/apply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ job_posting_id, action }), // No need to pass job_seeker_id
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to update application status");
+            }
+    
+            const data = await response.json();
+            alert(data.message); // Notify user
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
     };
+    
 
     const handleFilterSubmit = (e) => {
         e.preventDefault();
-        fetchData(input, salaryRange, location, requiredSkills);
+        fetchFilteredJobPostings();
     };
 
-    // Check if a job is already in localStorage array
-    const isJobAlreadyStored = (job, storageKey) => {
-        const storedJobs = JSON.parse(localStorage.getItem(storageKey)) || [];
-        return storedJobs.some(storedJob => storedJob.job_posting_id === job.job_posting_id);
+    const handleClearFilters = () => {
+        setInput("");
+        setSalaryRange("");
+        setLocation("");
+        setRequiredSkills("");
+        setResults([]);
     };
 
-    const acceptJob = () => {
-        if (results[currentIndex]) {
-            const acceptedJobs = JSON.parse(localStorage.getItem('acceptedJobs')) || [];
-            if (!isJobAlreadyStored(results[currentIndex], 'acceptedJobs')) {
-                acceptedJobs.push(results[currentIndex]);  // Add the current job to accepted jobs
-                localStorage.setItem('acceptedJobs', JSON.stringify(acceptedJobs));  // Store in localStorage
-                removeFromRejectedJobs(results[currentIndex]);
-            }
-        }
-        moveToNextJob();
+    const handlePrevious = () => {
+        if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
     };
 
-    const rejectJob = () => {
-        if (results[currentIndex]) {
-            const rejectedJobs = JSON.parse(localStorage.getItem('rejectedJobs')) || [];
-            if (!isJobAlreadyStored(results[currentIndex], 'rejectedJobs')) {
-                rejectedJobs.push(results[currentIndex]);  // Add the current job to rejected jobs
-                localStorage.setItem('rejectedJobs', JSON.stringify(rejectedJobs));  // Store in localStorage
-                removeFromAcceptedJobs(results[currentIndex]);
-            }
-        }
-        moveToNextJob();
-    };
-
-    const removeFromAcceptedJobs = (job) => {
-        let acceptedJobs = JSON.parse(localStorage.getItem('acceptedJobs')) || [];
-        const updatedAcceptedJobs = acceptedJobs.filter(storedJob => storedJob.job_posting_id !== job.job_posting_id);
-        localStorage.setItem('acceptedJobs', JSON.stringify(updatedAcceptedJobs));
-    };
-
-    const removeFromRejectedJobs = (job) => {
-        let rejectedJobs = JSON.parse(localStorage.getItem('rejectedJobs')) || [];
-        const updatedRejectedJobs = rejectedJobs.filter(storedJob => storedJob.job_posting_id !== job.job_posting_id);
-        localStorage.setItem('rejectedJobs', JSON.stringify(updatedRejectedJobs));
-    };
-
-    const moveToNextJob = () => {
-        if (currentIndex < results.length - 1) {
-            setCurrentIndex(currentIndex + 1);  // Move to the next result
-        }
-    };
-
-    const moveToPreviousJob = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);  // Move to the previous result
-        }
+    const handleNext = () => {
+        if (currentIndex < results.length - 1) setCurrentIndex(currentIndex + 1);
     };
 
     return (
         <div className="search-container">
             <form className="filter-form" onSubmit={handleFilterSubmit}>
-                <div className='form-group'>
-                    <label htmlFor="jobTitle" className='form-label'>Job Title:</label>
+                {/* Filter Inputs */}
+                <div className="form-group">
+                    <label htmlFor="jobTitle" className="form-label">Job Title:</label>
                     <input
                         type="text"
-                        id='jobTitle'
+                        id="jobTitle"
                         value={input}
-                        onChange={(e) => handleJobTitleChange(e.target.value)}
+                        onChange={(e) => setInput(e.target.value)}
                         placeholder="Search for job titles..."
                         className="search-input"
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="salaryRange" className="form-label">Minimum Salary:</label>
+                    <label htmlFor="salaryRange" className="form-label">Salary:</label>
                     <input
                         type="text"
                         id="salaryRange"
                         value={salaryRange}
-                        className="form-input"
                         onChange={(e) => setSalaryRange(e.target.value)}
-                        placeholder="Enter minimum salary (e.g., 50K)"
+                        placeholder="Enter salary range (e.g., 50K - 70K)"
+                        className="form-input"
                     />
                 </div>
                 <div className="form-group">
@@ -129,9 +136,9 @@ function SearchAndFilterSystem() {
                         type="text"
                         id="location"
                         value={location}
-                        className="form-input"
                         onChange={(e) => setLocation(e.target.value)}
                         placeholder="Enter location"
+                        className="form-input"
                     />
                 </div>
                 <div className="form-group">
@@ -140,31 +147,44 @@ function SearchAndFilterSystem() {
                         type="text"
                         id="requiredSkills"
                         value={requiredSkills}
-                        className="form-input"
                         onChange={(e) => setRequiredSkills(e.target.value)}
                         placeholder="Enter required skills"
+                        className="form-input"
                     />
                 </div>
                 <button type="submit" className="form-button">Search</button>
+                <button type="button" className="form-button" onClick={handleClearFilters}>Clear</button>
             </form>
 
-            {loading && <p className="loading-message">Loading...</p>}
-            {error && <p className="error-message">{error}</p>}
+            {/* Job Posting Cards */}
+            {loading && <p>Loading...</p>}
+            {error && <p className="error">{error}</p>}
+            {!loading && results.length === 0 && <p>No job postings found.</p>}
 
             {results.length > 0 && (
-                <div className="swipe-container">
-                    <div className="result-card">
-                        <h3>{results[currentIndex].title}</h3>
-                        <p><strong>Location:</strong> {results[currentIndex].location}</p>
-                        <p><strong>Salary:</strong> {results[currentIndex].salary}</p>
-                        <p><strong>Required Skills:</strong> {results[currentIndex].skills}</p>
-                        <p><strong>Description:</strong> {results[currentIndex].describtion}</p>
-                    </div>
+                <div className="result-card">
+                    <h3>{results[currentIndex].title}</h3>
+                    <p><strong>Location:</strong> {results[currentIndex].location}</p>
+                    <p><strong>Salary:</strong> {results[currentIndex].salary}</p>
+                    <p><strong>Required Skills:</strong> {results[currentIndex].skills}</p>
+                    <p><strong>Description:</strong> {results[currentIndex].description}</p>
+                    <p><strong>Posted On:</strong> {new Date(results[currentIndex].created_at).toLocaleDateString()}</p>
 
                     <div className="button-group">
-                        <button onClick={moveToPreviousJob} className="previous-button">Previous</button>
-                        <button onClick={rejectJob} className="reject-button">Reject</button>
-                        <button onClick={acceptJob} className="accept-button">Accept</button>
+                        <button
+                            onClick={() => handleApplication(results[currentIndex].job_posting_id, 'accept')}
+                            className="accept-button"
+                        >
+                            Accept
+                        </button>
+                        <button
+                            onClick={() => handleApplication(results[currentIndex].job_posting_id, 'reject')}
+                            className="reject-button"
+                        >
+                            Reject
+                        </button>
+                        <button onClick={handlePrevious} className="previous-button">Previous</button>
+                        <button onClick={handleNext} className="next-button">Next</button>
                     </div>
                 </div>
             )}
