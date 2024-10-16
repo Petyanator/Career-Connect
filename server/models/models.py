@@ -27,16 +27,13 @@ class Notification(db.Model):
     notification_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     application_id = db.Column(db.Integer)
     employer_id = db.Column(db.Integer)
-    accepted = db.Column(db.Text, nullable = False)
-    rejected = db.Column(db.Text, nullable = False)
+
 
     def to_json(self):
         return {
             "notification_id": self.notification_id,
             "application_id": self.application_id,
             "employer_id": self.employer_id,
-            "accepted": self.accepted,
-            "rejected": self.rejected
         }
 
 class JobSeeker(db.Model):
