@@ -39,18 +39,18 @@ def create_job_posting():
 
 
 # /server/routes/job_post_routes.py
-@app.route('/api/jobs', methods=['GET'])
-def get_job_postings():
-    try:
-        jobs = JobPosting.query.all()
-        jobs_list = [{
-            'job_posting_id': job.job_posting_id,
-            'job_title': job.job_title,
-            'salary_range': job.salary_range,
-            'location': job.location,
-            'required_skills': job.required_skills,
-            'description': job.description
-        } for job in jobs]
-        return jsonify(jobs_list), 200
-    except Exception as e:
-        return jsonify({'message': f'Error occurred: {str(e)}'}), 500
+# @app.route('/api/jobs', methods=['GET'])
+# def get_job_postings():
+#     try:
+#         jobs = JobPosting.query.all()
+#         jobs_list = [{
+#             'job_posting_id': job.job_posting_id,
+#             'job_title': job.job_title,
+#             'salary_range': job.salary_range,
+#             'location': job.location,
+#             'required_skills': job.required_skills,
+#             'description': job.description
+#         } for job in jobs]
+#         return jsonify(jobs_list), 200
+#     except Exception as e:
+#         return jsonify({'message': f'Error occurred: {str(e)}'}), 500
