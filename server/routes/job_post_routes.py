@@ -1,6 +1,7 @@
 # /server/routes/job_post_routes.py
 from flask import Blueprint, request, jsonify
-from models.models import JobPosting, Application  # Assuming your JobPosting model is defined here
+from models.models import JobPosting, Employer  # Assuming your JobPosting model is defined here
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from app import app, db
 
 job_post_routes = Blueprint('job_post_routes', __name__)
@@ -10,6 +11,10 @@ job_post_routes = Blueprint('job_post_routes', __name__)
 @app.route('/api/jobs', methods=['POST'])
 def create_job_posting():
     data = request.get_json()
+
+    user_id = get_jwt_identity()
+
+    employer = Employer.query.filter_by(user_id=user_id).first()
 
     # Simple validation (you can enhance this)
     required_fields = ['title', 'salary', 'location', 'skills', 'description']

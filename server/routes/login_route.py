@@ -1,10 +1,8 @@
 from app import app, bcrypt
 from flask import request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, unset_jwt_cookies
 from datetime import datetime
 from models.models import db, User
-from flask_jwt_extended import unset_jwt_cookies, jwt_required
-
 
 @app.route("/register", methods=["POST"])
 def register_user():
@@ -73,7 +71,7 @@ def login_user():
 
     # Return the access token and user type in the response
     return jsonify({"access_token": access_token, "user_type": user_type, "message": "Login successful"}), 200
-    
+
 
 
 @app.route("/logout", methods=["POST"])
