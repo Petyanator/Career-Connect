@@ -11,6 +11,8 @@ const JobPosting = () => {
     description: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,10 +22,21 @@ const JobPosting = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
+    // Retrieve JWT token from localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('No token found. Please login.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/api/jobs", {
         method: "POST",
         headers: {
+          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),  // Send the form data as JSON
@@ -45,6 +58,8 @@ const JobPosting = () => {
     } catch (error) {
       console.error("Error:", error);
       alert("Failed to post job.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -105,7 +120,9 @@ const JobPosting = () => {
           />
         </div>
 
-        <button type="submit">Post Job</button>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Posting..." : "Post Job"}
+        </button>
       </form>
     </div>
   );
