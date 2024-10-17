@@ -103,18 +103,18 @@ class JobPosting(db.Model):
         }
 
 
-    class Employer(db.Model):
-        __tablename__ = "employer"
-        employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-        user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
-        company_name = db.Column(db.Integer)
+class Employer(db.Model):
+    __tablename__ = "employer"
+    employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    company_name = db.Column(db.Integer)
 
-        def to_json(self):
-            return {
-                "employer_id": self.employer_id,
-                "user_id": self.user_id,
-                "company_name": self.company_name,
-            }
+    def to_json(self):
+        return {
+            "employer_id": self.employer_id,
+            "user_id": self.user_id,
+            "company_name": self.company_name,
+        }
 
 class Application(db.Model):
     __tablename__ = "applications"
