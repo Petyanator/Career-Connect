@@ -5,7 +5,6 @@ import "./JobPosting.css";
 const JobPosting = () => {
   const [formData, setFormData] = useState({
     jobTitle: "",
-    company: "",
     salaryRange: "",
     location: "",
     requiredSkills: "",
@@ -35,7 +34,6 @@ const JobPosting = () => {
         alert("Job posted successfully!");
         setFormData({
           jobTitle: "",
-          company: "",
           salaryRange: "",
           location: "",
           requiredSkills: "",
@@ -59,17 +57,6 @@ const JobPosting = () => {
             type="text"
             name="jobTitle"
             value={formData.jobTitle}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Company:</label>
-          <input
-            type="text"
-            name="company"
-            value={formData.company}
             onChange={handleChange}
             required
           />
