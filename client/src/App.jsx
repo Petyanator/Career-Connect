@@ -1,7 +1,4 @@
-import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-// import "@fortawesome/fontawesome-free/css/all.min.css";
 import NavBar from "./components/shared/NavBar";
 import Landing from "./pages/Landing";
 import AboutUs from "./pages/AboutUs";
@@ -11,43 +8,19 @@ import EmployerCreateProfile from "./pages/EmployerCreateProfile";
 import EmployerProfileView from "./pages/EmployerProfileView";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import UserToken from "./components/Token/UserToken";
 import SearchAndFilterSystem from "./components/SearchBar/SearchBar";
 import JobPosting from "./components/JobPosting/JobPosting";
 import JobViewer from "./components/JobViewer/JobViewer";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard";
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
+import { AuthProvider } from "./contexts/AuthContext";
+import PrivateRoute from "./components/shared/PrivateRoute";
 
 function App() {
-  const [profileData, setProfileData] = useState(null);
-  const [employerProfileData, setEmployerProfileData] = useState(null);
-  const { token, setToken } = UserToken(); // State for user token
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState(
-    localStorage.getItem("userType") || null
-  );
-
-  useEffect(() => {
-    setIsLoggedIn(!!token); // Update state based on whether a token exists
-    const storedUserType = localStorage.getItem("userType");
-    setUserType(storedUserType);
-  }, [token]);
-
-  const handleLogout = () => {
-    setToken(null); // Clear the token
-    setIsLoggedIn(false);
-    setUserType(null);
-    localStorage.removeItem("userType"); // Update the login state
-  };
   return (
-    <>
+    <AuthProvider>
       <BrowserRouter>
-        <NavBar
-          isLoggedIn={isLoggedIn}
-          userType={userType}
-          handleLogout={handleLogout}
-        />
-
+        <NavBar />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/aboutus" element={<AboutUs />} />
@@ -56,41 +29,40 @@ function App() {
           <Route path="/jobviewer" element={<JobViewer />} />
           <Route
             path="/create-profile"
-            element={<CreateProfilePage setProfileData={setProfileData} />}
+            element={<CreateProfilePage />}
           />
           <Route
             path="/profile"
-            element={<CreateProfileView profileData={profileData} />}
+            element={<CreateProfileView />}
           />
           <Route
             path="/employer-create-profile"
-            element={
-              <EmployerCreateProfile
-                setEmployerProfileData={setEmployerProfileData}
-              />
-            }
+            element={<EmployerCreateProfile />}
           />
           <Route
             path="/employer-profile"
-            element={
-              <EmployerProfileView employerProfileData={employerProfileData} />
-            }
+            element={<EmployerProfileView />}
           />
-          <Route
-            path="/login"
-            element={
-              <Login setIsLoggedIn={setIsLoggedIn} setUserType={setUserType} />
-            }
-          />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
             path="/job-seeker-dashboard"
             element={<JobSeekerDashboard />}
           />
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+
+          {/* Protected Route Example */}
+          <Route
+            path="/protected"
+            element={
+              <PrivateRoute>
+                <SomeProtectedComponent />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
-    </>
+    </AuthProvider>
   );
 }
 

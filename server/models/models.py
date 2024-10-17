@@ -54,7 +54,7 @@ class JobSeeker(db.Model):
             "job_seeker_id": self.job_seeker_id,
             "user_id": self.user_id,
             "profile_pic": self.profile_pic,
-            "first_name": self.first_name,
+            "first_name": self.first_name, 
             "last_name": self.last_name,
             "dob": self.dob.isoformat(),  # Convert date to string
             "gender": self.gender,

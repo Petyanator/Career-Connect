@@ -1,12 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./NavBar.css";
+import useAuth from "../../hooks/useAuth";
+import Logout from "../auth/Logout";
 
-function NavBar({ isLoggedIn, handleLogout, userType }) {
+function NavBar() {
   const navigate = useNavigate();
+  const { user, authTokens } = useAuth();
+  const isLoggedIn = !!authTokens;
+  const userType = user?.type;
+
   const handleLogoutAndNavigate = () => {
-    handleLogout(); // Call the logout function
-    navigate("/"); // Then navigate to the home page
+    navigate("/");
   };
+
   return (
     <nav>
       <ul>
@@ -35,7 +41,10 @@ function NavBar({ isLoggedIn, handleLogout, userType }) {
               </Link>
             </li>
             <li>
-              <button onClick={handleLogoutAndNavigate}>Logout</button>
+              <p>Welcome, {user.username}</p> {/* Display welcome message */}
+            </li>
+            <li>
+              <Logout handleLogout={handleLogoutAndNavigate} /> {/* Use Logout component */}
             </li>
           </>
         ) : (
