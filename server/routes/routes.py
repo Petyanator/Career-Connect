@@ -5,9 +5,10 @@ from models.models import JobPosting,Application,JobSeeker
 from datetime import datetime
 import re
 from flask_jwt_extended import jwt_required, get_jwt_identity
+
 @app.route("/")
-def hello():
-    return "hello"
+def testing():
+    return "routes are working"
 
 @app.route('/api/filter', methods=['GET'])
 @jwt_required()  # Ensure that this route requires authentication
