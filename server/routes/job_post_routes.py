@@ -12,17 +12,26 @@ job_post_routes = Blueprint('job_post_routes', __name__)
 def create_job_posting():
     data = request.get_json()
 
+    #grab the user id using JWT locaed from the login route.
     user_id = get_jwt_identity()
+    print(f"user_id is this from JWT: {user_id}")
 
+    #get the employer attached to the user_id.
     employer = Employer.query.filter_by(user_id=user_id).first()
+    print(f"employer is this: {employer}")
+
+    if not employer:
+        return jsonify({'message': 'Employer not found for this user'}), 404
 
     # Simple validation (you can enhance this)
     required_fields = ['title', 'salary', 'location', 'skills', 'description']
-    if not all(field in data and data[field] is not None for field in required_fields):
-        return jsonify({'message': 'Missing required fields'}), 400
+    for field in required_fields:
+        if not data.get(field):
+            return jsonify({'message': f'Missing required field: {field}'}), 400
 
     # Create a new job posting instance using SQLAlchemy
     new_job_post = JobPosting(
+        employer_id = employer.employer_id, #Assign the Employer_id
         title=data['jobTitle'],  # Match to 'title' in model
         salary=data['salaryRange'],  # Match to 'salary' in model
         location=data['location'],
@@ -43,19 +52,18 @@ def create_job_posting():
 
 
 
-# /server/routes/job_post_routes.py
+# Function to fetch all job postings
 @app.route('/api/jobs', methods=['GET'])
 def get_job_postings():
     try:
+        # Query all job postings
         jobs = JobPosting.query.all()
-        jobs_list = [{
-            'job_posting_id': job.job_posting_id,
-            'job_title': job.job_title,
-            'salary_range': job.salary_range,
-            'location': job.location,
-            'required_skills': job.required_skills,
-            'description': job.description
-        } for job in jobs]
+
+        # Serialize the job postings
+        jobs_list = [job.to_json() for job in jobs]
+
+        # Return the list of jobs
         return jsonify(jobs_list), 200
+
     except Exception as e:
         return jsonify({'message': f'Error occurred: {str(e)}'}), 500
