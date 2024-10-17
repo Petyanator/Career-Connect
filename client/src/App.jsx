@@ -27,6 +27,7 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route path="/notification" element={<Notification />} />
             </Routes>
           </BrowserRouter>
       </AuthProvider>
