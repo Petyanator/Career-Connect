@@ -29,6 +29,8 @@ def filter_job_postings():
         query = query.filter(JobPosting.location.ilike(f"%{location}%"))
     if required_skills:
         query = query.filter(JobPosting.skills.ilike(f"%{required_skills}%"))
+    if not job_title and not salary_range and not location and not required_skills:
+        query = query  # No filters applied, return all job postings.
 
     results = query.all()
     jobs = [job.to_json() for job in results]
