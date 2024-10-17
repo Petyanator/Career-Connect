@@ -43,7 +43,7 @@ class JobSeeker(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "profile_pic": self.profile_pic,
-            "first_name": self.first_name,
+            "first_name": self.first_name, 
             "last_name": self.last_name,
             "dob": self.dob.isoformat(),
             "gender": self.gender,
@@ -126,7 +126,7 @@ class Application(db.Model):
             "created_at": self.created_at.isoformat(),
         }
 
-class Notification(db.Model):
+""" class Notification(db.Model):
     __tablename__ = "notifications"
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -140,4 +140,4 @@ class Notification(db.Model):
             "application_id": self.application_id,
             "employer_id": self.employer_id,
             "accepted": self.accepted,
-        }
+        } """

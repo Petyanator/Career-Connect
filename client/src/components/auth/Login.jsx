@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import "./Login.css"; // Add your own styles for the login component
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import UserToken from '../Token/UserToken.jsx'; // Import the UserToken hook
+import axios from "axios";
+import { AuthContext } from "../../contexts/AuthContext";
+import "./Login.css"; // login styles
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -12,9 +12,9 @@ function Login() {
     const [loginError, setLoginError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
-    const [loginAttempt, setLoginAttempt] = useState(0); // Start at 0 for counting attempts
-    const [loginSuccess, setLoginSuccess] = useState(false);
-    const { token, setToken, removeToken } = UserToken(); // Use token management from UserToken
+    const [loginAttempt, setLoginAttempt] = useState(0); // Add back loginAttempt
+    const [loginSuccess, setLoginSuccess] = useState(false); // Add back loginSuccess
+    const { login } = useContext(AuthContext);  // Use AuthContext instead of UserToken
     const navigate = useNavigate();
 
     const togglePasswordVisibility = () => {
@@ -35,14 +35,13 @@ function Login() {
 
         try {
             const response = await axios.post("http://localhost:5000/login", formData);
-            console.log(response.data);
 
             if (response.status === 200) {
-                const accessToken = response.data.access_token; // Extract the access token
+                const { access_token, user } = response.data;
 
-                if (accessToken) {
-                    setToken(accessToken); // Save the access token in localStorage
-                    setLoginSuccess(true);
+                if (access_token) {
+                    login({ access_token, user }); // Use login from AuthContext to store token and user
+                    setLoginSuccess(true); // Set login success to true
                     setAlertMessage("Login successful!");
                     navigate('/home'); // Navigate to home page
                 } else {
@@ -53,17 +52,14 @@ function Login() {
             }
         } catch (error) {
             console.error("Login error", error);
-            if (error.response) {
-                setLoginError("Invalid username or password");
-            } else {
-                setLoginError("Failed to login, please try again later.");
-            }
+            setLoginError("Invalid username or password");
         } finally {
-            setLoginAttempt((prev) => prev + 1); // Increment login attempts
-            console.log("Logins attempted: " + (loginAttempt + 1)); // Log attempts
+            setLoginAttempt(prevAttempt => prevAttempt + 1); // Increment login attempts
+            console.log(`Login attempts: ${loginAttempt + 1}`); // Log the attempt count
         }
     };
 
+    // Effect to check for an existing token in localStorage
     useEffect(() => {
         const storedToken = localStorage.getItem("token");
         if (storedToken) {
@@ -71,7 +67,7 @@ function Login() {
             setAlertMessage("You are already logged in."); // Alert if the user is already logged in
             navigate('/home'); // Navigate to home if already logged in
         }
-    }, [token, navigate]);
+    }, [navigate]);
 
     return (
         <div className="login-form-container">
@@ -108,11 +104,13 @@ function Login() {
                 </div>
 
                 {loginError && <p style={{ color: "red" }}>{loginError}</p>}
+                <p>Login Attempts: {loginAttempt}</p> {/* Display login attempts */}
 
                 <button type="submit" className="login-btn">
                     Login
                 </button>
             </form>
+            {loginSuccess && <p>Login successful!</p>} {/* Display login success */}
         </div>
     );
 }
