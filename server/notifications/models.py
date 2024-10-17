@@ -11,6 +11,9 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
+    # Relationships
+    notifications = db.relationship('Notification', backref='user', lazy=True)
+
 # Employer model for employers
 class Employer(db.Model):
     __tablename__ = 'employers'
