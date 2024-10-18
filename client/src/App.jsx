@@ -43,6 +43,8 @@ function App() {
           <Route path="/searchbar" element={<SearchAndFilterSystem />} />
           <Route path="/jobposting" element={<JobPosting />} />
           <Route path="/jobviewer" element={<JobViewer />} />
+
+
           <Route
             path="/jobseeker_create_profile"
             element={<JobSeekerProfileCreate setProfileData={setProfileData} />}
@@ -51,16 +53,18 @@ function App() {
             path="/jobseeker_profile"
             element={<JobSeekerProfileView isEmployerView={false}/>}
           />
-
           <Route
             path="/jobseeker_profile/:id"
             element={<JobSeekerProfileView isEmployerView={true}/>}
           />
-
           <Route
             path="/jobseeker_profile"
             element={<JobSeekerProfileView profileData={profileData} />}
           />
+
+
+
+
           <Route
             path="/employer-create-profile"
             element={
