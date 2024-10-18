@@ -5,9 +5,10 @@ from models.models import JobPosting,Application,JobSeeker
 from datetime import datetime
 import re
 from flask_jwt_extended import jwt_required, get_jwt_identity
-@app.route("/demo")
-def hello():
-    return "hello"
+
+@app.route("/")
+def testing():
+    return "routes are working"
 
 @app.route('/api/filter', methods=['GET'])
 @jwt_required()  # Ensure that this route requires authentication
@@ -56,7 +57,7 @@ def extract_salary_range(salary_str):
         return min_salary, max_salary
     except (IndexError, ValueError):
         return None, None  # Return None for both if parsing fails
-    
+
 @app.route('/api/update_status', methods=['PUT'])
 def update_application_status():
     data = request.json
