@@ -4,7 +4,7 @@ import os
 import base64
 from datetime import datetime
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
-from models.models import db, JobSeeker
+from models.models import db, JobSeeker, Application, Employer
 from app import app
 import json
 
@@ -88,3 +88,100 @@ def create_profile():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': 'An error occurred while creating the profile.'}), 500
+
+
+@app.route("/api/update_job_seeker_profile",methods = ["PUT"])
+@jwt_required()
+def update_job_seeker():
+
+    user_id = get_jwt_identity()
+    
+    job_seeker = JobSeeker.query.filter_by(user_id= user_id).first()
+
+    data = request.get_json()
+
+    # Handle education (ensure it's stored as valid JSON)
+    education = data.get('education')
+    if isinstance(education, list):
+        education = json.dumps(education)  # Convert list to JSON string
+    # Handle skills (ensure it's stored as valid JSON)
+    skills = data.get('skills')
+    if isinstance(skills, list):
+        skills = json.dumps(skills)  # Convert list to JSON string
+    profile_pic = data.get('profile_pic')
+    # Handle profile picture (if provided)
+    profile_pic_path = None
+    if profile_pic and profile_pic.startswith('data:image/'):
+        img_data = profile_pic.split(',')[1]
+        img_data = base64.b64decode(img_data)
+        filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        with open(filepath, 'wb') as f:
+            f.write(img_data)
+        profile_pic_path = filepath
+    elif profile_pic:
+        profile_pic_path = profile_pic
+
+    job_seeker.first_name = data.get("first_name", job_seeker.first_name)
+    job_seeker.last_name = data.get("last_name", job_seeker.last_name)
+    job_seeker.dob = data.get("dob", job_seeker.dob)
+    job_seeker.gender = data.get("gender", job_seeker.gender)
+    job_seeker.nationality = data.get("nationality", job_seeker.nationality)
+
+
+
+    db.session.commit()
+
+
+    return jsonify({"message": "Profile was updated successfully"})
+
+@app.route("/api/delete_job_seeker_profile", methods = ["DELETE"])
+@jwt_required()
+def delete_job_seeker():
+   
+    user_id = get_jwt_identity()
+
+    job_seeker = JobSeeker.query.filter_by(user_id = user_id).first()
+    
+    if not job_seeker:
+        return jsonify({"message": "Job seeker not found"})
+    
+    job_seeker_id = job_seeker.job_seeker_id
+    
+    Application.query.filter_by(job_seeker_id=job_seeker_id).delete()
+    db.session.commit()
+
+    db.session.delete(job_seeker)
+    db.session.commit()
+    return jsonify({"message": "Job seeker profile was deleted successfully"})
+
+@app.route("/api/update_employer_profile", methods = ["PUT"])
+@jwt_required()    
+def update_employer():
+    user_id = get_jwt_identity()
+    employer = Employer.query.filter_by(user_id=user_id).first()
+
+    data = request.get_json()
+
+    employer.company_name = data.get("company_namez", employer.company_name)
+
+    db.session.commit()
+
+    return jsonify({"message": "Profile was successfully updated"})
+
+
+@app.route("/api/delete_employer_profile", methods = ["DELETE"])
+@jwt_required()
+def delete_employer():
+   
+    user_id = get_jwt_identity()
+
+    employer = Employer.query.filter_by(user_id = user_id).first()
+    
+    if not employer:
+        return jsonify({"message": "Employer was not found"})
+    
+    
+    db.session.delete(employer)
+    db.session.commit()
+    return jsonify({"message": "Employer profile was deleted successfully"})
