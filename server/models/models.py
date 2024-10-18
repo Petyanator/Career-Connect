@@ -22,32 +22,19 @@ class User(db.Model):
         "user_type": self.user_type
         }
 
-class Notification(db.Model):
-    __tablename__ = "notifications"
-    notification_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-    application_id = db.Column(db.Integer)
-    employer_id = db.Column(db.Integer)
-
-
-    def to_json(self):
-        return {
-            "notification_id": self.notification_id,
-            "application_id": self.application_id,
-            "employer_id": self.employer_id,
-        }
-
 class JobSeeker(db.Model):
     __tablename__ = "job_seekers"
-    job_seeker_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.users.id'), nullable=False)
     profile_pic = db.Column(db.String(255), nullable=True)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     dob = db.Column(db.Date, nullable=False)
     gender = db.Column(db.String(30), nullable=False)
     nationality = db.Column(db.String(255), nullable=False)
-    education = db.Column(db.String(255), nullable=False)  # JSON string of education
-    skills = db.Column(db.String(255), nullable=False)  # JSON string of skills
+    education = db.Column(db.String(255), nullable=True)
+    skills = db.Column(db.String(255), nullable=True)
 
     def to_json(self):
         return {
@@ -59,8 +46,36 @@ class JobSeeker(db.Model):
             "dob": self.dob.isoformat(),  # Convert date to string
             "gender": self.gender,
             "nationality": self.nationality,
-            "education": json.loads(self.education),  # Convert JSON string to Python list
-            "skills": json.loads(self.skills)  # Convert JSON string to Python list
+            "education": self.education,
+            "skills": self.skills,
+        }
+
+class Employer(db.Model):
+    __tablename__ = "employer"
+    
+    employer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    company_name = db.Column(db.String(255), nullable=False)
+    company_logo = db.Column(db.LargeBinary, nullable=False)
+    about = db.Column(db.Text, nullable=True)
+    preferential_treatment = db.Column(db.Text, nullable=True)
+    company_benefits = db.Column(db.Text, nullable=True)
+    contact_information = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now())
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(), onupdate=lambda: datetime.now())
+
+    def to_json(self):
+        return {
+            "employer_id": self.employer_id,
+            "user_id": self.user_id,
+            "company_name": self.company_name,
+            "company_logo": self.company_logo,
+            "about": self.about,
+            "preferential_treatment": self.preferential_treatment,
+            "company_benefits": self.company_benefits,
+            "contact_information": self.contact_information,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
         }
 
 class JobPosting(db.Model):
@@ -102,28 +117,15 @@ class JobPosting(db.Model):
             'description': self.description
         }
 
-
-class Employer(db.Model):
-    __tablename__ = "employer"
-    employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
-    company_name = db.Column(db.Integer)
-
-    def to_json(self):
-        return {
-            "employer_id": self.employer_id,
-            "user_id": self.user_id,
-            "company_name": self.company_name,
-        }
-
 class Application(db.Model):
     __tablename__ = "applications"
-    application_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-    job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
-    job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
+    
+    application_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    job_posting_id = db.Column(db.Integer, db.ForeignKey('job_posting.id'), nullable=False)
+    job_seeker_id = db.Column(db.Integer, db.ForeignKey('job_seekers.id'), nullable=False)
     job_seeker_status = db.Column(db.Integer)
     employer_status = db.Column(db.Integer)
-    created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now())
 
     def to_json(self):
         return {

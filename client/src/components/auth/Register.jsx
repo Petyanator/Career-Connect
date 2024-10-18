@@ -3,14 +3,15 @@ import axios from "axios";
 import "./Register.css";
 
 function Register() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    full_name: "",
-    user_type: "", // Add user_type to formData state
-    password: "",
-    confirmPassword: "",
-  });
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        full_name: "",
+        user_type: "",
+        password: "",
+        confirmPassword: "",
+        profileType: "",  // Add profileType field
+    });
 
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
@@ -37,51 +38,30 @@ function Register() {
       [name]: value,
     }));
 
-    if (name === "password") {
-      setPasswordMatch(value === formData.confirmPassword);
-      setIsPasswordValid(validatePassword(value));
-    } else if (name === "confirmPassword") {
-      setPasswordMatch(value === formData.password);
-    }
-  };
+        if (name === "password") {
+            setPasswordMatch(value === formData.confirmPassword);
+            setIsPasswordValid(validatePassword(value));
+        } else if (name === "confirmPassword") {
+            setPasswordMatch(value === formData.password);
+        }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!passwordMatch || !isPasswordValid) {
-      setErrorMessage(
-        "Please ensure the password criteria are met and passwords match."
-      );
-      return;
-    }
+        if (name === "username" || name === "email") {
+            checkUsernameOrEmail(name, value);
+        }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/register",
-        formData
-      );
-      if (response.status === 201) {
-        setRegistrationSuccess(true);
-        setErrorMessage("");
+        if (name === "profileType") {
+            setProfileSelected(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              user_type: value,
+            })); 
+        }
+    };
 
-        // Save the access token to localStorage or state management (e.g., Redux)
-        const { access_token } = response.data;
-        localStorage.setItem("access_token", access_token);
-
-        // Optionally, redirect the user to the login page or home page after registration
-        console.log("User registered successfully:", response.data.user);
-      }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status === 409) {
-          const errorMsg = error.response.data.error;
-          if (errorMsg.includes("Username")) {
-            setUsernameTaken(true);
-          } else if (errorMsg.includes("Email")) {
-            setEmailTaken(true);
-          }
-          setErrorMessage(errorMsg);
-        } else if (error.response.status === 400) {
-          setErrorMessage("Invalid user type.");
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (passwordMatch && isPasswordValid && !usernameTaken && !emailTaken && profileSelected) {
+            registerUser(formData);
         } else {
           setErrorMessage("An error occurred during registration.");
         }

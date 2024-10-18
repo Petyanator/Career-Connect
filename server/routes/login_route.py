@@ -1,8 +1,9 @@
 from app import app, bcrypt
 from flask import request, jsonify
-from flask_jwt_extended import create_access_token, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, unset_jwt_cookies, jwt_required
 from datetime import datetime
 from models.models import db, User
+
 
 @app.route("/register", methods=["POST"])
 def register_user():
@@ -22,8 +23,8 @@ def register_user():
     email = data.get("email")
     password = data.get("password")
     full_name = data.get("full_name")
-    user_type = data.get("user_type")  # Extract user_type from request
-
+    user_type = data.get("user_type").lower()
+    
     if user_type not in ["job_seeker", "employer"]:
         return jsonify({"error": "Invalid user type"}), 400
 
@@ -36,15 +37,15 @@ def register_user():
         email=email,
         password=hashed_password,
         full_name=full_name,
-        user_type=user_type  # Store user_type in the database
+        user_type=user_type
     )
 
     # Add the new user to the database
     db.session.add(new_user)
     db.session.commit()
 
-    # Create an access token for the new user
-    access_token = create_access_token(identity=new_user.user_id)  # Use user_id as identity
+    # Create an access token
+    access_token = create_access_token(identity=new_user.user_id)
 
     # Return the new user and access token
     return jsonify({"user": new_user.to_json(), "access_token": access_token}), 201
@@ -66,12 +67,10 @@ def login_user():
         return jsonify({"error": "Invalid username or password"}), 401
 
     # Generate access token after successful login
-    access_token = create_access_token(identity=user.user_id)  # Use user_id as identity
-    user_type = user.user_type  # Get user type from the user object
+    access_token = create_access_token(identity=user.username)
+    user_type = user.user_type
 
-    # Return the access token and user type in the response
     return jsonify({"access_token": access_token, "user_type": user_type, "message": "Login successful"}), 200
-
 
 
 @app.route("/logout", methods=["POST"])
