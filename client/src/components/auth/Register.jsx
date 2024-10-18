@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./Register.css";
 
@@ -7,6 +7,7 @@ function Register() {
         username: "",
         email: "",
         full_name: "",
+        user_type: "",
         password: "",
         confirmPassword: "",
         profileType: "",  // Add profileType field
@@ -62,7 +63,11 @@ function Register() {
         }
 
         if (name === "profileType") {
-            setProfileSelected(true);  // Mark profile selection as done
+            setProfileSelected(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              user_type: value,
+            })); 
         }
     };
 

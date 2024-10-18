@@ -1,9 +1,8 @@
 from app import app, bcrypt
 from flask import request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, unset_jwt_cookies, jwt_required
 from datetime import datetime
-from models.user_model import db, User
-from flask_jwt_extended import unset_jwt_cookies, jwt_required
+from models.models import db, User
 
 
 @app.route("/register", methods=["POST"])
@@ -24,8 +23,10 @@ def register_user():
     email = data.get("email")
     password = data.get("password")
     full_name = data.get("full_name")
-    # If profile_picture is not provided, use a default value
-    profile_picture = data.get("profile_picture", "default_profile_picture.png")
+    user_type = data.get("user_type").lower()
+    
+    if user_type not in ["job_seeker", "employer"]:
+        return jsonify({"error": "Invalid user type"}), 400
 
     # Hash the password
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
@@ -36,7 +37,7 @@ def register_user():
         email=email,
         password=hashed_password,
         full_name=full_name,
-        profile_picture=profile_picture,
+        user_type=user_type
     )
 
     # Add to the database and commit
@@ -44,18 +45,11 @@ def register_user():
     db.session.commit()
 
     # Create an access token
-    access_token = create_access_token(identity=username)
+    access_token = create_access_token(identity=new_user.user_id)
 
     # Return the new user and access token
     return jsonify({"user": new_user.to_json(), "access_token": access_token}), 201
 
-
-""" @app.route("/profile", methods=["GET"])
-@jwt_required()
-def my_profile():
-    response_body = {"name": "Logged in user", "email": "loggedInUser@gmail.com"}
-
-    return jsonify(response_body), 200 """
 
 
 @app.route("/login", methods=["POST"])
@@ -75,8 +69,9 @@ def login_user():
 
     # Generate access token after successful login
     access_token = create_access_token(identity=user.username)
+    user_type = user.user_type
 
-    return jsonify({"access_token": access_token, "message": "Login successful"}), 200
+    return jsonify({"access_token": access_token, "user_type": user_type, "message": "Login successful"}), 200
 
 
 @app.route("/logout", methods=["POST"])
