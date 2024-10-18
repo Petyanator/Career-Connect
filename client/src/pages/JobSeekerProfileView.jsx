@@ -1,66 +1,83 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';  // To get the job seeker ID from the URL
-import './JobSeekerProfileView.css';
+import { useNavigate } from 'react-router-dom';
+import "./JobSeekerProfileView.css";
 
-function JobSeekerProfileView({ token }) {
-  const { id } = useParams(); // Get job seeker ID from route params
-  const [profileData, setProfileData] = useState(null);
-  const [error, setError] = useState('');
+function JobSeekerProfileView({ profileData, isEmployerView }) {
+    const [profile, setProfile] = useState(null);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/jobseeker/${id}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('No token found');
+                    navigate('/login');
+                    return;
+                }
 
-        if (response.ok) {
-          const data = await response.json();
-          setProfileData(data);
-        } else {
-          setError('Failed to fetch profile');
-        }
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        setError('An error occurred while fetching the profile.');
-      }
-    };
+                // Fetch profile based on whether the user is a job seeker or employer
+                let response;
+                if (isEmployerView) {
+                    // Employer viewing a job seeker profile via application (pass job_seeker_id somehow)
+                    const jobSeekerId = profileData?.job_seeker_id;  // Replace with actual data
+                    response = await fetch(`http://localhost:5000/api/job_seekers/${jobSeekerId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    });
+                } else {
+                    // Job seeker viewing their own profile
+                    response = await fetch('http://localhost:5000/api/job_seekers/me', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    });
+                }
 
-    fetchProfile();
-  }, [id, token]);
+                const data = await response.json();
+                if (response.ok) {
+                    setProfile(data);
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+            }
+        };
 
-  if (error) {
-    return <h2>{error}</h2>;
-  }
+        fetchProfile();
+    }, [isEmployerView, profileData, navigate]);
 
-  if (!profileData) {
-    return <h2>Loading...</h2>;
-  }
+    if (!profile) {
+        return <h2>Loading profile...</h2>;
+    }
 
-  return (
-    <div>
-      {/* Particle effect container */}
-      <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div>
+    return (
+        <div>
+            {/* Particle effect */}
+            <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div>
 
-      <div className="profile-view">
-        <h1>{profileData.first_name} {profileData.last_name}'s Profile</h1>
-        <div className="profile-details">
-          <img src={profileData.profile_pic || '/default-pic.jpg'} alt="Profile" className="profile-picture" />
-          <div className="profile-text">
-            <p><strong>Date of Birth:</strong> {profileData.dob}</p>
-            <p><strong>Gender:</strong> {profileData.gender}</p>
-            <p><strong>Nationality:</strong> {profileData.nationality}</p>
-            <p><strong>Education:</strong> {profileData.education.join(', ')}</p>
-            <p><strong>Skills:</strong> {profileData.skills.join(', ')}</p>
-          </div>
+            <div className="profile-view">
+                <h1>{profile.first_name} {profile.last_name}'s Profile</h1>
+                <div className="profile-details">
+                    <img src={profile.profile_pic} alt="Profile" className="profile-picture" />
+                    <div className="profile-text">
+                        <p><strong>Date of Birth:</strong> {profile.dob}</p>
+                        <p><strong>Gender:</strong> {profile.gender}</p>
+                        <p><strong>Nationality:</strong> {profile.nationality}</p>
+                        <p><strong>Skills:</strong> {profile.skills.join(', ')}</p>
+                        <div>
+                            <strong>Education:</strong>
+                            {profile.education.map((education, index) => (
+                                <p key={index}>{education}</p>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default JobSeekerProfileView;
