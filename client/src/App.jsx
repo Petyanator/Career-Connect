@@ -44,8 +44,8 @@ function App() {
           <Route path="/jobposting" element={<JobPosting />} />
           <Route path="/jobviewer" element={<JobViewer />} />
           <Route
-            path="/create-profile"
-            element={<CreateProfilePage setProfileData={setProfileData} />}
+            path="/jobseeker_create_profile"
+            element={<JobSeekerProfileCreate setProfileData={setProfileData} />}
           />
           <Route
             path="/profile"
