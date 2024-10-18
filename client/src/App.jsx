@@ -49,6 +49,16 @@ function App() {
           />
           <Route
             path="/jobseeker_profile"
+            element={<JobSeekerProfileView isEmployerView={false}/>}
+          />
+
+          <Route
+            path="/jobseeker_profile/:id"
+            element={<JobSeekerProfileView isEmployerView={true}/>}
+          />
+
+          <Route
+            path="/jobseeker_profile"
             element={<JobSeekerProfileView profileData={profileData} />}
           />
           <Route

@@ -4,7 +4,7 @@ import os
 import base64
 from datetime import datetime
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
-from models.models import db, JobSeeker
+from models.models import db, JobSeeker, User
 from app import app
 import json
 
@@ -88,3 +88,23 @@ def create_profile():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': 'An error occurred while creating the profile.'}), 500
+
+
+# Route for job seekers to view their own profile
+@app.route('/api/job_seekers/me', methods=['GET'])
+@jwt_required()
+def get_my_profile():
+    user_id = get_jwt_identity()
+    job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
+    if job_seeker:
+        return jsonify(job_seeker.to_json()), 200
+    return jsonify({"message": "Profile not found"}), 404
+
+# Route for employers to view a specific job seeker profile
+@app.route('/api/job_seekers/<int:job_seeker_id>', methods=['GET'])
+@jwt_required()
+def get_job_seeker_profile(job_seeker_id):
+    job_seeker = JobSeeker.query.get(job_seeker_id)
+    if job_seeker:
+        return jsonify(job_seeker.to_json()), 200
+    return jsonify({"message": "Profile not found"}), 404
