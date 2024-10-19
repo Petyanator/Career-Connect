@@ -1,6 +1,6 @@
 // /client/src/components/jobposting/JobPosting.jsx
 import { useState } from "react";
-import "./JobPosting.css";
+// import "./JobPosting.css";
 
 const JobPosting = () => {
   const [formData, setFormData] = useState({

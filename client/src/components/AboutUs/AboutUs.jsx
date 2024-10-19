@@ -1,4 +1,4 @@
-import "./AboutUs.css";
+
 import DevelopersSection from "../Developers/DevelopersSection.jsx";
 import { useNavigate } from "react-router-dom";
 

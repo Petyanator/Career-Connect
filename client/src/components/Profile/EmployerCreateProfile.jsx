@@ -17,7 +17,6 @@ function EmployerCreateProfile({ setEmployerProfileData }) {
     const [companyNameValid, setCompanyNameValid] = useState(true);
     const [aboutCompanyValid, setAboutCompanyValid] = useState(true);
     const [contactValid, setContactValid] = useState(true);
-
     const navigate = useNavigate();
 
     // Particle effect useEffect

@@ -1,6 +1,6 @@
 // /client/src/components/jobviewer/JobViewer.jsx
 import React, { useState, useEffect } from 'react';
-import './JobViewer.css'
+// import './JobViewer.css'
 
 
 const JobViewer = () => {
