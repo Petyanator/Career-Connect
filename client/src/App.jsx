@@ -44,7 +44,6 @@ function App() {
   return (
     <>
       <BrowserRouter>
-      <h2>Hello</h2>
         <NavBar
           isLoggedIn={isLoggedIn}
           userType={userType}
