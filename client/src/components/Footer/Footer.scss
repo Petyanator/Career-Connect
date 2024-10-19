@@ -8,6 +8,8 @@
   justify-content: space-between;
   align-items: center; /* Vertically center items */
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for a subtle effect */
+  display: flex;
+  justify-content: space-evenly
 }
 
 .footer-copyright {
@@ -19,26 +21,24 @@
 }
 
 .footer-use_terms {
-  display: flex;
   gap: 1rem; /* Adds space between the "Privacy Policy" and "Terms of Use" */
-
   h4 {
     margin: 0;
     font-size: 1rem;
     color: #333; /* Text color */
     cursor: pointer; /* Make the text look clickable */
-
     &:hover {
       text-decoration: underline; /* Optional hover effect */
     }
   }
+  display: flex;
+  flex-direction: column;
 }
 
 .bi-github {
   font-size: 1.5rem; /* Increase size of the icon */
   color: #333;
   cursor: pointer; /* Make the icon look clickable */
-
   &:hover {
     color: #007bff; /* Optional hover effect to change the color */
   }

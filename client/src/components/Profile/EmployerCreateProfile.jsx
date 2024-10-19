@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './EmployerCreateProfile.css';
+// import './EmployerCreateProfile.css';
 
 function EmployerCreateProfile({ setEmployerProfileData }) {
     const [companyName, setCompanyName] = useState('');

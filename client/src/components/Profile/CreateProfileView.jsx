@@ -1,5 +1,5 @@
   import React, { useEffect } from 'react';
-  import './CreateProfileView.css';
+  // import './CreateProfileView.css';
 
   function CreateProfileView({ profileData }) {
       useEffect(() => {

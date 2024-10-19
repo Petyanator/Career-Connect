@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Landing.scss"; // Assuming you are using Sass files
+// import "./Landing.scss";
 import Footer from '../Footer/Footer'
 
 function Landing() {
