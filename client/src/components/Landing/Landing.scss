@@ -1,0 +1,27 @@
+.landing-container {
+  .user-reviews-section {
+    .reviews-container {
+      display: flex;
+      overflow-x: scroll;
+    }
+
+    .review-card {
+      min-width: 300px;
+      max-width: 300px;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+    }
+  }
+
+  .partner-companies-section {
+    .company-logo {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #e9ecef;
+      border-radius: 10px;
+    }
+  }
+}

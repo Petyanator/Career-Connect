@@ -17,6 +17,8 @@ import JobPosting from "./components/JobPosting/JobPosting";
 import JobViewer from "./components/JobViewer/JobViewer";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard"
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
+import Footer from "./components/Footer/Footer"
+
 
 function App() {
   const [profileData, setProfileData] = useState(null);
@@ -89,6 +91,8 @@ function App() {
           />
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
         </Routes>
+
+        <Footer />
       </BrowserRouter>
     </>
   );
