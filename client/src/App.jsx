@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 // import "@fortawesome/fontawesome-free/css/all.min.css";
 import NavBar from "./components/NavBar/NavBar";
 import Landing from "./components/Landing/Landing";
