@@ -1,0 +1,102 @@
+// Define variables for colors and spacing
+$bg-color: #0D3B4C;
+$primary-color: #1A535C;
+$secondary-color: #4ECDC4;
+$button-hover-color: #FF6B6B;
+$button-hover-secondary: #E63946;
+$input-bg: #335C67;
+$text-color: black;
+$font-family: 'Arial', sans-serif;
+$box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+// Global styles
+body {
+  background-color: $bg-color;
+  font-family: $font-family;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+// Login form styles
+.login-form-container {
+  width: 320px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: $primary-color;
+  border-radius: 12px;
+  box-shadow: $box-shadow;
+  text-align: center;
+
+  h2 {
+    color: $text-color;
+    margin-bottom: 30px;
+    font-size: 24px;
+  }
+
+  .input-container {
+    margin-bottom: 20px;
+    position: relative;
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: $input-bg;
+      color: $text-color;
+      font-size: 16px;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+
+  .login-btn,
+  .register-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background-color: $button-hover-color;
+    color: $text-color;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $button-hover-secondary;
+    }
+  }
+
+  .register-btn {
+    background-color: $secondary-color;
+
+    &:hover {
+      background-color: darken($secondary-color, 10%);
+    }
+  }
+
+  .alert {
+    width: 100%;
+    padding: 15px;
+    background-color: $button-hover-color;
+    color: $text-color;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+
+    &.success {
+      background-color: $secondary-color;
+    }
+
+    &.error {
+      background-color: $button-hover-color;
+    }
+  }
+}

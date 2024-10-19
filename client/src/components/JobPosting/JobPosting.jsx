@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./JobPosting.scss"; // Import your new SCSS file
+// import "./JobPosting.scss"; // Import your new SCSS file
 
 const JobPosting = () => {
   const [formData, setFormData] = useState({

@@ -1,11 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
-// import "./Login.css";
+import { useNavigate } from "react-router-dom";
 import UserToken from "../Token/UserToken.jsx";
+import './Login.scss'; // Import Sass file
 
 function Login({ setIsLoggedIn, setUserType }) {
-  // Accept setIsLoggedIn as a prop
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loginError, setLoginError] = useState("");
   const { setToken } = UserToken();
@@ -29,7 +28,7 @@ function Login({ setIsLoggedIn, setUserType }) {
 
         if (accessToken) {
           setToken(accessToken);
-          setIsLoggedIn(true); // Update the login status
+          setIsLoggedIn(true);
           setUserType(userType);
 
           localStorage.setItem("userType", userType);
@@ -54,28 +53,38 @@ function Login({ setIsLoggedIn, setUserType }) {
   };
 
   return (
-    <div className="login-form-container">
-      <h2>Login</h2>
-      {loginError && <p style={{ color: "red" }}>{loginError}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="container d-flex justify-content-center align-items-center vh-100">
+      <div className="login-form-container bg-light p-5 shadow rounded">
+        <h2 className="mb-4 text-center">Login</h2>
+        {loginError && <div className="alert alert-danger">{loginError}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <input
+              type="text"
+              name="username"
+              className="form-control"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
