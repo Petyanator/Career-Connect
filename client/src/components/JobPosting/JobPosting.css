@@ -1,11 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
   margin: 0;
   display: flex;
@@ -13,10 +7,11 @@ body {
   align-items: flex-start;
   height: 100vh;
   overflow-y: auto;
-  background-color: #092734;
+
 }
 
-.container{
+.job-posting-container{
+  padding-top:100px;
   width: 40rem; /* Ensures the navbar spans the full width of the page */ /* Makes sure the navbar is always on top of other elements */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
 }

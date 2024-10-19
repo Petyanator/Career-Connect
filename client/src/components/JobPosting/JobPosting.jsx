@@ -1,6 +1,5 @@
-// /client/src/components/jobposting/JobPosting.jsx
 import { useState } from "react";
-// import "./JobPosting.css";
+import "./JobPosting.scss"; // Import your new SCSS file
 
 const JobPosting = () => {
   const [formData, setFormData] = useState({
@@ -64,63 +63,68 @@ const JobPosting = () => {
   };
 
   return (
-    <div className="container">
+    <div className="job-posting-container">
       <form onSubmit={handleSubmit} className="formJobPosting">
-        <div>
+        <div className="form-group">
           <label>Job Title:</label>
           <input
             type="text"
             name="jobTitle"
             value={formData.jobTitle}
             onChange={handleChange}
+            className="form-control" /* Use Bootstrap form-control class */
             required
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label>Salary Range:</label>
           <input
             type="text"
             name="salaryRange"
             value={formData.salaryRange}
             onChange={handleChange}
+            className="form-control" /* Use Bootstrap form-control class */
             required
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label>Location:</label>
           <input
             type="text"
             name="location"
             value={formData.location}
             onChange={handleChange}
+            className="form-control" /* Use Bootstrap form-control class */
             required
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label>Required Skills:</label>
           <input
             type="text"
             name="requiredSkills"
             value={formData.requiredSkills}
             onChange={handleChange}
+            className="form-control" /* Use Bootstrap form-control class */
             required
           />
         </div>
 
-        <div>
+        <div className="form-group">
           <label>Description:</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
+            className="form-control" /* Use Bootstrap form-control class */
             required
           />
         </div>
 
-        <button type="submit" disabled={isSubmitting}>
+        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
           {isSubmitting ? "Posting..." : "Post Job"}
         </button>
       </form>
