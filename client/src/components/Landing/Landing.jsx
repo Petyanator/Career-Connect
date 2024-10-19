@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Landing.scss"; // Assuming you are using Sass files
+import Footer from '../Footer/Footer'
 
 function Landing() {
   const reviewsWrapperRef = useRef(null);
@@ -58,18 +59,8 @@ function Landing() {
         </div>
       </div>
 
-      {/* Companies Section */}
-      <div className="partner-companies-section text-center mt-5">
-        <h2 className="mb-4">Companies we have worked with:</h2>
-        <div className="d-flex justify-content-around">
-          {["Google", "Amazon", "Facebook", "Microsoft"].map((company, index) => (
-            <div className="company-logo p-3 border" key={index}>
-              {company}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+  <Footer />
+  </div>
   );
 }
 

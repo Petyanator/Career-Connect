@@ -51,6 +51,7 @@ function App() {
         />
 
         <Routes>
+        <Route path="/footer" element={<Footer />} />
           <Route path="/" element={<Landing />} />
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/searchbar" element={<SearchAndFilterSystem />} />
@@ -92,7 +93,7 @@ function App() {
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
         </Routes>
 
-        <Footer />
+
       </BrowserRouter>
     </>
   );
