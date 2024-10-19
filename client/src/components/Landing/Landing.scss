@@ -2,7 +2,7 @@
 
 $white: #ffffff;
 $text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-$banner-height: 100vh; // Use full height for banner
+$banner-height: 80vh; // Use full height for banner
 
 .landing-container{
 height:2400px;
@@ -11,7 +11,7 @@ height:2400px;
 .banner {
   background-size: cover;
   background-position: center;
-  height: $banner-height; // Make the banner full page
+  height: $banner-height;
   padding: 150px 0;
 
   h1 {
@@ -36,10 +36,15 @@ height:2400px;
   }
 }
 
+.service-title{
+  text-align:center;
+}
 .services-category{
   display:flex;
-
 }
-
+.service-card{
+  padding:18px;
+  margin:24px;
+}
 
 // You can add other styles for Footer or other components here
