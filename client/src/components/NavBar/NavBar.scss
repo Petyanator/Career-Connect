@@ -1,13 +1,20 @@
 /* Styling for the navigation bar */
 nav {
-  background-color: #2c3e50; /* Dark background color for navbar */
+  background-color: transparent; /* Initially transparent */
   padding: 1rem;
   position: fixed; /* Fixes the navbar at the top */
   top: 0;
   left: 0;
-  width: 100%; /* Ensures the navbar spans the full width of the page */ /* Makes sure the navbar is always on top of other elements */
+  width: 100%; /* Ensures the navbar spans the full width of the page */
+  z-index: 1000; /* Ensures the navbar is always on top of other elements */
+  transition: background-color 0.3s ease; /* Smooth transition effect */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
-  z-index: 1000;
+}
+
+/* When scrolled, we will add a new class `.navbar-scrolled` */
+.navbar-scrolled {
+  background-color: #2c3e50; /* Darker background after scrolling */
+  transition: background-color 0.3s ease;
 }
 
 /* Remove default list styling */
@@ -38,10 +45,6 @@ li {
   background-color: #34495e; /* Darker shade for hover */
   color: #fff;
 }
-/* 
-  Add some padding to the body to avoid content being hidden under the navbar */
-/* body {
-    padding-top: 0px; /* Adjust this based on the height of your navbar */
 
 /* Responsive styling for smaller screens */
 @media (max-width: 768px) {

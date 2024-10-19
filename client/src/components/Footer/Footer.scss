@@ -1,6 +1,4 @@
 .footer-container {
-  position: fixed; /* or 'absolute' depending on your design */
-  bottom: 0;
   width: 100%;
   background-color: #f8f9fa; /* Light background color for the footer */
   padding: 1rem;
@@ -9,7 +7,7 @@
   align-items: center; /* Vertically center items */
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for a subtle effect */
   display: flex;
-  justify-content: space-evenly
+  justify-content: space-evenly;
 }
 
 .footer-copyright {
