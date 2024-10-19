@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './SearchBar.css'; // Import your CSS for styling
+import './SearchAndFilterSystem.css'; // Import your CSS for styling
 
 function SearchAndFilterSystem() {
     const [input, setInput] = useState("");
@@ -59,7 +59,7 @@ function SearchAndFilterSystem() {
 
     const handleApplication = async (job_posting_id, action) => {
         const token = getTokenFromLocalStorage();
-    
+
         try {
             const response = await fetch('http://127.0.0.1:5000/api/apply', {
                 method: 'POST',
@@ -69,19 +69,19 @@ function SearchAndFilterSystem() {
                 },
                 body: JSON.stringify({ job_posting_id, action }), // No need to pass job_seeker_id
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Failed to update application status");
             }
-    
+
             const data = await response.json();
             alert(data.message); // Notify user
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
     };
-    
+
 
     const handleFilterSubmit = (e) => {
         e.preventDefault();

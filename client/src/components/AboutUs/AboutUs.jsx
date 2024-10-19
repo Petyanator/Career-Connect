@@ -1,5 +1,5 @@
 import "./AboutUs.css";
-import DevelopersSection from "./DevelopersSection.jsx";
+import DevelopersSection from "../Developers/DevelopersSection.jsx";
 import { useNavigate } from "react-router-dom";
 
 function AboutUs() {
