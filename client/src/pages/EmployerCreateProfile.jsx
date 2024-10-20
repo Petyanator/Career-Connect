@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './EmployerCreateProfile.css';  // You can structure this similar to JobSeekerProfileCreate.css
+import './EmployerCreateProfile.css';  // Similar to JobSeekerProfileCreate.css
 import { FaPlus } from 'react-icons/fa';
 
 function EmployerProfileCreate({ setProfileData }) {
@@ -22,10 +22,8 @@ function EmployerProfileCreate({ setProfileData }) {
 
   const navigate = useNavigate();
 
-  // Handle benefits input
-  const handleBenefitChange = (e) => {
-    setInputBenefit(e.target.value);
-  };
+  // Handle benefit input
+  const handleBenefitChange = (e) => setInputBenefit(e.target.value);
 
   const handleAddBenefit = (e) => {
     e.preventDefault();
@@ -43,9 +41,7 @@ function EmployerProfileCreate({ setProfileData }) {
   // Handle company logo change
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setCompanyLogo(file); // Store the File object
-    }
+    if (file) setCompanyLogo(file);
   };
 
   // Utility function to convert image file to base64
@@ -58,14 +54,14 @@ function EmployerProfileCreate({ setProfileData }) {
     });
   };
 
-  // Handle form submission using fetch
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validation
     const isCompanyNameValid = !!companyName;
     const isAboutCompanyValid = !!aboutCompany;
-    const isEmailValid = !!email && email.includes('@'); // Basic email validation
+    const isEmailValid = !!email && email.includes('@');
 
     setCompanyNameValid(isCompanyNameValid);
     setAboutCompanyValid(isAboutCompanyValid);
@@ -76,18 +72,19 @@ function EmployerProfileCreate({ setProfileData }) {
       return;
     }
 
-    // Convert companyLogo to base64 if necessary
+    // Convert company logo to base64 if necessary
     let company_logo = null;
     if (companyLogo) {
       company_logo = await convertImageToBase64(companyLogo);
     }
 
+    // Prepare profile data
     const profileData = {
       company_name: companyName,
       about_company: aboutCompany,
-      company_logo,  // This can be null if no logo was uploaded
+      company_logo,  // Can be null if no logo was uploaded
       preferential_treatment: preferentialTreatment,
-      company_benefits: companyBenefits,  // Send it as an array
+      company_benefits: JSON.stringify(companyBenefits),  // Convert benefits to JSON string
       email  // Include email in the profile data
     };
 
