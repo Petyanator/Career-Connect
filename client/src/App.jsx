@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import "@fortawesome/fontawesome-free/css/all.min.css";
 import NavBar from "./components/NavBar/NavBar";
 import Landing from "./components/Landing/Landing";
-import AboutUs from "./components/AboutUs/AboutUs";
+import Team from "./components/Team/Team";
 import CreateProfilePage from "./components/Profile/CreateProfilePage";
 import CreateProfileView from "./components/Profile/CreateProfileView";
 import EmployerCreateProfile from "./components/Profile/EmployerCreateProfile";

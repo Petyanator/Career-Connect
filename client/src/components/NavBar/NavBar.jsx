@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./NavBar.scss";
 
+
 function NavBar({ isLoggedIn, handleLogout, userType }) {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
@@ -37,8 +38,8 @@ function NavBar({ isLoggedIn, handleLogout, userType }) {
           </Link>
         </li>
         <li>
-          <Link className="navbar-link" to="/aboutus">
-            About Us
+          <Link className="navbar-link" to="/the-team">
+            The Team
           </Link>
         </li>
         {isLoggedIn ? (

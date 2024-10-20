@@ -2,20 +2,20 @@
 import DevelopersSection from "../Developers/DevelopersSection.jsx";
 import { useNavigate } from "react-router-dom";
 
-function AboutUs() {
+function Team() {
   const navigate = useNavigate();
   return (
-    <div className="about-us-container">
+    <div className="team-container">
       <h1>About Us</h1>
       <p>
-        At <span className="company-name">Career Connect</span>, we believe in
+        At <span className="team-name">Career Connect</span>, we believe in
         bridging the gap between talented professionals and the opportunities
         they deserve. Founded with a vision to simplify the job search process,
         our platform is designed to connect job seekers with top employers
         across various industries. Whether you’re a fresh graduate looking for
         your first opportunity or a seasoned professional seeking your next big
         move,
-        <span className="company-name"> Career Connect</span> is here to make
+        <span className="team-name"> Career Connect</span> is here to make
         the process easier, faster, and more effective.
       </p>
       <p>
@@ -27,14 +27,14 @@ function AboutUs() {
         helping you navigate the competitive job market with confidence.{"\n"}
       </p>
       <p>
-        For employers, <span className="company-name">Career Connect</span>{" "}
+        For employers, <span className="team-name">Career Connect</span>{" "}
         offers a seamless recruitment experience, providing access to a diverse
         pool of qualified candidates. We understand the challenges of finding
         the right fit, which is why we’ve built advanced tools to help you
         discover, engage, and hire top talent effortlessly.
       </p>
       <p>
-        Join <span className="company-name">Career Connect</span> today—where
+        Join <span className="team-name">Career Connect</span> today—where
         <span className="buzzword"> ambition</span> meets{" "}
         <span className="buzzword"> opportunity</span>, and{" "}
         <span className="buzzword"> success stories </span>
@@ -50,4 +50,4 @@ function AboutUs() {
   );
 }
 
-export default AboutUs;
+export default Team;
