@@ -53,7 +53,7 @@ function App() {
         <Routes>
         <Route path="/footer" element={<Footer />} />
           <Route path="/" element={<Landing />} />
-          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/the-team" element={<Team />} />
           <Route path="/searchbar" element={<SearchAndFilterSystem />} />
           <Route path="/jobposting" element={<JobPosting />} />
           <Route path="/jobviewer" element={<JobViewer />} />

@@ -1,49 +1,34 @@
-// Define variables for colors and spacing
-$bg-color: #0D3B4C;
-$primary-color: #1A535C;
-$secondary-color: #4ECDC4;
-$button-hover-color: #FF6B6B;
-$button-hover-secondary: #E63946;
-$input-bg: #335C67;
-$text-color: black;
-$font-family: 'Arial', sans-serif;
-$box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+@import '../../assets/styles/util/variables.scss';  // Import variables
 
-// Global styles
-// body {
-//   background-color: $bg-color;
-//   font-family: $font-family;
-//   height: 100vh;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   margin: 0;
-// }
 
-// Login form styles
-.login-form-container {
-  width: 320px;
-  margin: 0 auto;
-  padding: 40px;
+.login-container{
   background-color: $primary-color;
-  border-radius: 12px;
+  height: 100vh
+}
+
+.login-form {
+  margin:0;
+  width: 320px;
   box-shadow: $box-shadow;
   text-align: center;
+  color: $text-color;
+  display: flex;
 
   h2 {
-    color: $text-color;
+    color: Black;
     margin-bottom: 30px;
     font-size: 24px;
   }
 
   .input-container {
+    width: 320px;
     margin-bottom: 20px;
     position: relative;
 
     input {
       width: 100%;
       padding: 12px;
-      border: none;
+      border: 1px solid $border-color;
       border-radius: 8px;
       background-color: $input-bg;
       color: $text-color;
@@ -51,6 +36,12 @@ $box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 
       &::placeholder {
         color: rgba(255, 255, 255, 0.6);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 5px $secondary-color;
       }
     }
   }
@@ -60,7 +51,7 @@ $box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     width: 100%;
     padding: 12px;
     margin-top: 10px;
-    background-color: $button-hover-color;
+    background-color: $button-bg-color;
     color: $text-color;
     border: none;
     border-radius: 8px;
@@ -69,7 +60,7 @@ $box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: $button-hover-secondary;
+      background-color: $button-hover-color;
     }
   }
 
@@ -84,7 +75,7 @@ $box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   .alert {
     width: 100%;
     padding: 15px;
-    background-color: $button-hover-color;
+    background-color: $button-bg-color;
     color: $text-color;
     text-align: center;
     font-size: 18px;

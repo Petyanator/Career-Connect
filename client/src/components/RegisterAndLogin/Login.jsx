@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import UserToken from "../Token/UserToken.jsx";
-import './Login.scss'; // Import Sass file
+import "../RegisterAndLogin/Login.scss"
 
 function Login({ setIsLoggedIn, setUserType }) {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -53,8 +53,10 @@ function Login({ setIsLoggedIn, setUserType }) {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="login-form-container bg-light p-5 shadow rounded">
+    <>
+    <div className="login-container">
+
+      <div className="login-form">
         <h2 className="mb-4 text-center">Login</h2>
         {loginError && <div className="alert alert-danger">{loginError}</div>}
         <form onSubmit={handleSubmit}>
@@ -84,8 +86,10 @@ function Login({ setIsLoggedIn, setUserType }) {
             Login
           </button>
         </form>
-      </div>
+
+        </div>
     </div>
+    </>
   );
 }
 

@@ -1,22 +1,26 @@
-// Example SCSS to utilize nesting and variables
+@import '../../assets/styles/util/variables.scss';  // Import the variables.scss
 
 $white: #ffffff;
 $text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 $banner-height: 80vh; // Use full height for banner
 
-.landing-container{
-height:2400px;
+
+.landing-container {
+  height: 1200px; // You might want to rethink this hardcoded value if you're planning to be responsive.
+  background-color: $bg-color;
 }
 
+// Banner Styles
 .banner {
   background-size: cover;
   background-position: center;
   height: $banner-height;
   padding: 150px 0;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../../assets/styles/landing/banner2.jpg');
 
   h1 {
     margin: 0;
-    color: $white;
+    color: $text-color;
     text-shadow: $text-shadow;
     font-size: 78px;
     font-weight: bold;
@@ -24,7 +28,7 @@ height:2400px;
 
   p {
     font-size: 36px;
-    color: $white;
+    color: $text-color;
     opacity: 0.7;
     text-shadow: $text-shadow;
   }
@@ -33,18 +37,97 @@ height:2400px;
     margin-top: 20px;
     padding-left: 30px;
     padding-right: 30px;
+    background-color: $button-bg-color;
+    border: none;
+    color: $text-color;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($button-bg-color, 20%);
+    }
   }
 }
 
-.service-title{
-  text-align:center;
-}
-.services-category{
-  display:flex;
-}
-.service-card{
-  padding:18px;
-  margin:24px;
+// Services Section
+.services-info {
+  background-color: $primary-color;
+  color: $text-color;
+  padding: 40px 0;
+
+  .service-title {
+    text-align: center;
+    font-size: 32px;
+    color: $text-color;
+  }
+
+  .services-category {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+
+    .service-card {
+      background-color: lighten($primary-color, 10%);
+      padding: 24px;
+      margin: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      color: $text-color;
+
+      h3 {
+        color: $secondary-color;
+        margin-bottom: 15px;
+      }
+
+      p {
+        color: $text-color;
+      }
+    }
+  }
 }
 
-// You can add other styles for Footer or other components here
+// About Us Section
+.about-us-container {
+  padding: 50px 15px;
+  background-color: $bg-color;
+  color: $text-color;
+
+  .about-us-title {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+
+    .company-name {
+      color: $secondary-color;
+    }
+
+    .buzzword {
+      font-weight: bold;
+      color: $text-hover-color;
+    }
+  }
+
+  .start-now-btn-container {
+    text-align: center;
+
+    .start-now-btn {
+      background-color: $secondary-color;
+      border: none;
+      color: $text-color;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken($secondary-color, 10%);
+      }
+    }
+  }
+}

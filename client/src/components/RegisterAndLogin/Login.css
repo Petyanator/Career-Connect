@@ -9,7 +9,7 @@ body {
 }
 
 .login-form-container {
-    width: 320px;
+   width: 320px;
     margin: 0 auto;
     padding: 40px;
     background-color: #1A535C;
@@ -82,7 +82,7 @@ h1 {
 .alert {
     width: 100%;
     padding: 15px;
-    background-color: #FF6B6B; 
+    background-color: #FF6B6B;
     color: white;
     text-align: center;
     font-size: 18px;
@@ -91,7 +91,7 @@ h1 {
 }
 
 .alert.success {
-    background-color: #4ECDC4; 
+    background-color: #4ECDC4;
 }
 
 .alert.error {
