@@ -110,7 +110,7 @@ class Employer(db.Model):
     company_name = db.Column(db.Integer)
     company_logo = db.Column(db.String(255), nullable = True)
     about_company = db.Column(db.text, nullable = False)
-    preferential_treatement = db.Column(db.text, nullable = True)
+    preferential_treatment = db.Column(db.text, nullable = True)
     company_benefits = db.Column(db.text, nullable = True)
     email = db.Column(db.String(100), nullable = False)
 
@@ -120,44 +120,12 @@ class Employer(db.Model):
             "employer_id": self.employer_id,
             "user_id": self.user_id,
             "company_name": self.company_name,
+            "company_logo": self.company_logo,
+            "about_company": self.about_company,
+            "preferential_treat": self.preferential_treatment,
+            "company_benefits": self.company_benefits,
+            "email": self.email
         }
-
-
-class JobSeeker(db.Model):
-    __tablename__ = "job_seekers"
-    job_seeker_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
-    profile_pic = db.Column(db.String(255), nullable=True)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100), nullable=False)
-    dob = db.Column(db.Date, nullable=False)
-    gender = db.Column(db.String(30), nullable=False)
-    nationality = db.Column(db.String(255), nullable=False)
-    education = db.Column(db.String(255), nullable=False)  # JSON string of education
-    skills = db.Column(db.String(255), nullable=False)  # JSON string of skills
-
-    def to_json(self):
-        return {
-            "job_seeker_id": self.job_seeker_id,
-            "user_id": self.user_id,
-            "profile_pic": self.profile_pic,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "dob": self.dob.isoformat(),  # Convert date to string
-            "gender": self.gender,
-            "nationality": self.nationality,
-            "education": json.loads(self.education),  # Convert JSON string to Python list
-            "skills": json.loads(self.skills)  # Convert JSON string to Python list
-        }
-
-
-
-
-
-
-
-
-
 
 class Application(db.Model):
     __tablename__ = "applications"
