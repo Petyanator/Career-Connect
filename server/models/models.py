@@ -109,9 +109,9 @@ class Employer(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     company_name = db.Column(db.Integer)
     company_logo = db.Column(db.String(255), nullable = True)
-    about_company = db.Column(db.text, nullable = False)
-    preferential_treatment = db.Column(db.text, nullable = True)
-    company_benefits = db.Column(db.text, nullable = True)
+    about_company = db.Column(db.Text, nullable = False)
+    preferential_treatment = db.Column(db.Text, nullable = True)
+    company_benefits = db.Column(db.Text, nullable = True)
     email = db.Column(db.String(100), nullable = False)
 
 
