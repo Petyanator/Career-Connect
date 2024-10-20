@@ -42,7 +42,7 @@ function Landing() {
         <h1>
           Career Connect
         </h1>
-        <p>Connect with your future.</p>
+        <p>Connect with your future!</p>
         <a className="btn btn-danger" href="#">
           Start Now
         </a>
