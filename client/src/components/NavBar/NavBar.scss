@@ -1,4 +1,7 @@
 /* Styling for the navigation bar */
+@import '../../assets/styles/util/variables.scss';  // Import the variables.scss
+
+
 nav {
   background-color: transparent; /* Initially transparent */
   padding: 1rem;
