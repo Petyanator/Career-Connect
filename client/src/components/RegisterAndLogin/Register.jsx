@@ -1,13 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
-// import "./Register.css";
+import '../RegisterAndLogin/Register.scss'
 
 function Register() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     full_name: "",
-    user_type: "", // Add user_type to formData state
+    user_type: "",
     password: "",
     confirmPassword: "",
   });
@@ -62,13 +62,8 @@ function Register() {
       if (response.status === 201) {
         setRegistrationSuccess(true);
         setErrorMessage("");
-
-        // Save the access token to localStorage or state management (e.g., Redux)
         const { access_token } = response.data;
         localStorage.setItem("access_token", access_token);
-
-        // Optionally, redirect the user to the login page or home page after registration
-        console.log("User registered successfully:", response.data.user);
       }
     } catch (error) {
       if (error.response) {
@@ -80,8 +75,6 @@ function Register() {
             setEmailTaken(true);
           }
           setErrorMessage(errorMsg);
-        } else if (error.response.status === 400) {
-          setErrorMessage("Invalid user type.");
         } else {
           setErrorMessage("An error occurred during registration.");
         }
@@ -92,128 +85,109 @@ function Register() {
   };
 
   return (
-    <div className="register-form-container">
-      <h2>Register</h2>
-      {registrationSuccess ? (
-        <p style={{ color: "green" }}>
-          Registration successful! You can now log in.
-        </p>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          {/* Username */}
-          <div className="input-container">
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-            />
-            {usernameTaken && (
-              <p style={{ color: "red" }}>Username is already taken!</p>
-            )}
-          </div>
+    <div className="register-form-container d-flex justify-content-center align-items-center">
+      <div className="register-form">
+        <h2 className="text-center mb-4">Register</h2>
+        {registrationSuccess ? (
+          <p className="alert alert-success">Registration successful! You can now log in.</p>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <input
+                type="text"
+                name="username"
+                className="form-control"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+              {usernameTaken && <p className="text-danger">Username is already taken!</p>}
+            </div>
 
-          {/* Email */}
-          <div className="input-container">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            {emailTaken && (
-              <p style={{ color: "red" }}>Email is already registered!</p>
-            )}
-          </div>
+            <div className="mb-3">
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              {emailTaken && <p className="text-danger">Email is already registered!</p>}
+            </div>
 
-          {/* Full Name */}
-          <div className="input-container">
-            <input
-              type="text"
-              name="full_name"
-              placeholder="Full Name"
-              value={formData.full_name}
-              onChange={handleChange}
-              required
-            />
-          </div>
+            <div className="mb-3">
+              <input
+                type="text"
+                name="full_name"
+                className="form-control"
+                placeholder="Full Name"
+                value={formData.full_name}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          {/* User Type */}
-          <div className="input-container">
-            <label htmlFor="user_type">User Type:</label>
-            <select
-              name="user_type"
-              value={formData.user_type}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select User Type</option>
-              <option value="job_seeker">Job Seeker</option>
-              <option value="employer">Employer</option>
-            </select>
-          </div>
+            <div className="mb-3">
+              <label htmlFor="user_type" className="form-label">User Type:</label>
+              <select
+                name="user_type"
+                className="form-select"
+                value={formData.user_type}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select User Type</option>
+                <option value="job_seeker">Job Seeker</option>
+                <option value="employer">Employer</option>
+              </select>
+            </div>
 
-          {/* Password */}
-          <div className="input-container">
-            <div className="password-container">
+            <div className="mb-3 password-container">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
+                className="form-control"
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
                 required
               />
-              <span
-                className="toggle-password-icon"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword ? "🔒" : "🔓"}
+              <span className="toggle-password" onClick={togglePasswordVisibility}>
+                {showPassword ? "Hide" : "Show"}
               </span>
+              {!isPasswordValid && (
+                <p className="text-danger">
+                  Password must be at least 8 characters long and contain at least one letter, one number, and one special character.
+                </p>
+              )}
             </div>
-          </div>
 
-          {!isPasswordValid && (
-            <p style={{ color: "red" }}>
-              Password must be at least 8 characters long and contain at least
-              one letter, one number, and one special character.
-            </p>
-          )}
-
-          {/* Confirm Password */}
-          <div className="input-container">
-            <div className="password-container">
+            <div className="mb-3 password-container">
               <input
                 type={showPassword ? "text" : "password"}
                 name="confirmPassword"
+                className="form-control"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
               />
-              <span
-                className="toggle-password-icon"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword ? "🔒" : "🔓"}
+              <span className="toggle-password" onClick={togglePasswordVisibility}>
+                {showPassword ? "Hide" : "Show"}
               </span>
+              {!passwordMatch && <p className="text-danger">Passwords do not match!</p>}
             </div>
-          </div>
 
-          {!passwordMatch && (
-            <p style={{ color: "red" }}>Passwords do not match!</p>
-          )}
-
-          <button type="submit" className="register-btn">
-            Register
-          </button>
-        </form>
-      )}
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+            <button type="submit" className="btn btn-primary w-100">
+              Register
+            </button>
+          </form>
+        )}
+        {errorMessage && <p className="text-danger">{errorMessage}</p>}
+      </div>
     </div>
   );
 }

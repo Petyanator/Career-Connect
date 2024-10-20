@@ -1,4 +1,4 @@
-import "./Dashboard.css";
+
 
 function JobSeekerDashboard() {
   return (
