@@ -10,9 +10,12 @@ function EmployerProfileCreate({ setProfileData }) {
   const [preferentialTreatment, setPreferentialTreatment] = useState('');
   const [companyBenefits, setCompanyBenefits] = useState([]);
   const [inputBenefit, setInputBenefit] = useState('');
+  const [email, setEmail] = useState('');
 
+  // Validation states
   const [companyNameValid, setCompanyNameValid] = useState(true);
   const [aboutCompanyValid, setAboutCompanyValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
   const [showForm, setShowForm] = useState(true);
   const [isButtonShrinking, setIsButtonShrinking] = useState(false);
@@ -62,11 +65,13 @@ function EmployerProfileCreate({ setProfileData }) {
     // Validation
     const isCompanyNameValid = !!companyName;
     const isAboutCompanyValid = !!aboutCompany;
+    const isEmailValid = !!email && email.includes('@'); // Basic email validation
 
     setCompanyNameValid(isCompanyNameValid);
     setAboutCompanyValid(isAboutCompanyValid);
+    setEmailValid(isEmailValid);
 
-    if (!isCompanyNameValid || !isAboutCompanyValid) {
+    if (!isCompanyNameValid || !isAboutCompanyValid || !isEmailValid) {
       alert("Please fill out all the required fields.");
       return;
     }
@@ -77,13 +82,13 @@ function EmployerProfileCreate({ setProfileData }) {
       company_logo = await convertImageToBase64(companyLogo);
     }
 
-    // The company_benefits should be sent as an array, not a stringified JSON
     const profileData = {
       company_name: companyName,
       about_company: aboutCompany,
       company_logo,  // This can be null if no logo was uploaded
       preferential_treatment: preferentialTreatment,
       company_benefits: companyBenefits,  // Send it as an array
+      email  // Include email in the profile data
     };
 
     console.log("Submitting profile data:", profileData);
@@ -156,6 +161,17 @@ function EmployerProfileCreate({ setProfileData }) {
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               className={!companyNameValid ? 'invalid-input' : ''}
+            />
+
+            {/* Email */}
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Company Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={!emailValid ? 'invalid-input' : ''}
             />
 
             {/* About Company */}

@@ -51,9 +51,10 @@ def create_profile():
         if isinstance(skills, list):
             skills = json.dumps(skills)  # Convert list to JSON string
 
-        profile_pic = data.get('profile_pic')
+
 
         # Handle profile picture (if provided)
+        profile_pic = data.get('profile_pic')
         profile_pic_path = None
         if profile_pic and profile_pic.startswith('data:image/'):
             img_data = profile_pic.split(',')[1]
