@@ -21,10 +21,10 @@ function Login() {
         setShowPassword(!showPassword);
     };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,7 +40,16 @@ function Login() {
                     login({ access_token, user }); // Use login from AuthContext to store token and user
                     setLoginSuccess(true); // Set login success to true
                     setAlertMessage("Login successful!");
-                    navigate('/home'); // Navigate to home page
+
+                    // User type logic
+                    const userType = user.user_type; // Assuming user object contains user_type
+                    if (userType === "employer") {
+                        navigate('/employer-dashboard'); // Redirect to employer dashboard
+                    } else if (userType === "job_seeker") {
+                        navigate('/job-seeker-dashboard'); // Redirect to job seeker dashboard
+                    } else {
+                        navigate('/'); // Default redirection if user type is not recognized
+                    }
                 } else {
                     setLoginError("Failed to retrieve access token.");
                 }

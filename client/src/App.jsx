@@ -23,6 +23,7 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<Landing />} />
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/searchbar" element={<SearchAndFilterSystem />} />
           <Route path="/jobposting" element={<JobPosting />} />
@@ -56,7 +57,6 @@ function App() {
             path="/protected"
             element={
               <PrivateRoute>
-                <SomeProtectedComponent />
               </PrivateRoute>
             }
           />

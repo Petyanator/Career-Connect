@@ -34,14 +34,14 @@ function NavBar() {
                 to={
                   userType === "employer"
                     ? "/employer-dashboard"
-                    : "/job-seeker-dashboard"
+                    : "/job_seeker/create_profile"
                 }
               >
                 Dashboard
               </Link>
             </li>
             <li>
-              <p>Welcome, {user.username}</p> {/* Display welcome message */}
+             {/*  <p>Welcome, {user.username}</p> */} {/* Display welcome message */}
             </li>
             <li>
               <Logout handleLogout={handleLogoutAndNavigate} /> {/* Use Logout component */}
