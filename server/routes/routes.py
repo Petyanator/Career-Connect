@@ -116,7 +116,7 @@ def create_employer_profile():
     try:
         # Get JSON data from request
         data = request.get_json()
-
+        print(f"Received data: {data}")
         # Get user_id from JWT
         user_id = get_jwt_identity()
 

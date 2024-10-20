@@ -112,7 +112,7 @@ class Employer(db.Model):
     about_company = db.Column(db.Text, nullable = False)
     preferential_treatment = db.Column(db.Text, nullable = True)
     company_benefits = db.Column(db.Text, nullable = True)
-    email = db.Column(db.String(100), nullable = False)
+    email = db.Column(db.String(100), nullable = True)
 
 
     def to_json(self):
@@ -123,7 +123,7 @@ class Employer(db.Model):
             "company_logo": self.company_logo,
             "about_company": self.about_company,
             "preferential_treat": self.preferential_treatment,
-            "company_benefits": self.company_benefits,
+            "company_benefits": json.loads(self.company_benefits),
             "email": self.email
         }
 

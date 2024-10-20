@@ -77,12 +77,13 @@ function EmployerProfileCreate({ setProfileData }) {
       company_logo = await convertImageToBase64(companyLogo);
     }
 
+    // The company_benefits should be sent as an array, not a stringified JSON
     const profileData = {
       company_name: companyName,
       about_company: aboutCompany,
-      company_logo,
+      company_logo,  // This can be null if no logo was uploaded
       preferential_treatment: preferentialTreatment,
-      company_benefits: JSON.stringify(companyBenefits),
+      company_benefits: companyBenefits,  // Send it as an array
     };
 
     console.log("Submitting profile data:", profileData);
