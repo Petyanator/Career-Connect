@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import './CreateProfilePage.css';
+import './CreateProfilePage.scss';
 import { FaPlus } from 'react-icons/fa';
 
 function CreateProfilePage({ setProfileData }) {
@@ -173,87 +173,113 @@ function CreateProfilePage({ setProfileData }) {
   };
 
   return (
-    <div>
-      {/* Particle effect container */}
-      <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div>
-
-      {/* Form section */}
-      <div className={`create-profile-page ${showForm ? '' : 'hidden-form'}`}>
+    <>
+     <div className="create-profile-container d-flex justify-content-center align-items-center">
+      <div className="create-profile-form">
         {showForm && (
-          <form onSubmit={handleSubmit}>
-            <h1>Create Your Profile</h1>
+          <form onSubmit={handleSubmit} className="form-create-profile">
+            <h1 className="text-center mb-4">Create Your Profile</h1>
+
             {/* Profile Picture */}
-            <label htmlFor="profile-picture">Profile Picture:</label>
-            <input type="file" accept="image/jpeg, image/png" id="profile-picture" onChange={handleImageChange} />
-            {selectedImage && (
-              <div className="image-preview">
-                <img src={URL.createObjectURL(selectedImage)} alt="Profile Preview" style={{ width: '100px', height: '80px' }} />
-              </div>
-            )}
+            <div className="mb-3">
+              <label htmlFor="profile-picture" className="form-label">Profile Picture:</label>
+              <input type="file" className="form-control" accept="image/jpeg, image/png" id="profile-picture" />
+              {selectedImage && (
+                <div className="image-preview mt-2">
+                  <img src={URL.createObjectURL(selectedImage)} alt="Profile Preview" className="img-thumbnail" />
+                </div>
+              )}
+            </div>
 
             {/* First Name */}
-            <label htmlFor="first-name">First Name:</label>
-            <input
-              type="text"
-              id="first-name"
-              placeholder="First name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className={!firstNameValid ? 'invalid-input' : ''}
-            />
+            <div className="mb-3">
+              <label htmlFor="first-name" className="form-label">First Name:</label>
+              <input
+                type="text"
+                id="first-name"
+                className={`form-control ${!firstNameValid && "is-invalid"}`}
+                placeholder="First name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
 
             {/* Last Name */}
-            <label htmlFor="last-name">Last Name:</label>
-            <input
-              type="text"
-              id="last-name"
-              placeholder="Last name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className={!lastNameValid ? 'invalid-input' : ''}
-            />
+            <div className="mb-3">
+              <label htmlFor="last-name" className="form-label">Last Name:</label>
+              <input
+                type="text"
+                id="last-name"
+                className={`form-control ${!lastNameValid && "is-invalid"}`}
+                placeholder="Last name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
 
             {/* Date of Birth */}
-            <label htmlFor="dob">Date of Birth:</label>
-            <input
-              type="date"
-              id="dob"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-              className={!dobValid ? 'invalid-input' : ''}
-            />
+            <div className="mb-3">
+              <label htmlFor="dob" className="form-label">Date of Birth:</label>
+              <input
+                type="date"
+                id="dob"
+                className={`form-control ${!dobValid && "is-invalid"}`}
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
+              />
+            </div>
 
             {/* Gender */}
-            <label>Gender:</label>
-            <div className={`gender-input ${!genderValid ? 'invalid-input' : ''}`}>
-              <label>
-                <input type="radio" name="gender" value="Male" onChange={(e) => setGender(e.target.value)} /> Male
-              </label>
-              <label>
-                <input type="radio" name="gender" value="Female" onChange={(e) => setGender(e.target.value)} /> Female
-              </label>
+            <div className="mb-3">
+              <label className="form-label">Gender:</label>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  name="gender"
+                  value="Male"
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <label className="form-check-label">Male</label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  name="gender"
+                  value="Female"
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <label className="form-check-label">Female</label>
+              </div>
             </div>
 
             {/* Nationality */}
-            <label htmlFor="nationality">Nationality:</label>
-            <input
-              type="text"
-              id="nationality"
-              placeholder="Nationality"
-              value={nationality}
-              onChange={(e) => setNationality(e.target.value)}
-              className={!nationalityValid ? 'invalid-input' : ''}
-            />
+            <div className="mb-3">
+              <label htmlFor="nationality" className="form-label">Nationality:</label>
+              <input
+                type="text"
+                id="nationality"
+                className={`form-control ${!nationalityValid && "is-invalid"}`}
+                placeholder="Nationality"
+                value={nationality}
+                onChange={(e) => setNationality(e.target.value)}
+              />
+            </div>
 
             {/* Education Fields */}
             {educationFields.map((field, index) => (
-              <div key={index} className="education-section">
-                <label htmlFor={`education-${index}`}>Education Level:</label>
+              <div key={index} className="mb-3">
+                <label htmlFor={`education-${index}`} className="form-label">Education Level:</label>
                 <select
                   id={`education-${index}`}
-                  name="education"
+                  className="form-select"
                   value={field.education}
-                  onChange={(e) => handleEducationChange(index, e)}
+                  onChange={(e) => {
+                    const newFields = [...educationFields];
+                    newFields[index].education = e.target.value;
+                    setEducationFields(newFields);
+                  }}
                 >
                   <option value="">Select your education level</option>
                   <option value="High School Diploma">High School Diploma</option>
@@ -263,66 +289,67 @@ function CreateProfilePage({ setProfileData }) {
                   <option value="PhD">PhD</option>
                 </select>
 
-                {field.education && field.education !== 'High School Diploma' && (
+                {field.education && field.education !== "High School Diploma" && (
                   <>
-                    <label htmlFor={`degree-details-${index}`}>Degree/Certification Details:</label>
+                    <label htmlFor={`degree-details-${index}`} className="form-label">Degree/Certification Details:</label>
                     <input
                       type="text"
                       id={`degree-details-${index}`}
-                      name="degreeDetails"
+                      className="form-control"
                       value={field.degreeDetails}
-                      placeholder="Degree details"
-                      onChange={(e) => handleEducationChange(index, e)}
+                      onChange={(e) => {
+                        const newFields = [...educationFields];
+                        newFields[index].degreeDetails = e.target.value;
+                        setEducationFields(newFields);
+                      }}
                     />
 
-                    <label htmlFor={`institution-${index}`}>Institution Name:</label>
+                    <label htmlFor={`institution-${index}`} className="form-label">Institution Name:</label>
                     <input
                       type="text"
                       id={`institution-${index}`}
-                      name="institution"
+                      className="form-control"
                       value={field.institution}
-                      placeholder="Institution name"
-                      onChange={(e) => handleEducationChange(index, e)}
+                      onChange={(e) => {
+                        const newFields = [...educationFields];
+                        newFields[index].institution = e.target.value;
+                        setEducationFields(newFields);
+                      }}
                     />
                   </>
                 )}
               </div>
             ))}
 
-            <button type="button" className="add-education-btn" onClick={handleAddEducationField}>
+            <button type="button" className="btn btn-outline-primary mb-3" onClick={() => setEducationFields([...educationFields, { education: "", degreeDetails: "", institution: "" }])}>
               <FaPlus /> Add Education
             </button>
 
             {/* Skills */}
-            <label htmlFor="skills">Skills (Add at least 3):</label>
-            <div className={`skills-input ${!skillsValid ? 'invalid-input' : ''}`}>
-              <input
-                type="text"
-                id="skills"
-                value={inputSkill}
-                onChange={handleSkillChange}
-                placeholder="Enter a skill and press add"
-              />
-              <button onClick={handleAddSkill}>Add Skill</button>
-            </div>
-            <div className="skills-list">
-              {skills.map((skill, index) => (
-                <span key={index} className="skill-item">
-                  {skill}
-                  <button className="delete-skill" onClick={() => handleDeleteSkill(skill)}>
-                    &times;
-                  </button>
-                </span>
-              ))}
+            <div className="mb-3">
+              <label htmlFor="skills" className="form-label">Skills (Add at least 3):</label>
+              <div className="d-flex">
+                <input
+                  type="text"
+                  id="skills"
+                  className="form-control"
+                  value={inputSkill}
+                  onChange={(e) => setInputSkill(e.target.value)}
+                  placeholder="Enter a skill and press add"
+                />
+                <button type="button" className="btn btn-primary ms-2" onClick={handleAddSkill}>Add Skill</button>
+              </div>
+              <div className="mt-3">
+                {skills.map((skill, index) => (
+                  <span key={index} className="badge bg-secondary me-2">
+                    {skill}
+                    <button type="button" className="btn-close btn-close-white ms-2" onClick={() => handleDeleteSkill(skill)}></button>
+                  </span>
+                ))}
+              </div>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className={`submit-btn ${isButtonShrinking ? 'shrinking' : ''}`}
-            >
-              Submit
-            </button>
+            <button type="submit" className="btn btn-primary w-100">Submit</button>
           </form>
         )}
 
@@ -334,6 +361,7 @@ function CreateProfilePage({ setProfileData }) {
         )}
       </div>
     </div>
+    </>
   );
 }
 

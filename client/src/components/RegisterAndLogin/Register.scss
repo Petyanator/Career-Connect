@@ -14,7 +14,7 @@
     background-color: $form-bg-color;  // Add background color for the form
     border-radius: 12px;
     box-shadow: $box-shadow;
-    color: $text-color;
+    color: black;
     text-align: center;
 
     h2 {
@@ -29,7 +29,7 @@
 
       &:focus {
         outline: none;
-        border-color: $secondary-color;
+
         box-shadow: 0 0 5px $secondary-color;
       }
     }

@@ -1,0 +1,63 @@
+@import '../../assets/styles/util/variables';
+
+// Global style adjustments
+.create-profile-container {
+  background-color: $primary-color;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: $box-shadow;
+  color: $text-color;
+
+  .create-profile-form {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+
+    h1 {
+      text-align: center;
+      color: $text-color;
+      margin-bottom: 20px;
+    }
+
+    .form-control {
+      padding: 10px;
+      border-radius: 5px;
+      background-color: white;
+      color: $text-color;
+      margin-bottom: 15px;
+    }
+
+
+
+    .form-check-label {
+      color: $text-color;
+    }
+
+    .badge {
+      font-size: 1rem;
+      background-color: $secondary-color;
+      padding: 10px;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .is-invalid {
+      border-color: $button-hover-color;
+    }
+  }
+    .btn-primary, .btn-secondary {
+      width:100%;
+      padding: 12px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary {
+      margin-bottom: 15px;
+    }
+
+    .btn-primary:hover {
+      background-color: $button-hover-color;
+    }
+
+}
