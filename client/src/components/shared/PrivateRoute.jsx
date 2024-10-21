@@ -1,10 +1,22 @@
+import { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { AuthContext } from "../../contexts/AuthContext";
 
-function PrivateRoute({ children }) {
-  const { user } = useAuth(); // Use the custom useAuth hook for consistency
+const PrivateRoute = ({ children, allowedUserType }) => {
+  const { user, authTokens } = useContext(AuthContext);
 
-  return user ? children : <Navigate to="/login" />;
-}
+  if (!authTokens || !user) {
+    // If not authenticated, redirect to the login page
+    return <Navigate to="/login" />;
+  }
+
+  if (allowedUserType && user.user_type !== allowedUserType) {
+    // If the user type does not match the allowed type, redirect to home or another page
+    return <Navigate to="/" />;
+  }
+
+  // If authenticated and user type matches (or no specific type is required), render the children components
+  return children;
+};
 
 export default PrivateRoute;

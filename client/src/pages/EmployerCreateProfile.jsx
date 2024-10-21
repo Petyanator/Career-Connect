@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './EmployerCreateProfile.css';  // Similar to JobSeekerProfileCreate.css
-import { FaPlus } from 'react-icons/fa';
+
 
 function EmployerProfileCreate({ setProfileData }) {
   const [companyName, setCompanyName] = useState('');

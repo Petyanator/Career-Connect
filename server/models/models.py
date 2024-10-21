@@ -2,6 +2,7 @@ from app import db
 from datetime import datetime
 import json  # Import json module
 
+
 class User(db.Model):
     __tablename__ = "users"
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -15,19 +16,19 @@ class User(db.Model):
 
     def to_json(self):
         return {
-        "username": self.username,
-        "email": self.email,
-        "password": self.password,
-        "full_name": self.full_name,
-        "user_type": self.user_type
+            "username": self.username,
+            "email": self.email,
+            "password": self.password,
+            "full_name": self.full_name,
+            "user_type": self.user_type,
         }
+
 
 class Notification(db.Model):
     __tablename__ = "notifications"
-    notification_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    notification_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     application_id = db.Column(db.Integer)
     employer_id = db.Column(db.Integer)
-
 
     def to_json(self):
         return {
@@ -35,6 +36,7 @@ class Notification(db.Model):
             "application_id": self.application_id,
             "employer_id": self.employer_id,
         }
+
 
 class JobSeeker(db.Model):
     __tablename__ = "job_seekers"
@@ -59,21 +61,24 @@ class JobSeeker(db.Model):
             "dob": self.dob.isoformat(),  # Convert date to string
             "gender": self.gender,
             "nationality": self.nationality,
-            "education": json.loads(self.education),  # Convert JSON string to Python list
-            "skills": json.loads(self.skills)  # Convert JSON string to Python list
+            "education": json.loads(
+                self.education
+            ),  # Convert JSON string to Python list
+            "skills": json.loads(self.skills),  # Convert JSON string to Python list
         }
+
 
 class JobPosting(db.Model):
     __tablename__ = "job_posting"
     job_posting_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     employer_id = db.Column(db.Integer, db.ForeignKey("employer.employer_id"))
-    title = db.Column(db.String(255), nullable = False)
-    salary = db.Column(db.String(255), nullable = False)
-    location = db.Column(db.String(255), nullable = False)
-    skills = db.Column(db.Text, nullable = False)
-    description = db.Column(db.Text, nullable = False)
-    created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
-    updated_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
+    title = db.Column(db.String(255), nullable=False)
+    salary = db.Column(db.String(255), nullable=False)
+    location = db.Column(db.String(255), nullable=False)
+    skills = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
+    updated_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
 
     def to_json(self):
         return {
@@ -89,49 +94,52 @@ class JobPosting(db.Model):
         }
 
     def __repr__(self):
-        return f'<JobPosting {self.title}>'  # Corrected to access title
+        return f"<JobPosting {self.title}>"  # Corrected to access title
 
     def to_dict(self):
         return {
-            'job_posting_id': self.job_posting_id,
-            'employer_id': self.employer_id,
-            'title': self.title,  # Corrected to match field name
-            'salary': self.salary,  # Corrected to match field name
-            'location': self.location,
-            'skills': self.skills,  # Corrected to match field name
-            'description': self.description
+            "job_posting_id": self.job_posting_id,
+            "employer_id": self.employer_id,
+            "title": self.title,  # Corrected to match field name
+            "salary": self.salary,  # Corrected to match field name
+            "location": self.location,
+            "skills": self.skills,  # Corrected to match field name
+            "description": self.description,
         }
 
 
 class Employer(db.Model):
     __tablename__ = "employer"
-    employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    employer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     company_name = db.Column(db.String(255))
-    about_company = db.Column(db.Text, nullable = False)
-    preferential_treatment = db.Column(db.Text, nullable = True)
-    company_benefits = db.Column(db.Text, nullable = True)
-    email = db.Column(db.String(100), nullable = True)
+    company_logo = db.Column(db.String(255), nullable=True)
+    about_company = db.Column(db.Text, nullable=False)
+    preferential_treatment = db.Column(db.Text, nullable=True)
+    company_benefits = db.Column(db.Text, nullable=True)
+    email = db.Column(db.String(100), nullable=True)
 
     def to_json(self):
         return {
             "employer_id": self.employer_id,
             "user_id": self.user_id,
             "company_name": self.company_name,
+            "company_logo": self.company_logo,
             "about_company": self.about_company,
             "preferential_treat": self.preferential_treatment,
-            "company_benefits": json.loads(self.company_benefits),
-            "email": self.email
+            "company_benefits": json.loads(self.company_benefits), 
+            "email": self.email,
         }
+
 
 class Application(db.Model):
     __tablename__ = "applications"
-    application_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    application_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
     job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
     job_seeker_status = db.Column(db.Integer)
     employer_status = db.Column(db.Integer)
-    created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
 
     def to_json(self):
         return {

@@ -67,14 +67,17 @@ def login_user():
         return jsonify({"error": "Invalid username or password"}), 401
 
     # Generate access token after successful login
-    access_token = create_access_token(identity=user.user_id)
-    user_type = user.user_type
+    access_token = create_access_token(identity=user.username)
+    user_data = {
+        "username": user.username,
+        "user_type": user.user_type,
+    }
 
     return (
         jsonify(
             {
                 "access_token": access_token,
-                "user": user_type,
+                "user": user_data,
                 "message": "Login successful",
             }
         ),

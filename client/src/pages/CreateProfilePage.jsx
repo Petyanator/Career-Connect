@@ -121,8 +121,8 @@ function CreateProfilePage({ setProfileData }) {
       dob,
       gender,
       nationality,
-      education: JSON.stringify(education),  // JSON string of education array
-      skills: JSON.stringify(skills),  // JSON string of skills array
+      education, 
+      skills,
     };
 
     console.log("Submitting profile data:", profileData);

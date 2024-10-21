@@ -149,11 +149,11 @@ def apply_to_job():
 @jwt_required()
 def create_employer_profile():
     try:
-        user_id = get_jwt_identity()
         # Get JSON data from request
         data = request.get_json()
         print(f"Received data: {data}")
         # Get user_id from JWT
+        user_id = get_jwt_identity()
 
         # Validate required fields
         required_fields = ["company_name", "about_company", "email"]
@@ -188,6 +188,7 @@ def create_employer_profile():
         new_employer = Employer(
             user_id=user_id,
             company_name=company_name,
+            company_logo=company_logo_path or "",
             about_company=about_company,
             preferential_treatment=preferential_treatment,
             company_benefits=company_benefits,

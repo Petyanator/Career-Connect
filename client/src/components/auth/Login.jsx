@@ -46,7 +46,7 @@ function Login() {
                     if (userType === "employer") {
                         navigate('/employer-create-profile'); // Redirect to employer dashboard
                     } else if (userType === "job_seeker") {
-                        navigate('/job-seeker-dashboard'); // Redirect to job seeker dashboard
+                        navigate('/create-profile'); // Redirect to job seeker dashboard
                     } else {
                         navigate('/'); // Default redirection if user type is not recognized
                     }

@@ -1,4 +1,4 @@
-import { useState } from "react"; // Import useState from React
+import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBar from "./components/shared/NavBar";
 import Landing from "./pages/Landing";
@@ -31,35 +31,61 @@ function App() {
           <Route path="/searchbar" element={<SearchAndFilterSystem />} />
           <Route path="/jobposting" element={<JobPosting />} />
           <Route path="/jobviewer" element={<JobViewer />} />
+
+          {/* Protect CreateProfilePage and CreateProfileView */}
           <Route
             path="/create-profile"
-            element={<CreateProfilePage />}
+            element={
+              <PrivateRoute allowedUserType="job_seeker">
+                <CreateProfilePage />
+              </PrivateRoute>
+            }
           />
           <Route
             path="/profile"
-            element={<CreateProfileView />}
+            element={
+              <PrivateRoute allowedUserType="job_seeker">
+                <CreateProfileView />
+              </PrivateRoute>
+            }
           />
+
+          {/* Protect Employer Routes */}
           <Route
             path="/employer-create-profile"
-            element={<EmployerCreateProfile setEmployerProfileData={setEmployerProfileData} />} // Pass the function here
+            element={
+              <PrivateRoute allowedUserType="employer">
+                <EmployerCreateProfile setEmployerProfileData={setEmployerProfileData} />
+              </PrivateRoute>
+            }
           />
           <Route
             path="/employer-profile"
-            element={<EmployerProfileView employerProfileData={employerProfileData} />} // Optionally pass data here if needed
+            element={
+              <PrivateRoute allowedUserType="employer">
+                <EmployerProfileView employerProfileData={employerProfileData} />
+              </PrivateRoute>
+            }
           />
+
+          {/* Protect Job Seeker Routes */}
+          <Route
+            path="/job-seeker-dashboard"
+            element={
+              <PrivateRoute allowedUserType="job_seeker">
+                <JobSeekerDashboard />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Other Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
-            path="/job-seeker-dashboard"
-            element={<JobSeekerDashboard />}
-          />
-          <Route path="/employer-dashboard" element={<EmployerDashboard />} />
-
-          {/* Protected Route Example */}
-          <Route
-            path="/protected"
+            path="/employer-dashboard"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedUserType="employer">
+                <EmployerDashboard />
               </PrivateRoute>
             }
           />
