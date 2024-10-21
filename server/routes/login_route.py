@@ -24,7 +24,7 @@ def register_user():
     password = data.get("password")
     full_name = data.get("full_name")
     user_type = data.get("user_type").lower()
-    
+
     if user_type not in ["job_seeker", "employer"]:
         return jsonify({"error": "Invalid user type"}), 400
 
@@ -37,7 +37,7 @@ def register_user():
         email=email,
         password=hashed_password,
         full_name=full_name,
-        user_type=user_type
+        user_type=user_type,
     )
 
     # Add the new user to the database
@@ -68,9 +68,21 @@ def login_user():
 
     # Generate access token after successful login
     access_token = create_access_token(identity=user.username)
-    user_type = user.user_type
+    user_data = {
+        "username": user.username,
+        "user_type": user.user_type,
+    }
 
-    return jsonify({"access_token": access_token, "user_type": user_type, "message": "Login successful"}), 200
+    return (
+        jsonify(
+            {
+                "access_token": access_token,
+                "user": user_data,
+                "message": "Login successful",
+            }
+        ),
+        200,
+    )
 
 
 @app.route("/logout", methods=["POST"])
@@ -95,3 +107,20 @@ def create_token():
     access_token = create_access_token(identity=user.user_id)  # Use user_id as identity
 
     return jsonify({"access_token": access_token}), 200
+
+
+@app.route("/check-username-email", methods=["POST"])
+def check_username_email():
+    data = request.get_json()
+    username = data.get("username")
+    email = data.get("email")
+
+    user_exists = User.query.filter_by(username=username).first()
+    email_exists = User.query.filter_by(email=email).first()
+
+    if user_exists:
+        return jsonify({"error": "Username already exists"}), 409
+    if email_exists:
+        return jsonify({"error": "Email already exists"}), 409
+
+    return jsonify({"message": "Username and email are available"}), 200

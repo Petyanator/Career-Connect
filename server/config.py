@@ -29,6 +29,3 @@ def register_models(app):
         if filename.endswith(".py") and not filename.startswith("__"):
             module_name = f"models.{filename[:-3]}"
             __import__(module_name)
-
-
-

@@ -44,7 +44,7 @@ function Login() {
                     // User type logic
                     const userType = user.user_type; // Assuming user object contains user_type
                     if (userType === "employer") {
-                        navigate('/employer-dashboard'); // Redirect to employer dashboard
+                        navigate('/employer-create-profile'); // Redirect to employer dashboard
                     } else if (userType === "job_seeker") {
                         navigate('/job-seeker-dashboard'); // Redirect to job seeker dashboard
                     } else {
