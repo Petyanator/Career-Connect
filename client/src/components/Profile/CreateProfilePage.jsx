@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './JobSeekerProfileCreate.css';
+// import './CreateProfilePage.css';
 import { FaPlus } from 'react-icons/fa';
 
-function JobSeekerProfileCreate({ setProfileData }) {
+function CreateProfilePage({ setProfileData }) {
   const [skills, setSkills] = useState([]);
   const [inputSkill, setInputSkill] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
@@ -337,4 +337,4 @@ function JobSeekerProfileCreate({ setProfileData }) {
   );
 }
 
-export default JobSeekerProfileCreate;
+export default CreateProfilePage;
