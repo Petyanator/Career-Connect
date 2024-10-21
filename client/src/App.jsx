@@ -5,8 +5,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBar from "./components/shared/NavBar";
 import Landing from "./pages/Landing";
 import AboutUs from "./pages/AboutUs";
-import CreateProfilePage from "./pages/CreateProfilePage";
-import CreateProfileView from "./pages/CreateProfileView";
+import JobSeekerProfileCreate from "./pages/JobSeekerProfileCreate";
+import JobSeekerProfileView from "./pages/JobSeekerProfileView";
 import EmployerCreateProfile from "./pages/EmployerCreateProfile";
 import EmployerProfileView from "./pages/EmployerProfileView";
 import Register from "./components/auth/Register";
@@ -54,14 +54,28 @@ function App() {
           <Route path="/searchbar" element={<SearchAndFilterSystem />} />
           <Route path="/jobposting" element={<JobPosting />} />
           <Route path="/jobviewer" element={<JobViewer />} />
+
+
           <Route
-            path="/create-profile"
-            element={<CreateProfilePage setProfileData={setProfileData} />}
+            path="/jobseeker_create_profile"
+            element={<JobSeekerProfileCreate setProfileData={setProfileData} />}
           />
           <Route
-            path="/profile"
-            element={<CreateProfileView profileData={profileData} />}
+            path="/jobseeker_profile"
+            element={<JobSeekerProfileView isEmployerView={false}/>}
           />
+          <Route
+            path="/jobseeker_profile/:id"
+            element={<JobSeekerProfileView isEmployerView={true}/>}
+          />
+          <Route
+            path="/jobseeker_profile"
+            element={<JobSeekerProfileView profileData={profileData} />}
+          />
+
+
+
+
           <Route
             path="/employer-create-profile"
             element={

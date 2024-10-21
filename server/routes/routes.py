@@ -1,10 +1,12 @@
-
-from app import app,db, bcrypt
+from app import app, db, bcrypt
 from flask import jsonify, request
-from models.models import JobPosting,Application,JobSeeker
+from models.models import JobPosting, Application, JobSeeker, Employer
 from datetime import datetime
 import re
 from flask_jwt_extended import jwt_required, get_jwt_identity
+import base64
+from werkzeug.utils import secure_filename
+import os
 
 @app.route("/")
 def testing():
@@ -110,3 +112,89 @@ def apply_to_job():
 
     db.session.commit()
     return jsonify({"message": f"Job {action}ed successfully"}), 200
+
+
+
+# -------------------------------------------
+# Employer Profile Routes
+# -------------------------------------------
+
+# Profile creation route for employers
+@app.route('/api/employer/create_profile', methods=['POST'])
+@jwt_required()
+def create_employer_profile():
+    try:
+        # Get JSON data from request
+        data = request.get_json()
+        print(f"Received data: {data}")
+        # Get user_id from JWT
+        user_id = get_jwt_identity()
+
+        # Validate required fields
+        required_fields = ['company_name', 'about_company', 'email']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        # Extract fields from request data
+        company_name = data.get('company_name')
+        about_company = data.get('about_company')
+        preferential_treatment = data.get('preferential_treatment')
+        company_benefits = data.get('company_benefits')
+        email = data.get('email')
+
+        # Handle company logo (if provided)
+        company_logo = data.get('company_logo')
+        company_logo_path = None
+        if company_logo and company_logo.startswith('data:image/'):
+            img_data = company_logo.split(',')[1]
+            img_data = base64.b64decode(img_data)
+            filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            with open(filepath, 'wb') as f:
+                f.write(img_data)
+            company_logo_path = filepath
+        elif company_logo:
+            company_logo_path = company_logo  # If it's a URL or existing file path
+
+        # Create a new Employer object
+        new_employer = Employer(
+            user_id=user_id,
+            company_name=company_name,
+            company_logo=company_logo_path or '',
+            about_company=about_company,
+            preferential_treatment=preferential_treatment,
+            company_benefits=company_benefits,
+            email=email
+        )
+
+        # Save new profile to the database
+        db.session.add(new_employer)
+        db.session.commit()
+
+        return jsonify({'message': 'Employer profile created successfully', 'profile': new_employer.to_json()}), 201
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'An error occurred while creating the employer profile.'}), 500
+
+
+# Route for employers to view their own profile
+@app.route('/api/employer/me', methods=['GET'])
+@jwt_required()
+def get_my_employer_profile():
+    user_id = get_jwt_identity()
+    employer = Employer.query.filter_by(user_id=user_id).first()
+    if employer:
+        return jsonify(employer.to_json()), 200
+    return jsonify({"message": "Employer profile not found"}), 404
+
+
+# Route for job seekers or others to view a specific employer profile
+@app.route('/api/employer/<int:employer_id>', methods=['GET'])
+@jwt_required()
+def get_employer_profile(employer_id):
+    employer = Employer.query.get(employer_id)
+    if employer:
+        return jsonify(employer.to_json()), 200
+    return jsonify({"message": "Employer profile not found"}), 404
