@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import './CreateProfilePage.css';
+import './CreateProfilePage.css';
 import { FaPlus } from 'react-icons/fa';
 
 function CreateProfilePage({ setProfileData }) {
