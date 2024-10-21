@@ -1,3 +1,4 @@
+import { useState } from "react"; // Import useState from React
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBar from "./components/shared/NavBar";
 import Landing from "./pages/Landing";
@@ -17,6 +18,8 @@ import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/shared/PrivateRoute";
 
 function App() {
+  const [employerProfileData, setEmployerProfileData] = useState(null); // Define state here
+
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -38,11 +41,11 @@ function App() {
           />
           <Route
             path="/employer-create-profile"
-            element={<EmployerCreateProfile />}
+            element={<EmployerCreateProfile setEmployerProfileData={setEmployerProfileData} />} // Pass the function here
           />
           <Route
             path="/employer-profile"
-            element={<EmployerProfileView />}
+            element={<EmployerProfileView employerProfileData={employerProfileData} />} // Optionally pass data here if needed
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
