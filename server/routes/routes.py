@@ -15,24 +15,34 @@ def testing():
 @app.route('/api/filter', methods=['GET'])
 @jwt_required()  # Ensure that this route requires authentication
 def filter_job_postings():
-    job_title = request.args.get('job_title')
-    salary_range = request.args.get('salary_range')
-    location = request.args.get('location')
-    required_skills = request.args.get('required_skills')
+    # Get query parameters
+    job_title = request.args.get('job_title', type=str)
+    salary_range = request.args.get('salary_range', type=str)
+    location = request.args.get('location', type=str)
+    required_skills = request.args.get('required_skills', type=str)
 
+    # Start with the base query
     query = JobPosting.query
 
+    # Apply filters if parameters are provided
     if job_title:
         query = query.filter(JobPosting.title.ilike(f"%{job_title}%"))
+    
     if salary_range:
         min_salary, max_salary = extract_salary_range(salary_range)
         if min_salary is not None and max_salary is not None:
             query = query.filter(JobPosting.salary.between(min_salary, max_salary))
+
     if location:
         query = query.filter(JobPosting.location.ilike(f"%{location}%"))
-    if required_skills:
-        query = query.filter(JobPosting.skills.ilike(f"%{required_skills}%"))
 
+    if required_skills:
+        skills_list = [skill.strip() for skill in required_skills.split(',')]
+        query = query.filter(
+            db.or_(*[JobPosting.skills.ilike(f"%{skill}%") for skill in skills_list])
+        )
+
+    # Execute the query and format the results
     results = query.all()
     jobs = [job.to_json() for job in results]
 

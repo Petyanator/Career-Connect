@@ -66,3 +66,4 @@ def get_job_postings():
 
     except Exception as e:
         return jsonify({'message': f'Error occurred: {str(e)}'}), 500
+

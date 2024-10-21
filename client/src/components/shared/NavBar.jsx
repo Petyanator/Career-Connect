@@ -1,8 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-
 import "./NavBar.css";
 
-function NavBar({ isLoggedIn, handleLogout }) {
+function NavBar({ isLoggedIn, handleLogout, userType }) {
   const navigate = useNavigate();
   const handleLogoutAndNavigate = () => {
     handleLogout(); // Call the logout function
@@ -24,7 +23,14 @@ function NavBar({ isLoggedIn, handleLogout }) {
         {isLoggedIn ? (
           <>
             <li>
-              <Link className="navbar-link" to="/job-seeker-dashboard">
+              <Link
+                className="navbar-link"
+                to={
+                  userType === "employer"
+                    ? "/employer-dashboard"
+                    : "/job-seeker-dashboard"
+                }
+              >
                 Dashboard
               </Link>
             </li>
