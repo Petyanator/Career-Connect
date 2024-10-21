@@ -3,13 +3,9 @@ import "./Footer.scss"; // Assuming you are using Sass
 function Footer() {
   return (
   <>
-    <div className="footer-container">
-        <h4>Copyright © Career Connect 2024</h4>
-        <i className="bi bi-github">GitHub</i>
-        <div className="footer-use-terms">
-          <h4>Privacy Policy</h4>
-          <h4>Terms of Use</h4>
-        </div>
+    <div className="footer-container d-flex justify-content-between">
+        <h4>Copyright © Career Connect 2024 </h4>
+        <h4>This website was made by Batch 25 of wCoding!</h4>
     </div>
   </>
   );
