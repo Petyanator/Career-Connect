@@ -107,7 +107,7 @@ class Employer(db.Model):
     __tablename__ = "employer"
     employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
-    company_name = db.Column(db.Integer)
+    company_name = db.Column(db.String(255))
 
     def to_json(self):
         return {
