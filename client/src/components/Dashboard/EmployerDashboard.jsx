@@ -1,4 +1,4 @@
-import "./Dashboard.css";
+
 import JobPosting from "../JobPosting/JobPosting";
 import { Link } from "react-router-dom";
 

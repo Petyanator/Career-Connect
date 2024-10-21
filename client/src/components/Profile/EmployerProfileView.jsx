@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './EmployerProfileView.css';
+// import './EmployerProfileView.css';
 
 function EmployerProfileView({ employerProfileData }) {
     useEffect(() => {

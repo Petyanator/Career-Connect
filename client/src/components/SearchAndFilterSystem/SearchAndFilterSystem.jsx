@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './SearchBar.css'; // Import your CSS for styling
+import './SearchAndFilterSystem.css'; // Import your CSS for styling
 
 function SearchAndFilterSystem() {
     const [input, setInput] = useState("");
@@ -59,7 +59,7 @@ function SearchAndFilterSystem() {
 
     const handleApplication = async (job_posting_id, action) => {
         const token = getTokenFromLocalStorage();
-    
+
         try {
             const response = await fetch('http://127.0.0.1:5000/api/apply', {
                 method: 'POST',
@@ -69,19 +69,19 @@ function SearchAndFilterSystem() {
                 },
                 body: JSON.stringify({ job_posting_id, action }), // No need to pass job_seeker_id
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Failed to update application status");
             }
-    
+
             const data = await response.json();
             alert(data.message); // Notify user
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
     };
-    
+
 
     const handleFilterSubmit = (e) => {
         e.preventDefault();
@@ -119,43 +119,44 @@ function SearchAndFilterSystem() {
                         className="search-input"
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="salaryRange" className="form-label">Salary:</label>
-                    <input
-                        type="text"
-                        id="salaryRange"
-                        value={salaryRange}
-                        onChange={(e) => setSalaryRange(e.target.value)}
-                        placeholder="Enter salary range (e.g., 50K - 70K)"
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="location" className="form-label">Location:</label>
-                    <input
-                        type="text"
-                        id="location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        placeholder="Enter location"
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="requiredSkills" className="form-label">Required Skills:</label>
-                    <input
-                        type="text"
-                        id="requiredSkills"
-                        value={requiredSkills}
-                        onChange={(e) => setRequiredSkills(e.target.value)}
-                        placeholder="Enter required skills"
-                        className="form-input"
-                    />
+                <div className='filter-case'>
+                    <div className="form-group2">
+                        <label htmlFor="salaryRange" className="form-label">Salary:</label>
+                        <input
+                            type="text"
+                            id="salaryRange"
+                            value={salaryRange}
+                            onChange={(e) => setSalaryRange(e.target.value)}
+                            placeholder="Enter salary range (e.g., 50K - 70K)"
+                            className="form-input"
+                        />
+                    </div>
+                    <div className="form-group2">
+                        <label htmlFor="location" className="form-label">Location:</label>
+                        <input
+                            type="text"
+                            id="location"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            placeholder="Enter location"
+                            className="form-input"
+                        />
+                    </div>
+                    <div className="form-group2">
+                        <label htmlFor="requiredSkills" className="form-label">Required Skills:</label>
+                        <input
+                            type="text"
+                            id="requiredSkills"
+                            value={requiredSkills}
+                            onChange={(e) => setRequiredSkills(e.target.value)}
+                            placeholder="Enter required skills"
+                            className="form-input"
+                        />                    
+                    </div>
                 </div>
                 <button type="submit" className="form-button">Search</button>
                 <button type="button" className="form-button" onClick={handleClearFilters}>Clear</button>
             </form>
-
             {/* Job Posting Cards */}
             {loading && <p>Loading...</p>}
             {error && <p className="error">{error}</p>}

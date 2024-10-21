@@ -1,14 +1,36 @@
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./NavBar.css";
+import "./NavBar.scss";
+
 
 function NavBar({ isLoggedIn, handleLogout, userType }) {
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) { // Adjust the scroll threshold as needed
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const handleLogoutAndNavigate = () => {
     handleLogout(); // Call the logout function
     navigate("/"); // Then navigate to the home page
   };
+
   return (
-    <nav>
+    <nav className={scrolled ? "navbar-scrolled" : ""}>
       <ul>
         <li>
           <Link className="navbar-link" to="/">
@@ -16,8 +38,8 @@ function NavBar({ isLoggedIn, handleLogout, userType }) {
           </Link>
         </li>
         <li>
-          <Link className="navbar-link" to="/aboutus">
-            About Us
+          <Link className="navbar-link" to="/the-team">
+            The Team
           </Link>
         </li>
         {isLoggedIn ? (
