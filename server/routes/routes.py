@@ -1,6 +1,6 @@
 from app import app, db, bcrypt
 from flask import jsonify, request
-from models.models import JobPosting, Application, JobSeeker, Employer
+from models.models import JobPosting, Application, JobSeeker, Employer, Notification
 from datetime import datetime
 import re
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -27,7 +27,7 @@ def filter_job_postings():
     # Apply filters if parameters are provided
     if job_title:
         query = query.filter(JobPosting.title.ilike(f"%{job_title}%"))
-    
+
     if salary_range:
         min_salary, max_salary = extract_salary_range(salary_range)
         if min_salary is not None and max_salary is not None:

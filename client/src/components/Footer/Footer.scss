@@ -1,14 +1,14 @@
 .footer-container {
   width: 100%;
   background-color: #f8f9fa; /* Light background color for the footer */
-  padding: .35rem;
+  padding: .20rem;
   align-items: center; /* Vertically center items */
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for a subtle effect */
 
   h4 {
-    margin: 2; /* Remove margin to prevent spacing issues */
     font-size: 1rem;
     color: black; /* Text color */
     padding: 2px;
+    padding-top: 2px;
   }
 }
