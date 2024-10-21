@@ -58,26 +58,23 @@ function App() {
           <Route path="/jobposting" element={<JobPosting />} />
           <Route path="/jobviewer" element={<JobViewer />} />
 
-
           <Route
-            path="/jobseeker_create_profile"
-            element={<JobSeekerProfileCreate setProfileData={setProfileData} />}
-          />
-          <Route
-            path="/jobseeker_profile"
-            element={<JobSeekerProfileView isEmployerView={false}/>}
-          />
-          <Route
-            path="/jobseeker_profile/:id"
-            element={<JobSeekerProfileView isEmployerView={true}/>}
-          />
-          <Route
-            path="/jobseeker_profile"
-            element={<JobSeekerProfileView profileData={profileData} />}
+            path="/profile"
+            element={
+              <CreateProfileView
+                profileData={profileData}
+              />
+            }
           />
 
-
-
+          <Route
+            path="/create-profile"
+            element={
+              <CreateProfilePage
+                setProfileData={setProfileData}
+              />
+            }
+          />
 
           <Route
             path="/employer-create-profile"

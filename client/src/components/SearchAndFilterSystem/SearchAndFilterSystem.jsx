@@ -154,7 +154,6 @@ function SearchAndFilterSystem() {
                         />                    
                     </div>
                 </div>
-                <FaFilter />
                 <button type="submit" className="form-button">Search</button>
                 <button type="button" className="form-button" onClick={handleClearFilters}>Clear</button>
             </form>
