@@ -1,11 +1,12 @@
 
-from app import app,db, bcrypt
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
+from extensions import db, bcrypt
 from models.models import JobPosting
 from datetime import datetime
 
+routes_bp = Blueprint('routes_bp', __name__)
 
-@app.route("/api/filter", methods=["GET"])
+@routes_bp.route("/api/filter", methods=["GET"])
 def get_filters():
     job_title = request.args.get("job_title", "")
     salary_range = request.args.get("salary_range", "")

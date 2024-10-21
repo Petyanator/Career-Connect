@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./Register.css";
 
 function Register() {
@@ -19,6 +20,8 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const navigate = useNavigate(); // Use navigate to redirect users
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -57,17 +60,29 @@ function Register() {
     try {
       const response = await axios.post(
         "http://localhost:5000/register",
-        formData
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
+
       if (response.status === 201) {
         setRegistrationSuccess(true);
         setErrorMessage("");
 
         // Save the access token to localStorage or state management (e.g., Redux)
-        const { access_token } = response.data;
+        const { access_token, user_type } = response.data;
         localStorage.setItem("access_token", access_token);
 
-        // Optionally, redirect the user to the login page or home page after registration
+        // Navigate to the appropriate page based on user_type
+        if (user_type === "employer") {
+          navigate("/employer-create-profile"); // Redirect to EmployerCreateProfile page
+        } else if (user_type === "job_seeker") {
+          navigate("/job-seeker-dashboard"); // Redirect to Job Seeker Dashboard
+        }
+
         console.log("User registered successfully:", response.data.user);
       }
     } catch (error) {

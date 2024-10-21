@@ -1,0 +1,120 @@
+/* Google fonts Import */
+@import url(https://fonts.googleapis.com/css?family=Roboto&display=swap);
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #025336;
+    min-height: 100vh;
+    position: relative;
+}
+
+.wrapper {
+    width: 450px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.calendar {
+    padding: 20px;
+}
+
+.calendar ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+.calendar ul li {
+    width: calc(100% / 14);
+    /* Evenly divide the width between the days */
+    list-style: none;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.wrapper header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 30px 10px;
+}
+
+header .current-date {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+header .icons .icon {
+    height: 36px;
+    width: 36px;
+    background: #fff;
+    margin: 0 10px;
+    /* Increase spacing between arrows */
+    text-align: center;
+    line-height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #000;
+    font-size: 1.2rem;
+}
+
+header .icons .icon:hover {
+    background: beige;
+}
+
+.calendar .weeks li {
+    font-weight: 500;
+    color: #025336;
+    background: beige;
+    padding: 10px 0;
+}
+
+.calendar .days {
+    margin-bottom: 20px;
+}
+
+.calendar .days li {
+    margin-top: 30px;
+    cursor: pointer;
+    z-index: 1;
+    color: #025336;
+}
+
+.days li:hover::before {
+    background: beige;
+}
+
+.days li.inactive {
+    color: rgb(183, 179, 179);
+}
+
+.days li.active {
+    color: #fff;
+}
+
+.days li.active::before {
+    background: #025336;
+}
+
+.calendar .days li::before {
+    position: absolute;
+    content: "";
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: -1;
+}

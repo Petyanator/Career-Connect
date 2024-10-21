@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for routin
 import "./Login.css";
 import UserToken from "../Token/UserToken.jsx";
 
-function Login({ setIsLoggedIn }) {
+function Login({ setIsLoggedIn, setUserType }) {
   // Accept setIsLoggedIn as a prop
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loginError, setLoginError] = useState("");
@@ -30,6 +30,9 @@ function Login({ setIsLoggedIn }) {
         if (accessToken) {
           setToken(accessToken);
           setIsLoggedIn(true); // Update the login status
+          setUserType(userType);
+
+          localStorage.setItem("userType", userType);
 
           if (userType === "job_seeker") {
             navigate("/job-seeker-dashboard");

@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-// import "@fortawesome/fontawesome-free/css/all.min.css";
 import NavBar from "./components/shared/NavBar";
 import Landing from "./pages/Landing";
 import AboutUs from "./pages/AboutUs";
@@ -17,6 +15,7 @@ import JobPosting from "./components/JobPosting/JobPosting";
 import JobViewer from "./components/JobViewer/JobViewer";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard";
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
+import Calendar from "./pages/Calendar"; // Import the Calendar component
 
 function App() {
   const [profileData, setProfileData] = useState(null);
@@ -32,6 +31,7 @@ function App() {
     setToken(null); // Clear the token
     setIsLoggedIn(false); // Update the login state
   };
+
   return (
     <>
       <BrowserRouter>
@@ -65,7 +65,6 @@ function App() {
               <EmployerProfileView employerProfileData={employerProfileData} />
             }
           />
-
           <Route
             path="/login"
             element={<Login setIsLoggedIn={setIsLoggedIn} />}
@@ -76,6 +75,9 @@ function App() {
             element={<JobSeekerDashboard />}
           />
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+
+          {/* Add the calendar route */}
+          <Route path="/calendar" element={<Calendar />} />
         </Routes>
       </BrowserRouter>
     </>

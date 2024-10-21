@@ -61,9 +61,15 @@ function EmployerProfileView({ employerProfileData }) {
         };
     }, []);
 
+    console.log("EmployerProfileView: employerProfileData:", employerProfileData)
+
     if (!employerProfileData) {
+        console.log("EmployerProfileView: No employer profile data available");
         return <h2>No employer profile data available</h2>;
     }
+
+    console.log("EmployerProfileView: Preferential Treatment:", employerProfileData.preferentialTreatment);
+    console.log("EmployerProfileView: Company Benefits:", employerProfileData.companyBenefits);
 
     return (
         <div>

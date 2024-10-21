@@ -1,6 +1,6 @@
-from app import db
-from datetime import datetime
+from extensions import db, bcrypt
 import json  # Import json module
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -100,18 +100,29 @@ class JobPosting(db.Model):
             'required_skills': self.required_skills,
         }
 
-    class Employer(db.Model):
-        __tablename__ = "employer"
-        employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-        user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
-        company_name = db.Column(db.Integer)
+class Employer(db.Model):
+    __tablename__ = "employer"
+    employer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    company_name = db.Column(db.String(255))
+    company_logo = db.Column(db.String(255))
+    about_company = db.Column(db.Text)
+    preferential_treatment = db.Column(db.Text)
+    company_benefits = db.Column(db.Text)
+    contact = db.Column(db.String(255))
 
-        def to_json(self):
-            return {
-                "employer_id": self.employer_id,
-                "user_id": self.user_id,
-                "company_name": self.company_name,
-            }
+    def to_json(self):
+        return {
+            "employer_id": self.employer_id,
+            "user_id": self.user_id,
+            "company_name": self.company_name,
+            "company_logo": self.company_logo,
+            "about_company": self.about_company,
+            "preferential_treatment": json.loads(self.preferential_treatment) if self.preferential_treatment else [],
+            "company_benefits": json.loads(self.company_benefits) if self.company_benefits else [],
+            "contact": self.contact
+        }
+
 
 class Application(db.Model):
     __tablename__ = "applications"
@@ -141,48 +152,4 @@ class Application(db.Model):
             'required_skills': self.required_skills,
         }
 
-    from app import db
 
-class Employer(db.Model):
-    __tablename__ = "employer"
-    employer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
-    company_name = db.Column(db.String(255))
-    company_logo = db.Column(db.String(255))
-    about_company = db.Column(db.Text)
-    preferential_treatment = db.Column(db.Text)
-    company_benefits = db.Column(db.Text)
-    contact = db.Column(db.String(255))
-
-    def to_json(self):
-        return {
-            "employer_id": self.employer_id,
-            "user_id": self.user_id,
-            "company_name": self.company_name,
-            "company_logo": self.company_logo,
-            "about_company": self.about_company,
-            "preferential_treatment": self.preferential_treatment,
-            "company_benefits": self.company_benefits,
-            "contact": self.contact
-        }
-
-
-
-class Application(db.Model):
-    __tablename__ = "applications"
-    application_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-    job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
-    job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
-    job_seeker_status = db.Column(db.Integer)
-    employer_status = db.Column(db.Integer)
-    created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
-
-    def to_json(self):
-        return {
-            "application_id": self.application_id,
-            "job_posting_id": self.job_posting_id,
-            "job_seeker_id": self.job_seeker_id,
-            "job_seeker_status": self.job_seeker_status,
-            "employer_status": self.employer_status,
-            "created_at": self.created_at.isoformat(),
-        }

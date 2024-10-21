@@ -1,17 +1,17 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from werkzeug.utils import secure_filename
 import os
 import base64
 from datetime import datetime
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
-from models.models import db, JobSeeker
-from app import app
+from models.models import JobSeeker
+from extensions import db
 import json
 
 job_seeker_create_profile_bp = Blueprint('job_seeker_create_profile_bp', __name__)
 
 # Profile creation route
-@app.route('/api/job_seeker/create_profile', methods=['POST'])
+@job_seeker_create_profile_bp.route('/api/job_seeker/create_profile', methods=['POST'])
 @jwt_required()
 def create_profile():
     try:
@@ -55,7 +55,7 @@ def create_profile():
             img_data = profile_pic.split(',')[1]
             img_data = base64.b64decode(img_data)
             filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
             with open(filepath, 'wb') as f:
                 f.write(img_data)
             profile_pic_path = filepath

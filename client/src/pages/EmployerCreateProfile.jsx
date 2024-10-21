@@ -83,7 +83,6 @@ function EmployerCreateProfile({ setEmployerProfileData }) {
         };
     }, []);
 
-
     // Handle company logo change
     const handleLogoChange = (e) => {
         const file = e.target.files[0];
@@ -134,10 +133,35 @@ function EmployerCreateProfile({ setEmployerProfileData }) {
         setCompanyBenefits(updatedBenefits);
     };
 
+    // Function to make a POST request to the Flask API
+    const createEmployerProfile = async (employerProfileData) => {
+        try {
+            console.log("Creating employer profile with data:", employerProfileData);
+            const response = await fetch('http://127.0.0.1:5001/api/employer/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(employerProfileData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            console.log('Employer profile created successfully:', responseData);
+            return responseData; // Return response for further processing
+        } catch (error) {
+            console.error('Error creating employer profile:', error);
+        }
+    };
+
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validate the form fields
         const isCompanyNameValid = !!companyName;
         const isAboutCompanyValid = !!aboutCompany;
         const isContactValid = !!contact;
@@ -152,25 +176,27 @@ function EmployerCreateProfile({ setEmployerProfileData }) {
         }
 
         const employerProfileData = {
-            companyName,
-            companyLogo,
-            aboutCompany,
-            preferentialTreatment,
-            companyBenefits,
-            contact,
+            company_name: companyName,
+            company_logo: companyLogo,
+            about_company: aboutCompany,
+            preferential_treatment: preferentialTreatment,
+            company_benefits: companyBenefits,
+            contact: contact,
         };
 
-        setEmployerProfileData(employerProfileData);
+        console.log("Data being sent to backend:", employerProfileData);
 
-        setIsButtonShrinking(true);
-        setTimeout(() => {
-            setShowForm(false);
-            setShowOverlay(true);
-        }, 800);
-
-        setTimeout(() => {
-            navigate('/employer-profile');
-        }, 4000);
+        const response = await createEmployerProfile(employerProfileData);
+        if (response) {
+            setIsButtonShrinking(true);
+            setTimeout(() => {
+                setShowForm(false);
+                setShowOverlay(true);
+            }, 800);
+            setTimeout(() => {
+                navigate('/employer-profile');
+            }, 4000);
+        }
     };
 
     return (
@@ -256,7 +282,6 @@ function EmployerCreateProfile({ setEmployerProfileData }) {
                             value={inputBenefit}
                             onChange={(e) => setInputBenefit(e.target.value)}
                             disabled={companyBenefits.length >= 6}
-                            onKeyDown={(e) => e.key === "Enter" && handleAddBenefit(e)}
                         />
                         <div className="benefit-section">
                             <button
