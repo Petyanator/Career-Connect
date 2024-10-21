@@ -107,13 +107,23 @@ class Employer(db.Model):
     __tablename__ = "employer"
     employer_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
-    company_name = db.Column(db.Integer)
+    company_name = db.Column(db.String(255))
+    company_logo = db.Column(db.String(255), nullable = True)
+    about_company = db.Column(db.Text, nullable = False)
+    preferential_treatment = db.Column(db.Text, nullable = True)
+    company_benefits = db.Column(db.Text, nullable = True)
+    email = db.Column(db.String(100), nullable = True)
 
     def to_json(self):
         return {
             "employer_id": self.employer_id,
             "user_id": self.user_id,
             "company_name": self.company_name,
+            "company_logo": self.company_logo,
+            "about_company": self.about_company,
+            "preferential_treat": self.preferential_treatment,
+            "company_benefits": json.loads(self.company_benefits),
+            "email": self.email
         }
 
 class Application(db.Model):

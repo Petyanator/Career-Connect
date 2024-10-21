@@ -1,316 +1,238 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import './EmployerCreateProfile.css';
+import './EmployerCreateProfile.css';  // Similar to JobSeekerProfileCreate.css
+import { FaPlus } from 'react-icons/fa';
 
-function EmployerCreateProfile({ setEmployerProfileData }) {
-    const [companyName, setCompanyName] = useState('');
-    const [companyLogo, setCompanyLogo] = useState(null);
-    const [aboutCompany, setAboutCompany] = useState('');
-    const [preferentialTreatment, setPreferentialTreatment] = useState([]);
-    const [inputPreference, setInputPreference] = useState('');
-    const [companyBenefits, setCompanyBenefits] = useState([]);
-    const [inputBenefit, setInputBenefit] = useState('');
-    const [contact, setContact] = useState('');
-    const [showOverlay, setShowOverlay] = useState(false);
-    const [showForm, setShowForm] = useState(true);
-    const [isButtonShrinking, setIsButtonShrinking] = useState(false);
-    const [companyNameValid, setCompanyNameValid] = useState(true);
-    const [aboutCompanyValid, setAboutCompanyValid] = useState(true);
-    const [contactValid, setContactValid] = useState(true);
-    const navigate = useNavigate();
+function EmployerProfileCreate({ setProfileData }) {
+  const [companyName, setCompanyName] = useState('');
+  const [aboutCompany, setAboutCompany] = useState('');
+  const [companyLogo, setCompanyLogo] = useState(null);
+  const [preferentialTreatment, setPreferentialTreatment] = useState('');
+  const [companyBenefits, setCompanyBenefits] = useState([]);
+  const [inputBenefit, setInputBenefit] = useState('');
+  const [email, setEmail] = useState('');
 
-    // Particle effect useEffect
-    useEffect(() => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
-        script.async = true;
-        document.body.appendChild(script);
+  // Validation states
+  const [companyNameValid, setCompanyNameValid] = useState(true);
+  const [aboutCompanyValid, setAboutCompanyValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [showForm, setShowForm] = useState(true);
+  const [isButtonShrinking, setIsButtonShrinking] = useState(false);
 
-        script.onload = () => {
-            const particlesElement = document.getElementById('particles-js');
-            if (particlesElement && window.particlesJS) {
-                window.particlesJS('particles-js', {
-                    particles: {
-                        number: {
-                            value: 80,
-                            density: { enable: true, value_area: 800 },
-                        },
-                        color: { value: '#ffffff' },
-                        shape: {
-                            type: 'circle',
-                            stroke: { width: 0, color: '#000000' },
-                            polygon: { nb_sides: 5 },
-                        },
-                        opacity: { value: 0.5, anim: { enable: false } },
-                        size: { value: 3, random: true, anim: { enable: false } },
-                        line_linked: {
-                            enable: true,
-                            distance: 150,
-                            color: '#ffffff',
-                            opacity: 0.4,
-                            width: 1,
-                        },
-                        move: {
-                            enable: true,
-                            speed: 6,
-                            direction: 'none',
-                            random: false,
-                            straight: false,
-                            out_mode: 'out',
-                            bounce: false,
-                        },
-                    },
-                    interactivity: {
-                        detect_on: 'canvas',
-                        events: {
-                            onhover: { enable: true, mode: 'grab' },
-                            onclick: { enable: true, mode: 'push' },
-                        },
-                        modes: {
-                            grab: { distance: 140, line_linked: { opacity: 1 } },
-                            bubble: { distance: 400, size: 40 },
-                            repulse: { distance: 200 },
-                        },
-                    },
-                    retina_detect: true,
-                });
-            }
-        };
+  const navigate = useNavigate();
 
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, []);
+  // Handle benefit input
+  const handleBenefitChange = (e) => setInputBenefit(e.target.value);
 
+  const handleAddBenefit = (e) => {
+    e.preventDefault();
+    if (inputBenefit && !companyBenefits.includes(inputBenefit)) {
+      setCompanyBenefits([...companyBenefits, inputBenefit]);
+      setInputBenefit('');
+    }
+  };
 
-    // Handle company logo change
-    const handleLogoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setCompanyLogo(URL.createObjectURL(file));
-        }
+  const handleDeleteBenefit = (benefitToDelete) => {
+    const updatedBenefits = companyBenefits.filter(benefit => benefit !== benefitToDelete);
+    setCompanyBenefits(updatedBenefits);
+  };
+
+  // Handle company logo change
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) setCompanyLogo(file);
+  };
+
+  // Utility function to convert image file to base64
+  const convertImageToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validation
+    const isCompanyNameValid = !!companyName;
+    const isAboutCompanyValid = !!aboutCompany;
+    const isEmailValid = !!email && email.includes('@');
+
+    setCompanyNameValid(isCompanyNameValid);
+    setAboutCompanyValid(isAboutCompanyValid);
+    setEmailValid(isEmailValid);
+
+    if (!isCompanyNameValid || !isAboutCompanyValid || !isEmailValid) {
+      alert("Please fill out all the required fields.");
+      return;
+    }
+
+    // Convert company logo to base64 if necessary
+    let company_logo = null;
+    if (companyLogo) {
+      company_logo = await convertImageToBase64(companyLogo);
+    }
+
+    // Prepare profile data
+    const profileData = {
+      company_name: companyName,
+      about_company: aboutCompany,
+      company_logo,  // Can be null if no logo was uploaded
+      preferential_treatment: preferentialTreatment,
+      company_benefits: JSON.stringify(companyBenefits),  // Convert benefits to JSON string
+      email  // Include email in the profile data
     };
 
-    // Handle adding preferential treatment
-    const handleAddPreference = (e) => {
-        e.preventDefault();
-        if (preferentialTreatment.length >= 6) {
-            alert('You can add up to 6 preferential treatments only.');
-            return;
-        }
-        if (inputPreference && !preferentialTreatment.includes(inputPreference)) {
-            setPreferentialTreatment([...preferentialTreatment, inputPreference]);
-            setInputPreference('');
-        }
-    };
+    console.log("Submitting profile data:", profileData);
 
-    // Handle deleting a preference
-    const handleDeletePreference = (preferenceToDelete) => {
-        const updatedPreferences = preferentialTreatment.filter(
-            (preference) => preference !== preferenceToDelete
-        );
-        setPreferentialTreatment(updatedPreferences);
-    };
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('No token found');
+        return;
+      }
 
-    // Handle adding company benefits
-    const handleAddBenefit = (e) => {
-        e.preventDefault();
-        if (companyBenefits.length >= 6) {
-            alert('You can add up to 6 company benefits only.');
-            return;
-        }
-        if (inputBenefit && !companyBenefits.includes(inputBenefit)) {
-            setCompanyBenefits([...companyBenefits, inputBenefit]);
-            setInputBenefit('');
-        }
-    };
+      const response = await fetch('http://localhost:5000/api/employer/create_profile', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+      });
 
-    // Handle deleting a company benefit
-    const handleDeleteBenefit = (benefitToDelete) => {
-        const updatedBenefits = companyBenefits.filter(
-            (benefit) => benefit !== benefitToDelete
-        );
-        setCompanyBenefits(updatedBenefits);
-    };
+      const data = await response.json();
 
-    // Handle form submission
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const isCompanyNameValid = !!companyName;
-        const isAboutCompanyValid = !!aboutCompany;
-        const isContactValid = !!contact;
-
-        setCompanyNameValid(isCompanyNameValid);
-        setAboutCompanyValid(isAboutCompanyValid);
-        setContactValid(isContactValid);
-
-        if (!isCompanyNameValid || !isAboutCompanyValid || !isContactValid) {
-            alert('Please fill out all required fields.');
-            return;
-        }
-
-        const employerProfileData = {
-            companyName,
-            companyLogo,
-            aboutCompany,
-            preferentialTreatment,
-            companyBenefits,
-            contact,
-        };
-
-        setEmployerProfileData(employerProfileData);
-
-        setIsButtonShrinking(true);
+      if (response.ok) {
+        console.log("Server response:", data);
         setTimeout(() => {
-            setShowForm(false);
-            setShowOverlay(true);
+          setShowForm(false);
+          setShowOverlay(true);
         }, 800);
 
         setTimeout(() => {
-            navigate('/employer-profile');
+          navigate('/profile');
         }, 4000);
-    };
+      } else {
+        alert(`An error occurred: ${data.message}`);
+        setIsButtonShrinking(false);
+      }
+    } catch (error) {
+      console.error('Error creating profile:', error);
+      alert('An error occurred while creating your profile.');
+      setIsButtonShrinking(false);
+    }
+  };
 
-    return (
-        <div>
-            {/* Particle effect div */}
-            <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div>
+  return (
+    <div>
+      {/* Particle effect container */}
+      <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div>
 
-            <div className={`employer-create-profile-page ${showForm ? '' : 'hidden-form'}`}>
-                {showForm && (
-                    <form onSubmit={handleSubmit}>
-                        <h1>Create Employer Profile</h1>
+      {/* Form section */}
+      <div className={`create-profile-page ${showForm ? '' : 'hidden-form'}`}>
+        {showForm && (
+          <form onSubmit={handleSubmit}>
+            <h1>Create Employer Profile</h1>
 
-                        {/* Company Name */}
-                        <label htmlFor="company-name">Company Name:</label>
-                        <input
-                            type="text"
-                            id="company-name"
-                            placeholder="Company Name"
-                            value={companyName}
-                            onChange={(e) => setCompanyName(e.target.value)}
-                            className={!companyNameValid ? 'invalid-input' : ''}
-                        />
+            {/* Company Logo */}
+            <label htmlFor="company-logo">Company Logo:</label>
+            <input type="file" accept="image/jpeg, image/png" id="company-logo" onChange={handleLogoChange} />
+            {companyLogo && (
+              <div className="image-preview">
+                <img src={URL.createObjectURL(companyLogo)} alt="Logo Preview" style={{ width: '100px', height: '80px' }} />
+              </div>
+            )}
 
-                        {/* Company Logo */}
-                        <label htmlFor="company-logo">Company Logo:</label>
-                        <input type="file" accept="image/jpeg, image/png" id="company-logo" onChange={handleLogoChange} />
-                        {companyLogo && (
-                            <div className="image-preview">
-                                <img src={companyLogo} alt="Company Logo" style={{ width: '100px', height: '80px' }} />
-                            </div>
-                        )}
+            {/* Company Name */}
+            <label htmlFor="company-name">Company Name:</label>
+            <input
+              type="text"
+              id="company-name"
+              placeholder="Company Name"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              className={!companyNameValid ? 'invalid-input' : ''}
+            />
 
-                        {/* About Company */}
-                        <label htmlFor="about-company">About the Company:</label>
-                        <textarea
-                            id="about-company"
-                            placeholder="Describe the company"
-                            value={aboutCompany}
-                            onChange={(e) => setAboutCompany(e.target.value)}
-                            className={!aboutCompanyValid ? 'invalid-input' : ''}
-                        ></textarea>
+            {/* Email */}
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Company Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={!emailValid ? 'invalid-input' : ''}
+            />
 
-                        {/* Preferential Treatment */}
-                        <label htmlFor="preferential-treatment">Preferential Treatment (6 max):</label>
-                        <input
-                            type="text"
-                            id="preferential-treatment"
-                            placeholder="Add a preference"
-                            value={inputPreference}
-                            onChange={(e) => setInputPreference(e.target.value)}
-                            disabled={preferentialTreatment.length >= 6}
-                        />
-                        <div className="preference-section">
-                            <button
-                                className="add-preference-btn"
-                                onClick={handleAddPreference}
-                                disabled={preferentialTreatment.length >= 6}
-                            >
-                                Add Preference
-                            </button>
+            {/* About Company */}
+            <label htmlFor="about-company">About Company:</label>
+            <textarea
+              id="about-company"
+              placeholder="Describe your company"
+              value={aboutCompany}
+              onChange={(e) => setAboutCompany(e.target.value)}
+              className={!aboutCompanyValid ? 'invalid-input' : ''}
+            />
 
-                            <div className="preferences-list">
-                                {preferentialTreatment.map((preference, index) => (
-                                    <span key={index} className="preference-item">
-                                        {preference}
-                                        <button
-                                            className="delete-preference"
-                                            onClick={() => handleDeletePreference(preference)}
-                                        >
-                                            &times;
-                                        </button>
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
+            {/* Preferential Treatment */}
+            <label htmlFor="preferential-treatment">Preferential Treatment:</label>
+            <input
+              type="text"
+              id="preferential-treatment"
+              placeholder="Any preferential treatment for employees?"
+              value={preferentialTreatment}
+              onChange={(e) => setPreferentialTreatment(e.target.value)}
+            />
 
-                        {/* Company Benefits */}
-                        <label htmlFor="company-benefits">Company Benefits (6 max):</label>
-                        <input
-                            type="text"
-                            id="company-benefits"
-                            placeholder="Add a benefit"
-                            value={inputBenefit}
-                            onChange={(e) => setInputBenefit(e.target.value)}
-                            disabled={companyBenefits.length >= 6}
-                            onKeyDown={(e) => e.key === "Enter" && handleAddBenefit(e)}
-                        />
-                        <div className="benefit-section">
-                            <button
-                                className="add-benefit-btn"
-                                onClick={handleAddBenefit}
-                                disabled={companyBenefits.length >= 6}
-                            >
-                                Add Benefit
-                            </button>
-
-                            <div className="benefits-list">
-                                {companyBenefits.map((benefit, index) => (
-                                    <span key={index} className="benefit-item">
-                                        {benefit}
-                                        <button
-                                            className="delete-benefit"
-                                            onClick={() => handleDeleteBenefit(benefit)}
-                                        >
-                                            &times;
-                                        </button>
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Contact Information */}
-                        <label htmlFor="contact">Contact Information:</label>
-                        <input
-                            type="text"
-                            id="contact"
-                            placeholder="Contact Information"
-                            value={contact}
-                            onChange={(e) => setContact(e.target.value)}
-                            className={!contactValid ? 'invalid-input' : ''}
-                        />
-
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            className={`submit-btn ${isButtonShrinking ? 'shrinking' : ''}`}
-                        >
-                            Submit
-                        </button>
-                    </form>
-                )}
-
-                {/* Green checkmark overlay */}
-                {showOverlay && (
-                    <div className="overlay show">
-                        <i className="fas fa-check"></i>
-                    </div>
-                )}
+            {/* Company Benefits */}
+            <label htmlFor="company-benefits">Company Benefits (Add at least 1):</label>
+            <div className="benefits-input">
+              <input
+                type="text"
+                id="company-benefits"
+                value={inputBenefit}
+                onChange={handleBenefitChange}
+                placeholder="Enter a benefit and press add"
+              />
+              <button onClick={handleAddBenefit}>Add Benefit</button>
             </div>
-        </div>
-    );
+            <div className="benefits-list">
+              {companyBenefits.map((benefit, index) => (
+                <span key={index} className="benefit-item">
+                  {benefit}
+                  <button className="delete-benefit" onClick={() => handleDeleteBenefit(benefit)}>
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className={`submit-btn ${isButtonShrinking ? 'shrinking' : ''}`}
+            >
+              Submit
+            </button>
+          </form>
+        )}
+
+        {/* Success Overlay */}
+        {showOverlay && (
+          <div className="overlay show">
+            <i className="fas fa-check"></i>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
-export default EmployerCreateProfile;
+export default EmployerProfileCreate;

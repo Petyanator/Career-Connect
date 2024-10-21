@@ -119,43 +119,45 @@ function SearchAndFilterSystem() {
                         className="search-input"
                     />
                 </div>
-                <div className="form-group">
-                    <label htmlFor="salaryRange" className="form-label">Salary:</label>
-                    <input
-                        type="text"
-                        id="salaryRange"
-                        value={salaryRange}
-                        onChange={(e) => setSalaryRange(e.target.value)}
-                        placeholder="Enter salary range (e.g., 50K - 70K)"
-                        className="form-input"
-                    />
+                <div className='filter-case'>
+                    <div className="form-group2">
+                        <label htmlFor="salaryRange" className="form-label">Salary:</label>
+                        <input
+                            type="text"
+                            id="salaryRange"
+                            value={salaryRange}
+                            onChange={(e) => setSalaryRange(e.target.value)}
+                            placeholder="Enter salary range (e.g., 50K - 70K)"
+                            className="form-input"
+                        />
+                    </div>
+                    <div className="form-group2">
+                        <label htmlFor="location" className="form-label">Location:</label>
+                        <input
+                            type="text"
+                            id="location"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            placeholder="Enter location"
+                            className="form-input"
+                        />
+                    </div>
+                    <div className="form-group2">
+                        <label htmlFor="requiredSkills" className="form-label">Required Skills:</label>
+                        <input
+                            type="text"
+                            id="requiredSkills"
+                            value={requiredSkills}
+                            onChange={(e) => setRequiredSkills(e.target.value)}
+                            placeholder="Enter required skills"
+                            className="form-input"
+                        />                    
+                    </div>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="location" className="form-label">Location:</label>
-                    <input
-                        type="text"
-                        id="location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        placeholder="Enter location"
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="requiredSkills" className="form-label">Required Skills:</label>
-                    <input
-                        type="text"
-                        id="requiredSkills"
-                        value={requiredSkills}
-                        onChange={(e) => setRequiredSkills(e.target.value)}
-                        placeholder="Enter required skills"
-                        className="form-input"
-                    />
-                </div>
+                <FaFilter />
                 <button type="submit" className="form-button">Search</button>
                 <button type="button" className="form-button" onClick={handleClearFilters}>Clear</button>
             </form>
-
             {/* Job Posting Cards */}
             {loading && <p>Loading...</p>}
             {error && <p className="error">{error}</p>}
