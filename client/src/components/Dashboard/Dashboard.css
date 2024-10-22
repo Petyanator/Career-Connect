@@ -1,0 +1,44 @@
+.profile-settings-container {
+  margin-top: 3rem;
+  margin-bottom: 5rem;
+  display: flex;
+  width: 90vw;
+  height: 90vh;
+}
+.welcome-message {
+  font-size: xx-large;
+}
+.sidebar {
+  width: 20vw;
+  max-width: 150px;
+  background-color: #f7a86e;
+  padding: 20px;
+  color: white;
+  border-radius: 20px 0px 0px 20px;
+}
+
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  cursor: pointer;
+  margin: 10px 0;
+  padding: 8px;
+  background-color: #ffa573;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.sidebar-menu li.active {
+  background-color: #ff7f50;
+  font-weight: bold;
+}
+
+.content-area {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 0px 20px 20px 0px;
+}

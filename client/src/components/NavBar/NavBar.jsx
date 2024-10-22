@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./NavBar.scss";
-
+// import "./NavBar.scss";
 
 function NavBar({ isLoggedIn, handleLogout, userType }) {
   const [scrolled, setScrolled] = useState(false);
@@ -10,7 +9,8 @@ function NavBar({ isLoggedIn, handleLogout, userType }) {
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset > 50) { // Adjust the scroll threshold as needed
+      if (offset > 50) {
+        // Adjust the scroll threshold as needed
         setScrolled(true);
       } else {
         setScrolled(false);
