@@ -149,11 +149,7 @@ def update_job_seeker():
     job_seeker.gender = data.get("gender", job_seeker.gender)
     job_seeker.nationality = data.get("nationality", job_seeker.nationality)
 
-
-
     db.session.commit()
-
-
     return jsonify({"message": "Profile was updated successfully"})
 
 @app.route("/api/delete_job_seeker_profile", methods = ["DELETE"])
@@ -175,6 +171,51 @@ def delete_job_seeker():
     db.session.delete(job_seeker)
     db.session.commit()
     return jsonify({"message": "Job seeker profile was deleted successfully"})
+
+
+@app.route('/api/job_seeker/notifications', methods=['GET'])
+@jwt_required()
+def get_job_seeker_notifications():
+    user_id = get_jwt_identity()
+
+    # Find the job seeker associated with the current user
+    job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
+
+    if not job_seeker:
+        return jsonify({"message": "Job seeker not found"}), 404
+
+    # Get all applications where the job seeker has made a request (job_seeker_status is 1)
+    applications = Application.query.filter_by(job_seeker_id=job_seeker.job_seeker_id, job_seeker_status=1).all()
+
+    if not applications:
+        return jsonify({"message": "No notifications found"}), 404
+
+    # Prepare a response including job posting and employer status info
+    notifications = []
+    for app in applications:
+        job_posting = JobPosting.query.get(app.job_posting_id)
+        notifications.append({
+            "job_posting_title": job_posting.title,
+            "job_posting_description": job_posting.description,
+            "employer_status": app.employer_status,  # 1 = Accepted, 2 = Rejected, None = Pending
+            "created_at": app.created_at.isoformat()
+        })
+
+    return jsonify(notifications), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route("/api/update_employer_profile", methods = ["PUT"])
 @jwt_required()

@@ -139,7 +139,7 @@ class Application(db.Model):
     job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
     job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
     job_seeker_status = db.Column(db.Integer) # When set to 1, that means job seeker has sent a request.
-    employer_status = db.Column(db.Integer)
+    employer_status = db.Column(db.Integer) # When set to 1, that means employer has accepted. If 2, then they had rejected.
     created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
 
     def to_json(self):
