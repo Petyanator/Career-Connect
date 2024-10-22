@@ -129,6 +129,10 @@ function CreateProfilePage({ setProfileData }) {
         institution,
       };
     });
+    
+    // const education = educationFields.map((field) => {
+    //   return `${education} in ${degreeDetails} at ${institution}`;
+    // });
 
     const profileData = {
       profile_pic,
