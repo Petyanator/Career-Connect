@@ -27,7 +27,7 @@ class Notification(db.Model):
     notification_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     application_id = db.Column(db.Integer)
     employer_id = db.Column(db.Integer)
-
+    send_notification = db.Column(db.Boolean, default = False)
 
     def to_json(self):
         return {
@@ -131,7 +131,7 @@ class Application(db.Model):
     application_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
     job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
-    job_seeker_status = db.Column(db.Integer)
+    job_seeker_status = db.Column(db.Integer) # When set to 1, that means job seeker has sent a request.
     employer_status = db.Column(db.Integer)
     created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
 
