@@ -65,6 +65,33 @@ function NotificationsComponent() {
     return null;
   };
 
+  const handleEmployerResponse = async (applicationId, status) => {
+    const token = getTokenFromLocalStorage();
+    try {
+      const response = await fetch(`http://localhost:5000/api/employer/update_application`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ application_id: applicationId, employer_status: status }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update employer status");
+      }
+
+      const data = await response.json();
+      alert(data.message); // Show confirmation to the employer
+
+      // Refetch notifications after updating the status
+      fetchNotifications();
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  };
+
   const loadDetailedNotifications = async () => {
     const detailedData = await Promise.all(
       notifications.map(async (notification) => {
@@ -112,6 +139,22 @@ function NotificationsComponent() {
               <p className="skills-list">
                 <strong>Skills:</strong> {notification.jobSeekerDetails?.skills?.join(", ")}
               </p>
+
+              {/* Accept and Reject buttons */}
+              <div className="button-group">
+                <button
+                  className="btn btn-success me-2"
+                  onClick={() => handleEmployerResponse(notification.application_id, 1)} // 1 for Accept
+                >
+                  Accept
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleEmployerResponse(notification.application_id, 2)} // 2 for Reject
+                >
+                  Reject
+                </button>
+              </div>
             </li>
           ))}
         </ul>

@@ -74,6 +74,8 @@ def update_application_status():
     db.session.commit()
     return jsonify({"message": "Status updated successfully"}), 200
 
+
+
 @app.route('/api/apply', methods=['POST'])
 @jwt_required()
 def apply_to_job():
@@ -225,3 +227,31 @@ def get_employer_notifications():
     notifications = Notification.query.filter_by(employer_id=employer.employer_id, send_notification=True).all()
 
     return jsonify([n.to_json() for n in notifications]), 200
+
+
+@app.route('/api/employer/update_application', methods=['PUT'])
+@jwt_required()
+def update_employer_application():
+    try:
+        data = request.json
+        application_id = data.get('application_id')
+        employer_status = data.get('employer_status')
+
+        # Validate the input
+        if not application_id or employer_status not in [1, 2]:
+            return jsonify({"message": "Invalid data"}), 400
+
+        # Find the application by ID
+        application = Application.query.get(application_id)
+        if not application:
+            return jsonify({"message": "Application not found"}), 404
+
+        # Update the employer_status based on employer's decision
+        application.employer_status = employer_status
+        db.session.commit()
+
+        return jsonify({"message": "Employer status updated successfully"}), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while updating the application"}), 500
