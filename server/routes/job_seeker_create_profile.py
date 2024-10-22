@@ -206,4 +206,3 @@ def delete_employer():
     db.session.delete(employer)
     db.session.commit()
     return jsonify({"message": "Employer profile was deleted successfully"})
-
