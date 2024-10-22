@@ -12,12 +12,20 @@ import Team from "./components/Team/Team";
 import Register from "./components/RegisterAndLogin/Register";
 import Login from "./components/RegisterAndLogin/Login";
 import UserToken from "./components/Token/UserToken";
+
 // import SearchAndFilterSystem from "./components/SearchAndFilterSystem/SearchAndFilterSystem";
+import SearchAndFilterSystem from "./components/SearchForJobSeekers/SearchAndFilterSystem"
 import JobPosting from "./components/JobPosting/JobPosting";
 // import JobViewer from "./components/JobViewer/JobViewer";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard";
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
-import Footer from "./components/Footer/Footer";
+import Footer from "./components/Footer/Footer"
+import UpdateJobSeekerProfile from "./components/UpdateAndDelete/UpdateJobSeekerProfile";
+import DeleteJobSeekerProfile from "./components/UpdateAndDelete/DeleteJobSeekerProfile";
+import DeleteEmployerProfile from "./components/UpdateAndDelete/DeleteEmployerProfile";
+import UpdateEmployerProfile from "./components/UpdateAndDelete/UpdateEmployerProfile";
+import SearchForEmployers from "./components/SearchForEmployers/SearchForEmployers";
+
 
 function App() {
   const [profileData, setProfileData] = useState(null);
@@ -99,7 +107,7 @@ function App() {
           />
           <Route path="/register" element={<Register />} />
           <Route
-            path="/job-seeker-dasboard"
+            path="/job-seeker-dashboard"
             element={
               <JobSeekerDashboard
                 userType={userType}
@@ -118,7 +126,18 @@ function App() {
               />
             }
           />
+          <Route path="/update-jobseeker-profile" element={<UpdateJobSeekerProfile />} />
+          <Route path="/delete-jobseeker-profile" element={<DeleteJobSeekerProfile />} />
+          <Route path="/update-employer-profile" element={<UpdateEmployerProfile />} />
+          <Route path="/delete-employer-profile" element={<DeleteEmployerProfile />} />
+          <Route path="/find-jobseekers" element={<SearchForEmployers />} />
+          
+          
+
         </Routes>
+
+
+
       </BrowserRouter>
     </>
   );

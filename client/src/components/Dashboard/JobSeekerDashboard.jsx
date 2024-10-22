@@ -2,7 +2,7 @@ import "./Dashboard.css";
 import { useState, useEffect } from "react";
 import CreateProfilePage from "../Profile/CreateProfilePage";
 import CreateProfileView from "../Profile/CreateProfileView";
-import SearchAndFilterSystem from "../SearchAndFilterSystem/SearchAndFilterSystem";
+import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem";
 import SeekerActivity from "../SeekerActivity/SeekerActivity";
 
 function JobSeekerDashboard({ profileData, setProfileData }) {
