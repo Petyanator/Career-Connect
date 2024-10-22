@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './CreateProfilePage.css';
-import { FaPlus } from 'react-icons/fa';
+import React, { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+import "./CreateProfilePage.css";
+import { FaPlus } from "react-icons/fa";
+import CreateProfileView from "./CreateProfileView";
 
 function CreateProfilePage({ setProfileData }) {
   const [skills, setSkills] = useState([]);
-  const [inputSkill, setInputSkill] = useState('');
+  const [inputSkill, setInputSkill] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [educationFields, setEducationFields] = useState([
-    { education: '', degreeDetails: '', institution: '' }
+    { education: "", degreeDetails: "", institution: "" },
   ]);
-  const [gender, setGender] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [dob, setDob] = useState('');
-  const [nationality, setNationality] = useState('');
+  const [gender, setGender] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dob, setDob] = useState("");
+  const [nationality, setNationality] = useState("");
 
   // Validation states
   const [firstNameValid, setFirstNameValid] = useState(true);
@@ -28,8 +29,8 @@ function CreateProfilePage({ setProfileData }) {
   const [showForm, setShowForm] = useState(true);
   const [isButtonShrinking, setIsButtonShrinking] = useState(false);
 
-  const navigate = useNavigate();
-
+  // const navigate = useNavigate();
+  const [isSubmitted, setIsSubmitted] = useState(false);
   // Handle skill input
   const handleSkillChange = (e) => {
     setInputSkill(e.target.value);
@@ -39,12 +40,12 @@ function CreateProfilePage({ setProfileData }) {
     e.preventDefault();
     if (inputSkill && !skills.includes(inputSkill)) {
       setSkills([...skills, inputSkill]);
-      setInputSkill('');
+      setInputSkill("");
     }
   };
 
   const handleDeleteSkill = (skillToDelete) => {
-    const updatedSkills = skills.filter(skill => skill !== skillToDelete);
+    const updatedSkills = skills.filter((skill) => skill !== skillToDelete);
     setSkills(updatedSkills);
   };
 
@@ -58,14 +59,18 @@ function CreateProfilePage({ setProfileData }) {
 
   // Handle education input changes for dynamic fields
   const handleEducationChange = (index, e) => {
+    const { name, value } = e.target;
     const updatedFields = [...educationFields];
-    updatedFields[index][e.target.name] = e.target.value;
+    updatedFields[index][name] = value;
     setEducationFields(updatedFields);
   };
 
   // Function to add another education field
   const handleAddEducationField = () => {
-    setEducationFields([...educationFields, { education: '', degreeDetails: '', institution: '' }]);
+    setEducationFields((prevFields) => [
+      ...prevFields,
+      { education: "", degreeDetails: "", institution: "" }, // Add a new blank education field
+    ]);
   };
 
   // Utility function to convert image file to base64
@@ -97,7 +102,14 @@ function CreateProfilePage({ setProfileData }) {
     setNationalityValid(isNationalityValid);
     setSkillsValid(isSkillsValid);
 
-    if (!isFirstNameValid || !isLastNameValid || !isDobValid || !isGenderValid || !isNationalityValid || !isSkillsValid) {
+    if (
+      !isFirstNameValid ||
+      !isLastNameValid ||
+      !isDobValid ||
+      !isGenderValid ||
+      !isNationalityValid ||
+      !isSkillsValid
+    ) {
       alert("Please fill out all the required fields.");
       return;
     }
@@ -109,9 +121,13 @@ function CreateProfilePage({ setProfileData }) {
     }
 
     // Prepare education data
-    const education = educationFields.map(field => {
+    const education = educationFields.map((field) => {
       const { education, degreeDetails, institution } = field;
-      return `${education} in ${degreeDetails} at ${institution}`;
+      return {
+        education,
+        degreeDetails,
+        institution,
+      };
     });
 
     const profileData = {
@@ -121,17 +137,18 @@ function CreateProfilePage({ setProfileData }) {
       dob,
       gender,
       nationality,
-      education: JSON.stringify(education),  // JSON string of education array
-      skills: JSON.stringify(skills),  // JSON string of skills array
+      education,
+      // JSON.stringify(education), // JSON string of education array
+      skills: JSON.stringify(skills), // JSON string of skills array
     };
 
     console.log("Submitting profile data:", profileData);
 
     try {
       // Retrieve JWT token from storage
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        alert('No token found');
+        alert("No token found");
         return;
       }
 
@@ -139,14 +156,17 @@ function CreateProfilePage({ setProfileData }) {
       console.log("Payload being sent:", profileData);
 
       // Send data to the backend using fetch
-      const response = await fetch('http://localhost:5000/api/job_seeker/create_profile', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(profileData),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/job_seeker/create_profile",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(profileData),
+        }
+      );
 
       const data = await response.json();
 
@@ -159,35 +179,46 @@ function CreateProfilePage({ setProfileData }) {
         }, 800);
 
         setTimeout(() => {
-          navigate('/profile');
+          setIsSubmitted(true);
         }, 4000);
       } else {
         alert(`An error occurred: ${data.message}`);
         setIsButtonShrinking(false);
       }
     } catch (error) {
-      console.error('Error creating profile:', error);
-      alert('An error occurred while creating your profile.');
+      console.error("Error creating profile:", error);
+      alert("An error occurred while creating your profile.");
       setIsButtonShrinking(false);
     }
   };
-
+  if (isSubmitted) {
+    return <CreateProfileView setProfileData={setProfileData} />;
+  }
   return (
     <div>
       {/* Particle effect container */}
-      <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div>
+      {/* <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div> */}
 
       {/* Form section */}
-      <div className={`create-profile-page ${showForm ? '' : 'hidden-form'}`}>
+      <div className={`create-profile-page ${showForm ? "" : "hidden-form"}`}>
         {showForm && (
           <form onSubmit={handleSubmit}>
             <h1>Create Your Profile</h1>
             {/* Profile Picture */}
             <label htmlFor="profile-picture">Profile Picture:</label>
-            <input type="file" accept="image/jpeg, image/png" id="profile-picture" onChange={handleImageChange} />
+            <input
+              type="file"
+              accept="image/jpeg, image/png"
+              id="profile-picture"
+              onChange={handleImageChange}
+            />
             {selectedImage && (
               <div className="image-preview">
-                <img src={URL.createObjectURL(selectedImage)} alt="Profile Preview" style={{ width: '100px', height: '80px' }} />
+                <img
+                  src={URL.createObjectURL(selectedImage)}
+                  alt="Profile Preview"
+                  style={{ width: "100px", height: "80px" }}
+                />
               </div>
             )}
 
@@ -199,7 +230,7 @@ function CreateProfilePage({ setProfileData }) {
               placeholder="First name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className={!firstNameValid ? 'invalid-input' : ''}
+              className={!firstNameValid ? "invalid-input" : ""}
             />
 
             {/* Last Name */}
@@ -210,7 +241,7 @@ function CreateProfilePage({ setProfileData }) {
               placeholder="Last name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className={!lastNameValid ? 'invalid-input' : ''}
+              className={!lastNameValid ? "invalid-input" : ""}
             />
 
             {/* Date of Birth */}
@@ -220,17 +251,31 @@ function CreateProfilePage({ setProfileData }) {
               id="dob"
               value={dob}
               onChange={(e) => setDob(e.target.value)}
-              className={!dobValid ? 'invalid-input' : ''}
+              className={!dobValid ? "invalid-input" : ""}
             />
 
             {/* Gender */}
             <label>Gender:</label>
-            <div className={`gender-input ${!genderValid ? 'invalid-input' : ''}`}>
+            <div
+              className={`gender-input ${!genderValid ? "invalid-input" : ""}`}
+            >
               <label>
-                <input type="radio" name="gender" value="Male" onChange={(e) => setGender(e.target.value)} /> Male
+                <input
+                  type="radio"
+                  name="gender"
+                  value="Male"
+                  onChange={(e) => setGender(e.target.value)}
+                />{" "}
+                Male
               </label>
               <label>
-                <input type="radio" name="gender" value="Female" onChange={(e) => setGender(e.target.value)} /> Female
+                <input
+                  type="radio"
+                  name="gender"
+                  value="Female"
+                  onChange={(e) => setGender(e.target.value)}
+                />{" "}
+                Female
               </label>
             </div>
 
@@ -242,7 +287,7 @@ function CreateProfilePage({ setProfileData }) {
               placeholder="Nationality"
               value={nationality}
               onChange={(e) => setNationality(e.target.value)}
-              className={!nationalityValid ? 'invalid-input' : ''}
+              className={!nationalityValid ? "invalid-input" : ""}
             />
 
             {/* Education Fields */}
@@ -256,46 +301,61 @@ function CreateProfilePage({ setProfileData }) {
                   onChange={(e) => handleEducationChange(index, e)}
                 >
                   <option value="">Select your education level</option>
-                  <option value="High School Diploma">High School Diploma</option>
-                  <option value="Skill Certification">Skill Certification</option>
+                  <option value="High School Diploma">
+                    High School Diploma
+                  </option>
+                  <option value="Skill Certification">
+                    Skill Certification
+                  </option>
                   <option value="Bachelor's Degree">Bachelor's Degree</option>
                   <option value="Master's Degree">Master's Degree</option>
                   <option value="PhD">PhD</option>
                 </select>
 
-                {field.education && field.education !== 'High School Diploma' && (
-                  <>
-                    <label htmlFor={`degree-details-${index}`}>Degree/Certification Details:</label>
-                    <input
-                      type="text"
-                      id={`degree-details-${index}`}
-                      name="degreeDetails"
-                      value={field.degreeDetails}
-                      placeholder="Degree details"
-                      onChange={(e) => handleEducationChange(index, e)}
-                    />
+                {field.education &&
+                  field.education !== "High School Diploma" && (
+                    <>
+                      <label htmlFor={`degree-details-${index}`}>
+                        Degree/Certification Details:
+                      </label>
+                      <input
+                        type="text"
+                        id={`degree-details-${index}`}
+                        name="degreeDetails"
+                        value={field.degreeDetails}
+                        placeholder="Degree details"
+                        onChange={(e) => handleEducationChange(index, e)}
+                      />
 
-                    <label htmlFor={`institution-${index}`}>Institution Name:</label>
-                    <input
-                      type="text"
-                      id={`institution-${index}`}
-                      name="institution"
-                      value={field.institution}
-                      placeholder="Institution name"
-                      onChange={(e) => handleEducationChange(index, e)}
-                    />
-                  </>
-                )}
+                      <label htmlFor={`institution-${index}`}>
+                        Institution Name:
+                      </label>
+                      <input
+                        type="text"
+                        id={`institution-${index}`}
+                        name="institution"
+                        value={field.institution}
+                        placeholder="Institution name"
+                        onChange={(e) => handleEducationChange(index, e)}
+                      />
+                    </>
+                  )}
               </div>
             ))}
 
-            <button type="button" className="add-education-btn" onClick={handleAddEducationField}>
+            <button
+              type="button"
+              className="add-education-btn"
+              onClick={handleAddEducationField}
+            >
               <FaPlus /> Add Education
             </button>
 
             {/* Skills */}
             <label htmlFor="skills">Skills (Add at least 3):</label>
-            <div className={`skills-input ${!skillsValid ? 'invalid-input' : ''}`}>
+            <div
+              className={`skills-input ${!skillsValid ? "invalid-input" : ""}`}
+            >
               <input
                 type="text"
                 id="skills"
@@ -309,7 +369,10 @@ function CreateProfilePage({ setProfileData }) {
               {skills.map((skill, index) => (
                 <span key={index} className="skill-item">
                   {skill}
-                  <button className="delete-skill" onClick={() => handleDeleteSkill(skill)}>
+                  <button
+                    className="delete-skill"
+                    onClick={() => handleDeleteSkill(skill)}
+                  >
                     &times;
                   </button>
                 </span>
@@ -319,7 +382,7 @@ function CreateProfilePage({ setProfileData }) {
             {/* Submit Button */}
             <button
               type="submit"
-              className={`submit-btn ${isButtonShrinking ? 'shrinking' : ''}`}
+              className={`submit-btn ${isButtonShrinking ? "shrinking" : ""}`}
             >
               Submit
             </button>
