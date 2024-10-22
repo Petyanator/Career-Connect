@@ -192,16 +192,22 @@ def delete_job_seeker():
     db.session.commit()
     return jsonify({"message": "Job seeker profile was deleted successfully"})
 
-@app.route("/api/update_employer_profile", methods = ["PUT"])
-@jwt_required()    
+@app.route("/api/update_employer_profile", methods=["PUT"])
+@jwt_required()
 def update_employer():
     try:
-        # Get JSON data from request
-        data = request.get_json()
-        print(f"Received data: {data}")
-        # Get user_id from JWT
+        # Get the user ID from JWT
         user_id = get_jwt_identity()
 
+        # Fetch the existing employer profile from the database
+        employer = Employer.query.filter_by(user_id=user_id).first()
+
+        if not employer:
+            return jsonify({"message": "Employer not found."}), 404
+
+        # Get JSON data from the request
+        data = request.get_json()
+        
         # Extract fields from request data
         company_name = data.get('company_name')
         about_company = data.get('about_company')
@@ -209,40 +215,33 @@ def update_employer():
         company_benefits = data.get('company_benefits')
         email = data.get('email')
 
-        # Handle company logo (if provided)
-        company_logo = data.get('company_logo')
-        company_logo_path = None
-        if company_logo and company_logo.startswith('data:image/'):
-            img_data = company_logo.split(',')[1]
-            img_data = base64.b64decode(img_data)
+        # Handle company logo (keep existing if no new one is uploaded)
+        company_logo_path = employer.company_logo
+        if 'company_logo' in request.files:
+            logo_file = request.files['company_logo']
             filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            with open(filepath, 'wb') as f:
-                f.write(img_data)
+            logo_file.save(filepath)
             company_logo_path = filepath
-        elif company_logo:
-            company_logo_path = company_logo  # If it's a URL or existing file path
 
-        # Create a new Employer object
-        new_employer = Employer(
-            user_id=user_id,
-            company_name=company_name,
-            company_logo=company_logo_path or '',
-            about_company=about_company,
-            preferential_treatment=preferential_treatment,
-            company_benefits=company_benefits,
-            email=email
-        )
+        # Update the employer object with the provided or existing data
+        employer.company_name = company_name if company_name else employer.company_name
+        employer.about_company = about_company if about_company else employer.about_company
+        employer.preferential_treatment = preferential_treatment if preferential_treatment else employer.preferential_treatment
+        employer.company_benefits = company_benefits if company_benefits else employer.company_benefits
+        employer.email = email if email else employer.email
+        employer.company_logo = company_logo_path
 
-        # Save new profile to the database
-        db.session.add(new_employer)
+        # Commit changes to the database
         db.session.commit()
-
-        return jsonify({'message': 'Employer profile created successfully', 'profile': new_employer.to_json()}), 201
+        
+        return jsonify({"message": "Employer profile updated successfully."}), 200
 
     except Exception as e:
+        db.session.rollback()
         print(f"Error: {e}")
-        return jsonify({'error': 'An error occurred while creating the employer profile.'}), 500
+        return jsonify({"message": str(e)}), 500
+
 
 
 @app.route("/api/delete_employer_profile", methods = ["DELETE"])
