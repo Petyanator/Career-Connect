@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './EmployerCreateProfile.css';  // Similar to JobSeekerProfileCreate.css
-import { FaPlus } from 'react-icons/fa';
+import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+import "./EmployerCreateProfile.css"; // Similar to JobSeekerProfileCreate.css
+// import { FaPlus } from 'react-icons/fa';
+import EmployerProfileView from "./EmployerProfileView";
 
 function EmployerProfileCreate({ setProfileData }) {
-  const [companyName, setCompanyName] = useState('');
-  const [aboutCompany, setAboutCompany] = useState('');
+  const [companyName, setCompanyName] = useState("");
+  const [aboutCompany, setAboutCompany] = useState("");
   const [companyLogo, setCompanyLogo] = useState(null);
-  const [preferentialTreatment, setPreferentialTreatment] = useState('');
+  const [preferentialTreatment, setPreferentialTreatment] = useState("");
   const [companyBenefits, setCompanyBenefits] = useState([]);
-  const [inputBenefit, setInputBenefit] = useState('');
-  const [email, setEmail] = useState('');
+  const [inputBenefit, setInputBenefit] = useState("");
+  const [email, setEmail] = useState("");
 
   // Validation states
   const [companyNameValid, setCompanyNameValid] = useState(true);
@@ -20,7 +21,8 @@ function EmployerProfileCreate({ setProfileData }) {
   const [showForm, setShowForm] = useState(true);
   const [isButtonShrinking, setIsButtonShrinking] = useState(false);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Handle benefit input
   const handleBenefitChange = (e) => setInputBenefit(e.target.value);
@@ -29,12 +31,14 @@ function EmployerProfileCreate({ setProfileData }) {
     e.preventDefault();
     if (inputBenefit && !companyBenefits.includes(inputBenefit)) {
       setCompanyBenefits([...companyBenefits, inputBenefit]);
-      setInputBenefit('');
+      setInputBenefit("");
     }
   };
 
   const handleDeleteBenefit = (benefitToDelete) => {
-    const updatedBenefits = companyBenefits.filter(benefit => benefit !== benefitToDelete);
+    const updatedBenefits = companyBenefits.filter(
+      (benefit) => benefit !== benefitToDelete
+    );
     setCompanyBenefits(updatedBenefits);
   };
 
@@ -61,7 +65,7 @@ function EmployerProfileCreate({ setProfileData }) {
     // Validation
     const isCompanyNameValid = !!companyName;
     const isAboutCompanyValid = !!aboutCompany;
-    const isEmailValid = !!email && email.includes('@');
+    const isEmailValid = !!email && email.includes("@");
 
     setCompanyNameValid(isCompanyNameValid);
     setAboutCompanyValid(isAboutCompanyValid);
@@ -82,70 +86,85 @@ function EmployerProfileCreate({ setProfileData }) {
     const profileData = {
       company_name: companyName,
       about_company: aboutCompany,
-      company_logo,  // Can be null if no logo was uploaded
+      company_logo, // Can be null if no logo was uploaded
       preferential_treatment: preferentialTreatment,
-      company_benefits: JSON.stringify(companyBenefits),  // Convert benefits to JSON string
-      email  // Include email in the profile data
+      company_benefits: JSON.stringify(companyBenefits), // Convert benefits to JSON string
+      email, // Include email in the profile data
     };
 
     console.log("Submitting profile data:", profileData);
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        alert('No token found');
+        alert("No token found");
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/employer/create_profile', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(profileData),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/employer/create_profile",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(profileData),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
         console.log("Server response:", data);
+        // Success
         setTimeout(() => {
           setShowForm(false);
           setShowOverlay(true);
         }, 800);
 
         setTimeout(() => {
-          navigate('/profile');
+          setIsSubmitted(true);
         }, 4000);
       } else {
         alert(`An error occurred: ${data.message}`);
         setIsButtonShrinking(false);
       }
     } catch (error) {
-      console.error('Error creating profile:', error);
-      alert('An error occurred while creating your profile.');
+      console.error("Error creating profile:", error);
+      alert("An error occurred while creating your profile.");
       setIsButtonShrinking(false);
     }
   };
-
+  if (isSubmitted) {
+    return <EmployerProfileView setProfileData={setProfileData} />;
+  }
   return (
     <div>
       {/* Particle effect container */}
-      <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div>
+      {/* <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div> */}
 
       {/* Form section */}
-      <div className={`create-profile-page ${showForm ? '' : 'hidden-form'}`}>
+      <div className={`create-profile-page ${showForm ? "" : "hidden-form"}`}>
         {showForm && (
           <form onSubmit={handleSubmit}>
             <h1>Create Employer Profile</h1>
 
             {/* Company Logo */}
             <label htmlFor="company-logo">Company Logo:</label>
-            <input type="file" accept="image/jpeg, image/png" id="company-logo" onChange={handleLogoChange} />
+            <input
+              type="file"
+              accept="image/jpeg, image/png"
+              id="company-logo"
+              onChange={handleLogoChange}
+            />
             {companyLogo && (
               <div className="image-preview">
-                <img src={URL.createObjectURL(companyLogo)} alt="Logo Preview" style={{ width: '100px', height: '80px' }} />
+                <img
+                  src={URL.createObjectURL(companyLogo)}
+                  alt="Logo Preview"
+                  style={{ width: "100px", height: "80px" }}
+                />
               </div>
             )}
 
@@ -157,7 +176,7 @@ function EmployerProfileCreate({ setProfileData }) {
               placeholder="Company Name"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className={!companyNameValid ? 'invalid-input' : ''}
+              className={!companyNameValid ? "invalid-input" : ""}
             />
 
             {/* Email */}
@@ -168,7 +187,7 @@ function EmployerProfileCreate({ setProfileData }) {
               placeholder="Company Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={!emailValid ? 'invalid-input' : ''}
+              className={!emailValid ? "invalid-input" : ""}
             />
 
             {/* About Company */}
@@ -178,11 +197,13 @@ function EmployerProfileCreate({ setProfileData }) {
               placeholder="Describe your company"
               value={aboutCompany}
               onChange={(e) => setAboutCompany(e.target.value)}
-              className={!aboutCompanyValid ? 'invalid-input' : ''}
+              className={!aboutCompanyValid ? "invalid-input" : ""}
             />
 
             {/* Preferential Treatment */}
-            <label htmlFor="preferential-treatment">Preferential Treatment:</label>
+            <label htmlFor="preferential-treatment">
+              Preferential Treatment:
+            </label>
             <input
               type="text"
               id="preferential-treatment"
@@ -192,7 +213,9 @@ function EmployerProfileCreate({ setProfileData }) {
             />
 
             {/* Company Benefits */}
-            <label htmlFor="company-benefits">Company Benefits (Add at least 1):</label>
+            <label htmlFor="company-benefits">
+              Company Benefits (Add at least 1):
+            </label>
             <div className="benefits-input">
               <input
                 type="text"
@@ -207,7 +230,10 @@ function EmployerProfileCreate({ setProfileData }) {
               {companyBenefits.map((benefit, index) => (
                 <span key={index} className="benefit-item">
                   {benefit}
-                  <button className="delete-benefit" onClick={() => handleDeleteBenefit(benefit)}>
+                  <button
+                    className="delete-benefit"
+                    onClick={() => handleDeleteBenefit(benefit)}
+                  >
                     &times;
                   </button>
                 </span>
@@ -217,7 +243,7 @@ function EmployerProfileCreate({ setProfileData }) {
             {/* Submit Button */}
             <button
               type="submit"
-              className={`submit-btn ${isButtonShrinking ? 'shrinking' : ''}`}
+              className={`submit-btn ${isButtonShrinking ? "shrinking" : ""}`}
             >
               Submit
             </button>
