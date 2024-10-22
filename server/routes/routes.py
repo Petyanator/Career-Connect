@@ -213,3 +213,17 @@ def get_employer_profile(employer_id):
     if employer:
         return jsonify(employer.to_json()), 200
     return jsonify({"message": "Employer profile not found"}), 404
+
+# Route for employers to get notifications
+@app.route('/api/employer/notifications', methods=['GET'])
+@jwt_required()
+def get_employer_notifications():
+    user_id = get_jwt_identity()
+    employer = Employer.query.filter_by(user_id=user_id).first()
+
+    if not employer:
+        return jsonify({"message": "Employer not found"}), 404
+
+    notifications = Notification.query.filter_by(employer_id=employer.employer_id, send_notification=True).all()
+
+    return jsonify([n.to_json() for n in notifications]), 200
