@@ -70,7 +70,7 @@ def login_user():
     user_type = user.user_type  # Get user type from the user object
 
     # Return the access token and user type in the response
-    return jsonify({"access_token": access_token, "user_type": user_type, "message": "Login successful"}), 200
+    return jsonify({"access_token": access_token, "user_type": user_type, "full_name": user.full_name, "message": "Login successful"}), 200
 
 
 
