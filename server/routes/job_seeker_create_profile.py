@@ -111,50 +111,66 @@ def get_job_seeker_profile(job_seeker_id):
         return jsonify(job_seeker.to_json()), 200
     return jsonify({"message": "Profile not found"}), 404
 
-@app.route("/api/update_job_seeker_profile",methods = ["PUT"])
+
+@app.route("/api/update_job_seeker_profile", methods=["PUT"])
 @jwt_required()
-def update_job_seeker():
+def update_job_seeker_profile():
+    try:
+        user_id = get_jwt_identity()
+        job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
 
-    user_id = get_jwt_identity()
-    
-    job_seeker = JobSeeker.query.filter_by(user_id= user_id).first()
+        if not job_seeker:
+            return jsonify({"message": "Job seeker not found."}), 404
+        data = request.get_json()
+        # Get data from the multipart form
+        first_name = data.get("first_name")
+        last_name = data.get("last_name")
+        dob_str = data.get("dob")  # Retrieve the date as a string
+        gender = data.get("gender")
+        nationality = data.get("nationality")
 
-    data = request.get_json()
+        # Handle skills (stored as JSON)
+        education = data.get('education')
+        if isinstance(education, list):
+            education = json.dumps(education)  # Convert list to JSON string
 
-    # Handle education (ensure it's stored as valid JSON)
-    education = data.get('education')
-    if isinstance(education, list):
-        education = json.dumps(education)  # Convert list to JSON string
-    # Handle skills (ensure it's stored as valid JSON)
-    skills = data.get('skills')
-    if isinstance(skills, list):
-        skills = json.dumps(skills)  # Convert list to JSON string
-    profile_pic = data.get('profile_pic')
-    # Handle profile picture (if provided)
-    profile_pic_path = None
-    if profile_pic and profile_pic.startswith('data:image/'):
-        img_data = profile_pic.split(',')[1]
-        img_data = base64.b64decode(img_data)
-        filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        with open(filepath, 'wb') as f:
-            f.write(img_data)
-        profile_pic_path = filepath
-    elif profile_pic:
-        profile_pic_path = profile_pic
+        # Handle skills (ensure it's stored as valid JSON)
+        skills = data.get('skills')
+        if isinstance(skills, list):
+            skills = json.dumps(skills) # Keep existing education if none provided
 
-    job_seeker.first_name = data.get("first_name", job_seeker.first_name)
-    job_seeker.last_name = data.get("last_name", job_seeker.last_name)
-    job_seeker.dob = data.get("dob", job_seeker.dob)
-    job_seeker.gender = data.get("gender", job_seeker.gender)
-    job_seeker.nationality = data.get("nationality", job_seeker.nationality)
+        # Handle profile picture upload
+        profile_pic_path = job_seeker.profile_pic  # Keep the existing one by default
+        if 'profile_pic' in request.files:
+            pic = request.files['profile_pic']
+            filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            pic.save(filepath)
+            profile_pic_path = filepath
 
+        # Update the job seeker object
+        job_seeker.first_name = first_name if first_name else job_seeker.first_name
+        job_seeker.last_name = last_name if last_name else job_seeker.last_name
 
+        # Only convert and update dob if dob_str is not empty
+        if dob_str:
+            job_seeker.dob = datetime.fromisoformat(dob_str)  # Convert string to date
 
-    db.session.commit()
+        job_seeker.gender = gender if gender else job_seeker.gender
+        job_seeker.nationality = nationality if nationality else job_seeker.nationality
+        job_seeker.skills = skills  # Save as JSON string
+        job_seeker.education = education  # Save as JSON string
+        job_seeker.profile_pic = profile_pic_path
 
+        db.session.commit()
+        return jsonify({"message": "Profile updated successfully."}), 200
 
-    return jsonify({"message": "Profile was updated successfully"})
+    except ValueError as ve:
+        return jsonify({"message": f"Invalid date format: {str(ve)}"}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500
+
 
 @app.route("/api/delete_job_seeker_profile", methods = ["DELETE"])
 @jwt_required()
@@ -179,16 +195,54 @@ def delete_job_seeker():
 @app.route("/api/update_employer_profile", methods = ["PUT"])
 @jwt_required()    
 def update_employer():
-    user_id = get_jwt_identity()
-    employer = Employer.query.filter_by(user_id=user_id).first()
+    try:
+        # Get JSON data from request
+        data = request.get_json()
+        print(f"Received data: {data}")
+        # Get user_id from JWT
+        user_id = get_jwt_identity()
 
-    data = request.get_json()
+        # Extract fields from request data
+        company_name = data.get('company_name')
+        about_company = data.get('about_company')
+        preferential_treatment = data.get('preferential_treatment')
+        company_benefits = data.get('company_benefits')
+        email = data.get('email')
 
-    employer.company_name = data.get("company_namez", employer.company_name)
+        # Handle company logo (if provided)
+        company_logo = data.get('company_logo')
+        company_logo_path = None
+        if company_logo and company_logo.startswith('data:image/'):
+            img_data = company_logo.split(',')[1]
+            img_data = base64.b64decode(img_data)
+            filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            with open(filepath, 'wb') as f:
+                f.write(img_data)
+            company_logo_path = filepath
+        elif company_logo:
+            company_logo_path = company_logo  # If it's a URL or existing file path
 
-    db.session.commit()
+        # Create a new Employer object
+        new_employer = Employer(
+            user_id=user_id,
+            company_name=company_name,
+            company_logo=company_logo_path or '',
+            about_company=about_company,
+            preferential_treatment=preferential_treatment,
+            company_benefits=company_benefits,
+            email=email
+        )
 
-    return jsonify({"message": "Profile was successfully updated"})
+        # Save new profile to the database
+        db.session.add(new_employer)
+        db.session.commit()
+
+        return jsonify({'message': 'Employer profile created successfully', 'profile': new_employer.to_json()}), 201
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'An error occurred while creating the employer profile.'}), 500
 
 
 @app.route("/api/delete_employer_profile", methods = ["DELETE"])

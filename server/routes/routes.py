@@ -7,6 +7,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import base64
 from werkzeug.utils import secure_filename
 import os
+import json
 
 @app.route("/")
 def testing():
@@ -140,8 +141,10 @@ def create_employer_profile():
         company_name = data.get('company_name')
         about_company = data.get('about_company')
         preferential_treatment = data.get('preferential_treatment')
-        company_benefits = data.get('company_benefits')
         email = data.get('email')
+        company_benefits = data.get('company_benefits')
+        if isinstance(company_benefits, list):
+            education = json.dumps(company_benefits)
 
         # Handle company logo (if provided)
         company_logo = data.get('company_logo')
@@ -155,7 +158,10 @@ def create_employer_profile():
                 f.write(img_data)
             company_logo_path = filepath
         elif company_logo:
-            company_logo_path = company_logo  # If it's a URL or existing file path
+            company_logo_path = company_logo 
+                                              # If it's a URL or existing file path
+            
+
 
         # Create a new Employer object
         new_employer = Employer(

@@ -18,7 +18,10 @@ import JobViewer from "./components/JobViewer/JobViewer";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard"
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
 import Footer from "./components/Footer/Footer"
-
+import UpdateJobSeekerProfile from "./components/UpdateAndDelete/UpdateJobSeekerProfile";
+import DeleteJobSeekerProfile from "./components/UpdateAndDelete/DeleteJobSeekerProfile";
+import DeleteEmployerProfile from "./components/UpdateAndDelete/DeleteEmployerProfile";
+import UpdateEmployerProfile from "./components/UpdateAndDelete/UpdateEmployerProfile";
 
 function App() {
   const [profileData, setProfileData] = useState(null);
@@ -102,7 +105,15 @@ function App() {
             element={<JobSeekerDashboard />}
           />
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+          <Route path="/update-jobseeker-profile" element={<UpdateJobSeekerProfile />} />
+          <Route path="/delete-jobseeker-profile" element={<DeleteJobSeekerProfile />} />
+          
+          <Route path="/update-employer-profile" element={<UpdateEmployerProfile />} />
+          <Route path="/delete-employer-profile" element={<DeleteEmployerProfile />} />
+          
+        
         </Routes>
+
 
 
       </BrowserRouter>
