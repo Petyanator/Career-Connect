@@ -69,28 +69,27 @@
 
 // export default App;
 
-src / App.jsx;
-import React, { useEffect, useState } from "react";
+// src/App.jsx
+
+// src/App.jsx
+//
+
+// src/App.jsx
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Notification from "./components/Notifications/Notification";
 
-const App = () => {
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    // Get the token from localStorage on component mount
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
-  }, []);
-
-  if (!token) {
-    return <div>Please log in to view your notifications.</div>; // Display a message if no token
-  }
-
+function App() {
   return (
-    <div>
-      <Notification />
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          {/* Other routes */}
+          <Route path="/notifications" element={<Notification />} />
+        </Routes>
+      </div>
+    </Router>
   );
-};
+}
 
 export default App;

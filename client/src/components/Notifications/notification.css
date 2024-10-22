@@ -1,47 +1,28 @@
-/* src/components/Notifications/Notification.css */
 .notification-page {
   padding: 20px;
-}
-
-.notification-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-.notification-item {
-  background-color: #f9f9f9;
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.notification-message {
-  font-size: 16px;
+  background-color: #f8f9fa;
   color: #333;
-}
 
-.notification-actions {
-  display: flex;
-  gap: 10px;
-}
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-.accept-btn,
-.reject-btn {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
+  .notification-list {
+    list-style: none;
+    padding: 0;
 
-.accept-btn {
-  background-color: #4caf50;
-  color: white;
-}
+    .notification-item {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-.reject-btn {
-  background-color: #f44336;
-  color: white;
+      &:hover {
+        background-color: #952727;
+      }
+    }
+  }
 }
