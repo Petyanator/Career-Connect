@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
-from models.models import User, JobSeeker, Application  # Import your models
+from models.models import User, JobSeeker, Application, JobPosting, Employer  # Import your models
 from app import app, db  # Import your Flask app and database
 
 @app.route('/dashboard', methods=['GET'])
@@ -32,6 +32,26 @@ def get_applications():
 
     if not job_seeker:
         return jsonify({"message": "Job seeker not found"}), 404
+    
+  # Query applications, join with JobPosting and Employer tables
+    applications = (
+        db.session.query(Application, JobPosting, Employer)
+        .join(JobPosting, Application.job_posting_id == JobPosting.job_posting_id)
+        .join(Employer, JobPosting.employer_id == Employer.employer_id)
+        .filter(Application.job_seeker_id == job_seeker.job_seeker_id)
+        .all()
+    )
 
-    applications = Application.query.filter_by(job_seeker_id=job_seeker.job_seeker_id).all()
-    return jsonify([app.to_json() for app in applications]), 200
+  # Prepare the data to be returned
+    result = []
+    for application, job_posting, employer in applications:
+        result.append({
+            "application_id": application.application_id,
+            "job_seeker_status": application.job_seeker_status,
+            "employer_status": application.employer_status,
+            "created_at": application.created_at.isoformat(),
+            "job_title": job_posting.title,
+            "company_name": employer.company_name
+        })
+
+    return jsonify(result), 200

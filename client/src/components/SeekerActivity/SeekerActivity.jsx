@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import UserToken from "../Token/UserToken";
 
 function SeekerActivity() {
   const [activeTab, setActiveTab] = useState("accepted");
@@ -27,7 +26,7 @@ function SeekerActivity() {
     fetchApplications();
   }, []);
 
-  // Filter applications based on the active tab
+  // Filter applications based on the active tab (Accepted or Rejected)
   const filteredApplications = applications.filter((app) =>
     activeTab === "accepted"
       ? app.job_seeker_status === 1
@@ -44,12 +43,15 @@ function SeekerActivity() {
         {filteredApplications.length > 0 ? (
           filteredApplications.map((application) => (
             <div key={application.application_id}>
-              <p>Job Posting ID: {application.job_posting_id}</p>
+              <p>Job Title: {application.job_title}</p>
+              <p>Company Name: {application.company_name}</p>
               <p>
                 Status:{" "}
                 {application.job_seeker_status === 1 ? "Accepted" : "Rejected"}
               </p>
-              <p>Applied on: {application.created_at}</p>
+              <p>
+                Applied on: {new Date(application.created_at).toLocaleString()}
+              </p>
             </div>
           ))
         ) : (
