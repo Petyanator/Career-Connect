@@ -116,7 +116,7 @@ def get_job_seeker_profile(job_seeker_id):
 def update_job_seeker():
 
     user_id = get_jwt_identity()
-    
+
     job_seeker = JobSeeker.query.filter_by(user_id= user_id).first()
 
     data = request.get_json()
@@ -159,16 +159,16 @@ def update_job_seeker():
 @app.route("/api/delete_job_seeker_profile", methods = ["DELETE"])
 @jwt_required()
 def delete_job_seeker():
-   
+
     user_id = get_jwt_identity()
 
     job_seeker = JobSeeker.query.filter_by(user_id = user_id).first()
-    
+
     if not job_seeker:
         return jsonify({"message": "Job seeker not found"})
-    
+
     job_seeker_id = job_seeker.job_seeker_id
-    
+
     Application.query.filter_by(job_seeker_id=job_seeker_id).delete()
     db.session.commit()
 
@@ -177,7 +177,7 @@ def delete_job_seeker():
     return jsonify({"message": "Job seeker profile was deleted successfully"})
 
 @app.route("/api/update_employer_profile", methods = ["PUT"])
-@jwt_required()    
+@jwt_required()
 def update_employer():
     user_id = get_jwt_identity()
     employer = Employer.query.filter_by(user_id=user_id).first()
@@ -194,16 +194,10 @@ def update_employer():
 @app.route("/api/delete_employer_profile", methods = ["DELETE"])
 @jwt_required()
 def delete_employer():
-   
     user_id = get_jwt_identity()
-
     employer = Employer.query.filter_by(user_id = user_id).first()
-    
     if not employer:
         return jsonify({"message": "Employer was not found"})
-    
-    
     db.session.delete(employer)
     db.session.commit()
     return jsonify({"message": "Employer profile was deleted successfully"})
-
