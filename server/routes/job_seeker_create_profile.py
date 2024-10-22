@@ -111,7 +111,6 @@ def get_job_seeker_profile(job_seeker_id):
         return jsonify(job_seeker.to_json()), 200
     return jsonify({"message": "Profile not found"}), 404
 
-
 @app.route("/api/update_job_seeker_profile", methods=["PUT"])
 @jwt_required()
 def update_job_seeker_profile():
@@ -121,23 +120,25 @@ def update_job_seeker_profile():
 
         if not job_seeker:
             return jsonify({"message": "Job seeker not found."}), 404
+
         data = request.get_json()
-        # Get data from the multipart form
+
+        # Retrieve basic information from the request
         first_name = data.get("first_name")
         last_name = data.get("last_name")
-        dob_str = data.get("dob")  # Retrieve the date as a string
+        dob_str = data.get("dob")  # Date of birth as a string
         gender = data.get("gender")
         nationality = data.get("nationality")
 
-        # Handle skills (stored as JSON)
+        # Handle education (stored as JSON)
         education = data.get('education')
-        if isinstance(education, list):
-            education = json.dumps(education)  # Convert list to JSON string
+        if isinstance(education, str):
+            education = json.loads(education)  # Convert from JSON string to list
 
         # Handle skills (ensure it's stored as valid JSON)
         skills = data.get('skills')
-        if isinstance(skills, list):
-            skills = json.dumps(skills) # Keep existing education if none provided
+        if isinstance(skills, str):
+            skills = json.loads(skills)  # Convert from JSON string to list
 
         # Handle profile picture upload
         profile_pic_path = job_seeker.profile_pic  # Keep the existing one by default
@@ -148,18 +149,22 @@ def update_job_seeker_profile():
             pic.save(filepath)
             profile_pic_path = filepath
 
-        # Update the job seeker object
+        # Update the job seeker object with new data
         job_seeker.first_name = first_name if first_name else job_seeker.first_name
         job_seeker.last_name = last_name if last_name else job_seeker.last_name
 
-        # Only convert and update dob if dob_str is not empty
+        # Update date of birth if provided
         if dob_str:
             job_seeker.dob = datetime.fromisoformat(dob_str)  # Convert string to date
 
         job_seeker.gender = gender if gender else job_seeker.gender
         job_seeker.nationality = nationality if nationality else job_seeker.nationality
-        job_seeker.skills = skills  # Save as JSON string
-        job_seeker.education = education  # Save as JSON string
+        
+        # Save skills and education as JSON strings
+        job_seeker.skills = json.dumps(skills) if skills else job_seeker.skills
+        job_seeker.education = json.dumps(education) if education else job_seeker.education
+        
+        # Update profile picture path
         job_seeker.profile_pic = profile_pic_path
 
         db.session.commit()
@@ -170,6 +175,7 @@ def update_job_seeker_profile():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": str(e)}), 500
+
 
 
 @app.route("/api/delete_job_seeker_profile", methods = ["DELETE"])

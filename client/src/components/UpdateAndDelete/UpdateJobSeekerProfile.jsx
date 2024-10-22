@@ -49,34 +49,38 @@ function UpdateJobSeekerProfile() {
 
         const convertImageToBase64 = (file) => {
             return new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.readAsDataURL(file);
-              reader.onload = () => resolve(reader.result);
-              reader.onerror = (error) => reject(error);
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
             });
-          };
+        };
 
-          if (profilePic) {
-            profile_pic = await convertImageToBase64(profilePic)
-          }
+        let profile_pic = null; // Declare profile_pic here
 
-          const education = educationFields.map(field => {
-            const {education, degreeDetails, institution} = field
-            return `${education} in ${degreeDetails} at ${institution}`
-          })
+        if (profilePic) {
+            profile_pic = await convertImageToBase64(profilePic);
+        }
 
-          const formData = {
-            profilePic,
+        const education = educationFields.map((field) => {
+            const { education, degreeDetails, institution } = field;
+            return {
+              education,
+              degreeDetails,
+              institution,
+            };
+          });
+
+        const formData = {
+            profile_pic,
             first_name: firstName,
             last_name: lastName,
             dob,
             gender,
             nationality,
-            education: JSON.stringify(education),  // JSON string of education array
-            skills: JSON.stringify(skills),  // JSON string of skills array
-          };
-
-
+            education: JSON.stringify(education), // JSON string of education array
+            skills: JSON.stringify(skills), // JSON string of skills array
+        };
 
         try {
             const token = localStorage.getItem('token');
@@ -94,10 +98,17 @@ function UpdateJobSeekerProfile() {
                 body: JSON.stringify(formData),
             });
 
-            const data = await response.json()
+            const data = await response.json();
 
             if (response.ok) {
                 alert("Profile updated successfully!", data);
+                // Optionally, clear other fields but keep skills and education intact
+                // setFirstName('');
+                // setLastName('');
+                // setDob('');
+                // setGender('');
+                // setNationality('');
+                // setProfilePic(null);
             } else {
                 const errorData = await response.json();
                 alert(`Error: ${errorData.message || "Profile update failed"}`);
@@ -159,52 +170,52 @@ function UpdateJobSeekerProfile() {
                     onChange={(e) => setNationality(e.target.value)}
                 />
 
-{educationFields.map((field, index) => (
-              <div key={index} className="education-section">
-                <label htmlFor={`education-${index}`}>Education Level:</label>
-                <select
-                  id={`education-${index}`}
-                  name="education"
-                  value={field.education}
-                  onChange={(e) => handleEducationChange(index, e)}
-                >
-                  <option value="">Select your education level</option>
-                  <option value="High School Diploma">High School Diploma</option>
-                  <option value="Skill Certification">Skill Certification</option>
-                  <option value="Bachelor's Degree">Bachelor's Degree</option>
-                  <option value="Master's Degree">Master's Degree</option>
-                  <option value="PhD">PhD</option>
-                </select>
+                {educationFields.map((field, index) => (
+                    <div key={index} className="education-section">
+                        <label htmlFor={`education-${index}`}>Education Level:</label>
+                        <select
+                            id={`education-${index}`}
+                            name="education"
+                            value={field.education}
+                            onChange={(e) => handleEducationChange(index, e)}
+                        >
+                            <option value="">Select your education level</option>
+                            <option value="High School Diploma">High School Diploma</option>
+                            <option value="Skill Certification">Skill Certification</option>
+                            <option value="Bachelor's Degree">Bachelor's Degree</option>
+                            <option value="Master's Degree">Master's Degree</option>
+                            <option value="PhD">PhD</option>
+                        </select>
 
-                {field.education && field.education !== 'High School Diploma' && (
-                  <>
-                    <label htmlFor={`degree-details-${index}`}>Degree/Certification Details:</label>
-                    <input
-                      type="text"
-                      id={`degree-details-${index}`}
-                      name="degreeDetails"
-                      value={field.degreeDetails}
-                      placeholder="Degree details"
-                      onChange={(e) => handleEducationChange(index, e)}
-                    />
+                        {field.education && field.education !== 'High School Diploma' && (
+                            <>
+                                <label htmlFor={`degree-details-${index}`}>Degree/Certification Details:</label>
+                                <input
+                                    type="text"
+                                    id={`degree-details-${index}`}
+                                    name="degreeDetails"
+                                    value={field.degreeDetails}
+                                    placeholder="Degree details"
+                                    onChange={(e) => handleEducationChange(index, e)}
+                                />
 
-                    <label htmlFor={`institution-${index}`}>Institution Name:</label>
-                    <input
-                      type="text"
-                      id={`institution-${index}`}
-                      name="institution"
-                      value={field.institution}
-                      placeholder="Institution name"
-                      onChange={(e) => handleEducationChange(index, e)}
-                    />
-                  </>
-                )}
-              </div>
-            ))}
+                                <label htmlFor={`institution-${index}`}>Institution Name:</label>
+                                <input
+                                    type="text"
+                                    id={`institution-${index}`}
+                                    name="institution"
+                                    value={field.institution}
+                                    placeholder="Institution name"
+                                    onChange={(e) => handleEducationChange(index, e)}
+                                />
+                            </>
+                        )}
+                    </div>
+                ))}
 
-            <button type="button" className="add-education-btn" onClick={handleAddEducationField}>
-              <FaPlus /> Add Education
-            </button>
+                <button type="button" className="add-education-btn" onClick={handleAddEducationField}>
+                    <FaPlus /> Add Education
+                </button>
 
                 <div className="skills-input">
                     <input

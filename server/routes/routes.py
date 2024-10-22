@@ -213,3 +213,20 @@ def get_employer_profile(employer_id):
     if employer:
         return jsonify(employer.to_json()), 200
     return jsonify({"message": "Employer profile not found"}), 404
+
+
+
+@app.route("/api/job_seekers_search", methods=["GET"])
+@jwt_required()
+def find_jobseekers():
+    try:
+        jobseekers = JobSeeker.query.all()
+        people = [person.to_json() for person in jobseekers]
+
+        if not people:
+            return jsonify({"message": "No job seekers found"}), 404
+
+        return jsonify(people), 200
+
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
