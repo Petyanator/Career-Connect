@@ -76,8 +76,6 @@ def update_application_status():
 
 @app.route('/api/apply', methods=['POST'])
 @jwt_required()
-@app.route('/api/apply', methods=['POST'])
-@jwt_required()
 def apply_to_job():
     data = request.json
     job_posting_id = data.get('job_posting_id')

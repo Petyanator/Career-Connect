@@ -9,8 +9,9 @@ function EmployerDashboard() {
     <>
       <div className="dashboard4">
         <h1>you are logged in as an employer</h1>
-        <NotificationsComponent />
+
         <JobPosting></JobPosting>
+        <NotificationsComponent />
         <Link className="navbar-link" to="/">
           Home
         </Link>
