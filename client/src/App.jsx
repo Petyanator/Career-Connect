@@ -69,23 +69,28 @@ function App() {
 
 export default App;
 
-// import React, { useEffect } from "react";
-// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import Notifications from "./components/Notifications/Notifications";
+// src/App.jsx
+// import React, { useEffect, useState } from "react";
+// import Notification from "./components/Notifications/Notification";
 
-// function App() {
+// const App = () => {
+//   const [token, setToken] = useState(null);
+
 //   useEffect(() => {
-//     // Simulating a login and storing a mock token
-//     localStorage.setItem("token", "your_mock_token_here");
+//     // Get the token from localStorage on component mount
+//     const storedToken = localStorage.getItem("token");
+//     setToken(storedToken);
 //   }, []);
 
+//   if (!token) {
+//     return <div>Please log in to view your notifications.</div>; // Display a message if no token
+//   }
+
 //   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<Notifications />} />
-//       </Routes>
-//     </Router>
+//     <div>
+//       <Notification />
+//     </div>
 //   );
-// }
+// };
 
 // export default App;
