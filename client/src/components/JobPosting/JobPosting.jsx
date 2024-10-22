@@ -18,49 +18,82 @@ const JobPosting = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Retrieve JWT token from localStorage
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('No token found. Please login.');
-      setIsSubmitting(false);
-      return;
-    }
-
+  const notifyEmployer = async (applicationId, jobSeekerId, employerId) => {
     try {
-      const response = await fetch("http://localhost:5000/api/jobs", {
-        method: "POST",
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/notifications', {
+        method: 'POST',
         headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),  // Send the form data as JSON
+        body: JSON.stringify({
+          application_id: applicationId,
+          job_seeker_id: jobSeekerId,
+          employer_id: employerId,
+          message: "A job seeker is interested in your job posting!",
+        }),
       });
-
+  
       const data = await response.json();
       if (response.ok) {
-        alert("Job posted successfully!");
-        setFormData({
-          jobTitle: "",
-          salaryRange: "",
-          location: "",
-          requiredSkills: "",
-          description: "",
-        });
+        alert("Employer notified successfully!");
       } else {
         alert(`Error: ${data.message}`);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Failed to post job.");
-    } finally {
-      setIsSubmitting(false);
+      alert("Failed to notify employer.");
     }
-  };
+  };  
+
+ // Call notifyEmployer after successfully submitting job posting
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('No token found. Please login.');
+    setIsSubmitting(false);
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:5000/api/jobs", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Job posted successfully!");
+
+      // Reset form
+      setFormData({
+        jobTitle: "",
+        salaryRange: "",
+        location: "",
+        requiredSkills: "",
+        description: "",
+      });
+
+      // Notify the employer with the relevant data
+      notifyEmployer(data.application_id, /* jobSeekerId */ 1, /* employerId */ 2);  // Replace with actual values
+    } else {
+      alert(`Error: ${data.message}`);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Failed to post job.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="job-posting-container">

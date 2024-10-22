@@ -18,6 +18,7 @@ import JobViewer from "./components/JobViewer/JobViewer";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard"
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
 import Footer from "./components/Footer/Footer"
+import Notifications from "./components/Notification/Notification";
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
           <Route path="/the-team" element={<Team />} />
           <Route path="/searchbar" element={<SearchAndFilterSystem />} />
           <Route path="/jobposting" element={<JobPosting />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/jobviewer" element={<JobViewer />} />
 
           <Route

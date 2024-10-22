@@ -24,17 +24,25 @@ class User(db.Model):
 
 class Notification(db.Model):
     __tablename__ = "notifications"
-    notification_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-    application_id = db.Column(db.Integer)
-    employer_id = db.Column(db.Integer)
-
+    notification_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    application_id = db.Column(db.Integer, db.ForeignKey("applications.application_id"), nullable=False)
+    employer_id = db.Column(db.Integer, nullable=False)
+    job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"), nullable=False)  # Who receives it
+    message = db.Column(db.String(255), nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
 
     def to_json(self):
         return {
             "notification_id": self.notification_id,
             "application_id": self.application_id,
             "employer_id": self.employer_id,
+            "job_seeker_id": self.job_seeker_id,
+            "message": self.message,
+            "is_read": self.is_read,
+            "created_at": self.created_at.isoformat(),
         }
+
 
 class JobSeeker(db.Model):
     __tablename__ = "job_seekers"
