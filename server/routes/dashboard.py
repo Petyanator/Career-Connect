@@ -3,6 +3,8 @@ from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 from models.models import User, JobSeeker, Application, JobPosting, Employer  # Import your models
 from app import app, db  # Import your Flask app and database
 
+
+#route to get jobseeker and employer profile data
 @app.route('/dashboard', methods=['GET'])
 @jwt_required()  # Ensure that this route requires authentication
 def get_user_data():
@@ -14,11 +16,14 @@ def get_user_data():
 
     # Fetch the job seeker profile if it exists
     job_seeker_profile = JobSeeker.query.filter_by(user_id=user_id).first()
+    # Fetch the employer profile if it exists 
+    employer_profile = Employer.query.filter_by(user_id=user_id).first()
 
     # Create response data
     response_data = {
         "full_name": user.full_name,
         "user_type": user.user_type,
+        "employer_profile": employer_profile.to_json() if employer_profile else None,
         "job_seeker_profile": job_seeker_profile.to_json() if job_seeker_profile else None  # Send None if no profile
     }
 

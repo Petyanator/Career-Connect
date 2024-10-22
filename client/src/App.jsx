@@ -7,21 +7,21 @@ import Landing from "./components/Landing/Landing";
 import Team from "./components/Team/Team";
 // import CreateProfilePage from "./components/Profile/CreateProfilePage";
 // import CreateProfileView from "./components/Profile/CreateProfileView";
-import EmployerCreateProfile from "./components/Profile/EmployerCreateProfile";
-import EmployerProfileView from "./components/Profile/EmployerProfileView";
+// import EmployerCreateProfile from "./components/Profile/EmployerCreateProfile";
+// import EmployerProfileView from "./components/Profile/EmployerProfileView";
 import Register from "./components/RegisterAndLogin/Register";
 import Login from "./components/RegisterAndLogin/Login";
 import UserToken from "./components/Token/UserToken";
-import SearchAndFilterSystem from "./components/SearchAndFilterSystem/SearchAndFilterSystem";
+// import SearchAndFilterSystem from "./components/SearchAndFilterSystem/SearchAndFilterSystem";
 import JobPosting from "./components/JobPosting/JobPosting";
-import JobViewer from "./components/JobViewer/JobViewer";
+// import JobViewer from "./components/JobViewer/JobViewer";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard";
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
 import Footer from "./components/Footer/Footer";
 
 function App() {
   const [profileData, setProfileData] = useState(null);
-  const [employerProfileData, setEmployerProfileData] = useState(null);
+  // const [employerProfileData, setEmployerProfileData] = useState(null);
   const { token, setToken } = UserToken(); // State for user token
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState(
@@ -58,9 +58,9 @@ function App() {
           <Route path="/footer" element={<Footer />} />
           <Route path="/" element={<Landing />} />
           <Route path="/the-team" element={<Team />} />
-          <Route path="/searchbar" element={<SearchAndFilterSystem />} />
+          {/* <Route path="/searchbar" element={<SearchAndFilterSystem />} /> */}
           <Route path="/jobposting" element={<JobPosting />} />
-          <Route path="/jobviewer" element={<JobViewer />} />
+          {/* <Route path="/jobviewer" element={<JobViewer />} /> */}
 
           {/* <Route
             path="/profile"
@@ -72,7 +72,7 @@ function App() {
             element={<CreateProfilePage setProfileData={setProfileData} />}
           /> */}
 
-          <Route
+          {/* <Route
             path="/employer-create-profile"
             element={
               <EmployerCreateProfile
@@ -85,7 +85,7 @@ function App() {
             element={
               <EmployerProfileView employerProfileData={employerProfileData} />
             }
-          />
+          /> */}
           <Route
             path="/login"
             element={
@@ -109,7 +109,15 @@ function App() {
               />
             }
           />
-          <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+          <Route
+            path="/employer-dashboard"
+            element={
+              <EmployerDashboard
+                profileData={profileData}
+                setProfileData={setProfileData}
+              />
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>

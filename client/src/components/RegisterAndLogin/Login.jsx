@@ -59,7 +59,8 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
 
           if (profileResponse.ok) {
             const profileData = await profileResponse.json();
-            setProfileData(profileData.job_seeker_profile || {}); // Set profile data or an empty object
+            setProfileData(profileData.job_seeker_profile || {});
+            setProfileData(profileData.employer_profile || {}); // Set profile data or an empty object
           }
 
           // Navigate to the appropriate dashboard
