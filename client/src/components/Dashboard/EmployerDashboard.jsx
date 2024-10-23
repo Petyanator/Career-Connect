@@ -7,6 +7,7 @@ import SearchForEmployers from "../SearchForEmployers/SearchForEmployers";
 import DeleteEmployerProfile from "../UpdateAndDelete/DeleteEmployerProfile";
 import UpdateEmployerProfile from "../UpdateAndDelete/UpdateEmployerProfile";
 import NotificationsComponent from "../NotificationsComponents/NotificationsComponents";
+import EmployerViewJobPost from "../JobViewer/EmployerViewJobPost";
 
 function EmployerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData);
@@ -85,7 +86,12 @@ function EmployerDashboard({ profileData, setProfileData }) {
           </div>
         );
       case "my-job-posts":
-        return <div>My Job Posts</div>;
+        return (
+          <div>
+            My Job Posts
+            <EmployerViewJobPost />
+          </div>
+        );
       default:
         return "profile";
     }
