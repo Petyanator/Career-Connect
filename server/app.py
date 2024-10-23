@@ -1,12 +1,29 @@
+
 from flask import Flask
 from flask_cors import CORS
-from routes.employer_create_profile import employer_create_profile_bp
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from config import Config, register_models, register_routes
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials = True)
+bcrypt = Bcrypt(app)
 
-# Register the blueprint
-app.register_blueprint(employer_create_profile_bp)
+app.config.from_object(Config)
+
+db = SQLAlchemy(app)
+
+jwt = JWTManager(app)
+
+register_routes(app)
+
+register_models(app)
+
+
+
+from routes import job_post_routes
+from routes import job_seeker_create_profile
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5001, debug=True)
+    app.run(debug=True)

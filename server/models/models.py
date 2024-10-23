@@ -1,6 +1,6 @@
-from extensions import db, bcrypt
+from app import db
+from datetime import datetime
 import json  # Import json module
-
 
 class User(db.Model):
     __tablename__ = "users"
@@ -24,16 +24,23 @@ class User(db.Model):
 
 class Notification(db.Model):
     __tablename__ = "notifications"
-    notification_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-    application_id = db.Column(db.Integer)
-    employer_id = db.Column(db.Integer)
-
+    notification_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    application_id = db.Column(db.Integer, db.ForeignKey("applications.application_id"))
+    employer_id = db.Column(db.Integer, db.ForeignKey("employer.employer_id"))
+    job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
+    job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
+    send_notification = db.Column(db.Boolean, default=False)  # Field to track if notification should be sent
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
 
     def to_json(self):
         return {
             "notification_id": self.notification_id,
             "application_id": self.application_id,
             "employer_id": self.employer_id,
+            "job_posting_id": self.job_posting_id,
+            "job_seeker_id": self.job_seeker_id,
+            "send_notification": self.send_notification,
+            "created_at": self.created_at.isoformat()
         }
 
 class JobSeeker(db.Model):
@@ -102,31 +109,6 @@ class JobPosting(db.Model):
             'description': self.description
         }
 
-<<<<<<< HEAD
-class Employer(db.Model):
-    __tablename__ = "employer"
-    employer_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
-    company_name = db.Column(db.String(255))
-    company_logo = db.Column(db.String(255))
-    about_company = db.Column(db.Text)
-    preferential_treatment = db.Column(db.Text)
-    company_benefits = db.Column(db.Text)
-    contact = db.Column(db.String(255))
-
-    def to_json(self):
-        return {
-            "employer_id": self.employer_id,
-            "user_id": self.user_id,
-            "company_name": self.company_name,
-            "company_logo": self.company_logo,
-            "about_company": self.about_company,
-            "preferential_treatment": json.loads(self.preferential_treatment) if self.preferential_treatment else [],
-            "company_benefits": json.loads(self.company_benefits) if self.company_benefits else [],
-            "contact": self.contact
-        }
-
-=======
 
 class Employer(db.Model):
     __tablename__ = "employer"
@@ -146,19 +128,18 @@ class Employer(db.Model):
             "company_name": self.company_name,
             "company_logo": self.company_logo,
             "about_company": self.about_company,
-            "preferential_treat": self.preferential_treatment,
+            "preferential_treatment": self.preferential_treatment,
             "company_benefits": json.loads(self.company_benefits),
             "email": self.email
         }
->>>>>>> main
 
 class Application(db.Model):
     __tablename__ = "applications"
     application_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
     job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
-    job_seeker_status = db.Column(db.Integer)
-    employer_status = db.Column(db.Integer)
+    job_seeker_status = db.Column(db.Integer) # When set to 1, that means job seeker has sent a request.
+    employer_status = db.Column(db.Integer) # When set to 1, that means employer has accepted. If 2, then they had rejected.
     created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
 
     def to_json(self):
@@ -170,14 +151,3 @@ class Application(db.Model):
             "employer_status": self.employer_status,
             "created_at": self.created_at.isoformat(),
         }
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'job_title': self.job_title,
-            'salary_range': self.salary_range,
-            'location': self.location,
-            'required_skills': self.required_skills,
-        }
-
-

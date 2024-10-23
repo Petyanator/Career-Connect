@@ -1,16 +1,12 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import UserToken from "../Token/UserToken.jsx";
-import "../RegisterAndLogin/Login.scss"
+import "../RegisterAndLogin/Login.scss";
 
-function Login({ setIsLoggedIn, setUserType }) {
-<<<<<<< HEAD:client/src/components/auth/Login.jsx
-  // Accept setIsLoggedIn as a prop
-=======
->>>>>>> main:client/src/components/RegisterAndLogin/Login.jsx
+function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loginError, setLoginError] = useState("");
+  const [loading, setLoading] = useState(false); // Added loading state
   const { setToken } = UserToken();
   const navigate = useNavigate();
 
@@ -21,33 +17,58 @@ function Login({ setIsLoggedIn, setUserType }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
+
     try {
-      const response = await axios.post(
-        "http://localhost:5000/login",
-        formData
-      );
-      if (response.status === 200) {
-        const accessToken = response.data.access_token;
-        const userType = response.data.user_type;
+      const response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const {
+          access_token: accessToken,
+          user_type: userType,
+          full_name: fullName,
+        } = await response.json();
 
         if (accessToken) {
+          // Save the token and user information
           setToken(accessToken);
-<<<<<<< HEAD:client/src/components/auth/Login.jsx
-          setIsLoggedIn(true); // Update the login status
-=======
           setIsLoggedIn(true);
->>>>>>> main:client/src/components/RegisterAndLogin/Login.jsx
           setUserType(userType);
+          setFullName(fullName);
 
+          // Save user data to local storage
+          localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("userType", userType);
+          localStorage.setItem("fullName", fullName);
 
-          if (userType === "job_seeker") {
-            navigate("/job-seeker-dashboard");
-          } else if (userType === "employer") {
-            navigate("/employer-dashboard");
-          } else {
-            setLoginError("User type is not recognized.");
+          // Fetch profile data
+          const profileResponse = await fetch(
+            "http://localhost:5000/dashboard",
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (profileResponse.ok) {
+            const profileData = await profileResponse.json();
+            setProfileData(profileData.job_seeker_profile || {});
+            setProfileData(profileData.employer_profile || {}); // Set profile data or an empty object
           }
+
+          // Navigate to the appropriate dashboard
+          navigate(
+            userType === "job_seeker"
+              ? "/job-seeker-dashboard"
+              : "/employer-dashboard"
+          );
         } else {
           setLoginError("Failed to retrieve access token.");
         }
@@ -56,14 +77,14 @@ function Login({ setIsLoggedIn, setUserType }) {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setLoginError("Invalid username or password.");
+      setLoginError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   return (
-    <>
     <div className="login-container">
-
       <div className="login-form">
         <h2 className="mb-4 text-center">Login</h2>
         {loginError && <div className="alert alert-danger">{loginError}</div>}
@@ -77,6 +98,7 @@ function Login({ setIsLoggedIn, setUserType }) {
               value={formData.username}
               onChange={handleChange}
               required
+              disabled={loading} // Disable input while loading
             />
           </div>
           <div className="mb-3">
@@ -88,16 +110,19 @@ function Login({ setIsLoggedIn, setUserType }) {
               value={formData.password}
               onChange={handleChange}
               required
+              disabled={loading} // Disable input while loading
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100">
-            Login
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            disabled={loading} // Disable button while loading
+          >
+            {loading ? "Logging in..." : "Login"} {/* Show loading text */}
           </button>
         </form>
-
-        </div>
+      </div>
     </div>
-    </>
   );
 }
 

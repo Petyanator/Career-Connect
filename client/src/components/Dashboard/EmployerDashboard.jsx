@@ -1,67 +1,150 @@
-import React from 'react';
+import "./Dashboard.css";
+import { useState, useEffect } from "react";
 import JobPosting from "../JobPosting/JobPosting";
-import JobViewer from "../JobViewer/JobViewer";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faClipboard } from '@fortawesome/free-solid-svg-icons';
-import './EmployerDashboard.css';
+import EmployerCreateProfile from "../Profile/EmployerCreateProfile";
+import EmployerProfileView from "../Profile/EmployerProfileView";
+import SearchForEmployers from "../SearchForEmployers/SearchForEmployers";
+import DeleteEmployerProfile from "../UpdateAndDelete/DeleteEmployerProfile";
+import UpdateEmployerProfile from "../UpdateAndDelete/UpdateEmployerProfile";
 
-// Mock job listings data
-const mockJobListings = [
-  {
-    id: 1,
-    job_title: 'Frontend Developer',
-    company: 'Tech Solutions',
-    location: 'New York',
-    salary_range: '$70K - $90K',
-    required_skills: ['React', 'JavaScript', 'CSS'], // Changed to array
-    description: 'Develop and maintain the frontend of web applications.',
-    posted_time: '1 day ago',
-    job_type: 'Full Time',
-  },
-  {
-    id: 2,
-    job_title: 'Backend Developer',
-    company: 'Tech Solutions',
-    location: 'San Francisco',
-    salary_range: '$80K - $100K',
-    required_skills: ['Node.js', 'Express', 'MongoDB'], // Changed to array
-    description: 'Create server-side applications and RESTful APIs.',
-    posted_time: '2 days ago',
-    job_type: 'Full Time',
-  }
-];
+function EmployerDashboard({ profileData, setProfileData }) {
+  const [isLoading, setIsLoading] = useState(!profileData);
 
-function EmployerDashboard() {
+  const [fullName] = useState(localStorage.getItem("fullName") || "User");
+  const [userType] = useState(localStorage.getItem("userType") || "job_seeker");
+  const token = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (!profileData && token) {
+      const fetchUserData = async () => {
+        setIsLoading(true); // Start loading
+        try {
+          const response = await fetch("http://localhost:5000/dashboard", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setProfileData(data.employer_profile || {}); // Set profile data or empty object
+          } else {
+            console.error("Failed to fetch user data");
+          }
+        } catch (error) {
+          console.error("An error occurred:", error);
+        } finally {
+          setIsLoading(false); // Stop loading
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [profileData, token, setProfileData]); // Include setProfileData in dependencies
+
+  const [activeTab, setActiveTab] = useState("profile");
+  const renderContent = () => {
+    switch (activeTab) {
+      case "profile": {
+        const hasProfileData =
+          profileData && profileData.company_name && profileData.about_company;
+        return !hasProfileData ? (
+          <EmployerCreateProfile
+            setProfileData={setProfileData}
+          ></EmployerCreateProfile>
+        ) : (
+          <EmployerProfileView profileData={profileData}></EmployerProfileView>
+        );
+      }
+      case "search":
+        return (
+          <div>
+            <SearchForEmployers></SearchForEmployers>
+          </div>
+        );
+      case "create job post":
+        return (
+          <div>
+            {" "}
+            Create a job post <JobPosting></JobPosting>
+          </div>
+        );
+      case "security":
+        return (
+          <div>
+            <DeleteEmployerProfile />
+
+            <UpdateEmployerProfile />
+          </div>
+        );
+      case "appearance":
+        return <div>Appearance Settings Content</div>;
+      case "help":
+        return <div>Help Content</div>;
+      default:
+        return "profile";
+    }
+  };
   return (
-    <>
-      <div className="dashboard-container">
-        <h1>Hello <span className="wiggle">Employer!</span> Manage your job listings</h1>
-        <p>Manage your job postings and review candidates below.</p>
-
-        <div className="icon-links">
-          <a href="/profile" className="icon-link">
-            <FontAwesomeIcon icon={faUser} size="2x" />
-            <p>Profile</p>
-          </a>
-
-          <a href="/noticeboard" className="icon-link">
-            <FontAwesomeIcon icon={faClipboard} size="2x" />
-            <p>Noticeboard</p>
-          </a>
+    <div className="profile-settings-container">
+      <aside className="sidebar">
+        <ul className="sidebar-menu">
+          <li
+            onClick={() => setActiveTab("profile")}
+            className={activeTab === "profile" ? "active" : ""}
+          >
+            Profile
+          </li>
+          <li
+            onClick={() => setActiveTab("search")}
+            className={activeTab === "search" ? "active" : ""}
+          >
+            Search
+          </li>
+          <li
+            onClick={() => setActiveTab("create job post")}
+            className={activeTab === "create job post" ? "active" : ""}
+          >
+            Create Job Post
+          </li>
+          <li
+            onClick={() => setActiveTab("security")}
+            className={activeTab === "security" ? "active" : ""}
+          >
+            Security
+          </li>
+          <li
+            onClick={() => setActiveTab("appearance")}
+            className={activeTab === "appearance" ? "active" : ""}
+          >
+            Appearance
+          </li>
+          <li
+            onClick={() => setActiveTab("help")}
+            className={activeTab === "help" ? "active" : ""}
+          >
+            Help
+          </li>
+        </ul>
+      </aside>
+      <main className="content-area">
+        <div className="welcome-message">
+          {isLoading ? (
+            <p>Loading user data...</p> // Show a loading message while fetching data
+          ) : (
+            <>
+              <h1>Welcome, {fullName ? fullName : "User"}!</h1>
+              <p>
+                You are logged in as{" "}
+                {userType === "job_seeker" ? "a Job Seeker" : "an Employer"}.
+              </p>
+            </>
+          )}
         </div>
-      </div>
-
-      <div className="job-viewer-container">
-        <h1>Manage your current job listings</h1>
-        {/* Pass jobListings to JobViewer */}
-        <JobViewer jobListings={mockJobListings} />
-      </div>
-
-      <div className="job-posting-container">
-        <h1>Post a job from the dashboard</h1>
-        <JobPosting />
-      </div>
-    </>
+        {renderContent()}
+      </main>
+    </div>
   );
 }
 

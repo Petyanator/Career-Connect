@@ -1,48 +1,144 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faClipboard } from '@fortawesome/free-solid-svg-icons';
-import SearchAndFilterSystem from '../SearchAndFilterSystem/SearchAndFilterSystem';
-import { Link } from "react-router-dom";
-import './JobSeekerDashboard.css';
+import "./Dashboard.css";
+import { useState, useEffect } from "react";
+import CreateProfilePage from "../Profile/CreateProfilePage";
+import CreateProfileView from "../Profile/CreateProfileView";
+import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem";
+import SeekerActivity from "../SeekerActivity/SeekerActivity";
 
-function JobSeekerDashboard() {
-  // Initialize the animation state
-  const [isAnimating, setIsAnimating] = useState(true);
+function JobSeekerDashboard({ profileData, setProfileData }) {
+  const [isLoading, setIsLoading] = useState(!profileData); // Set loading state based on profileData
 
-  // Function to reset animation on click
-  const handleTypingClick = () => {
-    setIsAnimating(false);
-    setTimeout(() => setIsAnimating(true), 100); // Reset after 100ms
+  const [fullName] = useState(localStorage.getItem("fullName") || "User");
+  const [userType] = useState(localStorage.getItem("userType") || "job_seeker");
+  const token = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (!profileData && token) {
+      const fetchUserData = async () => {
+        setIsLoading(true); // Start loading
+        try {
+          const response = await fetch("http://localhost:5000/dashboard", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setProfileData(data.job_seeker_profile || {}); // Set profile data or empty object
+          } else {
+            console.error("Failed to fetch user data");
+          }
+        } catch (error) {
+          console.error("An error occurred:", error);
+        } finally {
+          setIsLoading(false); // Stop loading
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [profileData, token, setProfileData]); // Include setProfileData in dependencies
+
+  const [activeTab, setActiveTab] = useState("profile");
+  const renderContent = () => {
+    switch (activeTab) {
+      case "profile": {
+        const hasProfileData =
+          profileData &&
+          Object.keys(profileData).length > 0 &&
+          profileData.skills &&
+          profileData.skills.length > 0;
+        return hasProfileData ? (
+          <CreateProfileView profileData={profileData}></CreateProfileView>
+        ) : (
+          <CreateProfilePage
+            setProfileData={setProfileData}
+          ></CreateProfilePage>
+        );
+      }
+      case "search":
+        return (
+          <div>
+            <SearchAndFilterSystem />
+          </div>
+        );
+      case "activity":
+        return (
+          <div>
+            <SeekerActivity></SeekerActivity>
+          </div>
+        );
+      case "security":
+        return <div>Security Settings Content</div>;
+      case "appearance":
+        return <div>Appearance Settings Content</div>;
+      case "help":
+        return <div>Help Content</div>;
+      default:
+        return "profile";
+    }
   };
-
   return (
-    <>
-      <div className="dashboard-container">
-        <div
-          className={`typing ${isAnimating ? 'animate' : ''}`}
-          onClick={handleTypingClick}
-        ></div>
-        <p>Use the search below to find jobs that match your skills and preferences.</p>
-        <div className="icon-links">
-          {/* Profile Page Link */}
-          <Link to="/job-seeker-home-profile" className="icon-link">
-            <FontAwesomeIcon icon={faUser} size="2x" />
-            <p>Profile</p>
-          </Link>
-
-          {/* Noticeboard Page Link */}
-          <Link to="/noticeboard" className="icon-link">
-            <FontAwesomeIcon icon={faClipboard} size="2x" />
-            <p>Noticeboard</p>
-          </Link>
+    <div className="profile-settings-container">
+      <aside className="sidebar">
+        <ul className="sidebar-menu">
+          <li
+            onClick={() => setActiveTab("profile")}
+            className={activeTab === "profile" ? "active" : ""}
+          >
+            Profile
+          </li>
+          <li
+            onClick={() => setActiveTab("search")}
+            className={activeTab === "search" ? "active" : ""}
+          >
+            Search
+          </li>
+          <li
+            onClick={() => setActiveTab("activity")}
+            className={activeTab === "activity" ? "active" : ""}
+          >
+            Activity
+          </li>
+          <li
+            onClick={() => setActiveTab("security")}
+            className={activeTab === "security" ? "active" : ""}
+          >
+            Security
+          </li>
+          <li
+            onClick={() => setActiveTab("appearance")}
+            className={activeTab === "appearance" ? "active" : ""}
+          >
+            Appearance
+          </li>
+          <li
+            onClick={() => setActiveTab("help")}
+            className={activeTab === "help" ? "active" : ""}
+          >
+            Help
+          </li>
+        </ul>
+      </aside>
+      <main className="content-area">
+        <div className="welcome-message">
+          {isLoading ? (
+            <p>Loading user data...</p> // Show a loading message while fetching data
+          ) : (
+            <>
+              <h1>Welcome, {fullName ? fullName : "User"}!</h1>
+              <p>
+                You are logged in as{" "}
+                {userType === "job_seeker" ? "a Job Seeker" : "an Employer"}.
+              </p>
+            </>
+          )}
         </div>
-      </div>
-
-      {/* Search container with SearchAndFilterSystem component */}
-      <div className="search-container">
-        <SearchAndFilterSystem />
-      </div>
-    </>
+        {renderContent()}
+      </main>
+    </div>
   );
 }
 

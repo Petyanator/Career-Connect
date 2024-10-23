@@ -1,31 +1,4 @@
 from flask import Blueprint, request, jsonify
-<<<<<<< HEAD
-from models.models import JobPosting 
-from extensions import db
-
-job_post_bp = Blueprint('job_post_bp', __name__)
-
-@job_post_bp.route('/api/jobs', methods=['POST'])
-def create_job_posting():
-    data = request.get_json()
-
-    
-    required_fields = ['jobTitle', 'company', 'salaryRange', 'location', 'requiredSkills', 'description']
-    if not all(field in data and data[field] for field in required_fields):
-        return jsonify({'message': 'Missing required fields'}), 400
-
-    
-    new_job_post = JobPosting(
-        job_title=data['jobTitle'],
-        company=data['company'],
-        salary_range=data['salaryRange'],
-        location=data['location'],
-        required_skills=data['requiredSkills'],
-        description=data['description']
-    )
-
-    
-=======
 from models.models import JobPosting, Employer  # Import your JobPosting and Employer models
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app import app, db
@@ -36,7 +9,6 @@ job_post_routes = Blueprint('job_post_routes', __name__)
 @app.route('/api/jobs', methods=['POST'])
 @jwt_required()  # Ensure the user is authenticated before creating a job
 def create_job_posting():
->>>>>>> main
     try:
         # Extract the user_id from the JWT token
         user_id = get_jwt_identity()
@@ -79,12 +51,8 @@ def create_job_posting():
         db.session.rollback()  # Rollback the session in case of error
         return jsonify({'message': f'Error occurred: {str(e)}'}), 500
 
-<<<<<<< HEAD
-@job_post_bp.route('/api/jobs', methods=['GET'])
-=======
 # Route to get all job postings
 @app.route('/api/jobs', methods=['GET'])
->>>>>>> main
 def get_job_postings():
     try:
         # Query all job postings from the database
@@ -99,3 +67,11 @@ def get_job_postings():
     except Exception as e:
         return jsonify({'message': f'Error occurred: {str(e)}'}), 500
 
+
+@app.route('/api/job_posting/<int:job_posting_id>', methods=['GET'])
+@jwt_required()
+def get_job_posting(job_posting_id):
+    job_posting = JobPosting.query.get(job_posting_id)
+    if job_posting:
+        return jsonify(job_posting.to_json()), 200
+    return jsonify({"message": "Job posting not found"}), 404

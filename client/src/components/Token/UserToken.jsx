@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function useToken() {
+function UserToken() {
   // Get the initial token from local storage
   const getToken = () => localStorage.getItem("token");
 
@@ -10,11 +10,11 @@ function useToken() {
   // Update local storage and state when the token changes
   const setToken = (userToken) => {
     if (userToken) {
-      localStorage.setItem("token", useToken); // Store token in local storage
+      localStorage.setItem("token", userToken); // Store token in local storage
     } else {
       localStorage.removeItem("token"); // Remove token from local storage if null
     }
-    setTokenState(useToken); // Update the state
+    setTokenState(userToken); // Update the state
   };
 
   // Optional: useEffect to synchronize state with local storage
@@ -31,4 +31,4 @@ function useToken() {
   };
 }
 
-export default useToken;
+export default UserToken;
