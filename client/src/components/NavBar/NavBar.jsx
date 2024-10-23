@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./NavBar.scss";
+// import "./NavBar.scss";
 
 function NavBar({ isLoggedIn, handleLogout, userType }) {
   const [scrolled, setScrolled] = useState(false);
