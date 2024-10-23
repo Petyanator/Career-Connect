@@ -1,13 +1,23 @@
 /* Styling for the navigation bar */
+@import '../../assets/styles/util/variables.scss';  // Import the variables.scss
+
+
 nav {
-  background-color: #2c3e50; /* Dark background color for navbar */
-  padding: 1rem;
+  background-color: transparent; /* Initially transparent */
+  padding: .5rem;
   position: fixed; /* Fixes the navbar at the top */
   top: 0;
   left: 0;
-  width: 100%; /* Ensures the navbar spans the full width of the page */ /* Makes sure the navbar is always on top of other elements */
+  width: 100%; /* Navbar will take up the screen width*/
+  z-index: 1000; /* Ensures the navbar is always on top of other elements */
+  transition: background-color 0.3s ease; /* Smooth transition effect */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
-  z-index: 1000;
+}
+
+/* When scrolled, we will add a new class `.navbar-scrolled` */
+.navbar-scrolled {
+  background-color: #212529; /* Darker background after scrolling */
+  transition: background-color 0.4s ease;
 }
 
 /* Remove default list styling */
@@ -16,7 +26,7 @@ ul {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center; /* Center the navigation links */
+  justify-content: end; /* Center the navigation links */
 }
 
 /* Navigation links styling */
@@ -38,10 +48,6 @@ li {
   background-color: #34495e; /* Darker shade for hover */
   color: #fff;
 }
-/* 
-  Add some padding to the body to avoid content being hidden under the navbar */
-/* body {
-    padding-top: 0px; /* Adjust this based on the height of your navbar */
 
 /* Responsive styling for smaller screens */
 @media (max-width: 768px) {

@@ -1,0 +1,176 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.profile-home {
+    width: 90vw;
+    max-width: 1200px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-home h1 {
+    text-align: center;
+    color: #0B3142;
+    font-size: 38px;
+    margin-bottom: 20px;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 300px;
+    height: 300px;
+    margin-left: 30px;
+    border-radius: 10%;
+    object-fit: cover;
+    border: 4px solid #003153;
+    padding: 5px;
+    background-color: #f1f1f1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.profile-attribute {
+    align-items: center;
+    text-align: center;
+    width: 70%;
+    margin: 10px auto;
+    background-color: #f7f9fc;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.profile-attribute label {
+    background-color: #003153;
+    /* Prussian blue */
+    color: white;
+    padding: 5px;
+    border-radius: 5px 5px 0 0;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.profile-attribute p {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 0 0 5px 5px;
+    font-size: 14px;
+    margin: 0;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.profile-actions .btn-edit-profile {
+    padding: 10px 30px;
+    background-color: #d9305b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+}
+
+.profile-actions .btn-edit-profile:hover {
+    background-color: #a62246;
+}
+
+.profile-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+    margin-top: 5px;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.skill-entry,
+.education-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.skill-entry p,
+.education-entry p {
+    margin: 0;
+    flex-grow: 1;
+    padding-right: 10px;
+}
+
+.delete-icon {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #d9305b;
+    transition: color 0.2s ease;
+}
+
+.delete-icon:hover {
+    color: #a62246;
+}
+
+.add-skill,
+.add-education {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.add-skill input,
+.add-education input {
+    flex-grow: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+}
+
+.add-icon {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-icon:hover {
+    background-color: #218838;
+}
+
+
+
+@media (max-width: 768px) {
+    .profile-attribute {
+        width: 90%;
+        /* Make it responsive for smaller screens */
+    }
+}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2024 at 01:35 PM
+-- Generation Time: Oct 21, 2024 at 03:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,6 +33,7 @@ CREATE TABLE `applications` (
   `application_id` int(11) NOT NULL AUTO_INCREMENT,
   `job_posting_id` int(11) NOT NULL,
   `job_seeker_id` int(11) NOT NULL,
+<<<<<<< HEAD
   `job_seeker_status` tinyint(1) NOT NULL,
   `employer_status` tinyint(1) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -41,6 +42,11 @@ CREATE TABLE `applications` (
   KEY `applications_to_job_postings` (`job_posting_id`),
   CONSTRAINT `applications_to_job_postings` FOREIGN KEY (`job_posting_id`) REFERENCES `job_posting` (`job_posting_id`),
   CONSTRAINT `applications_to_job_seekers` FOREIGN KEY (`job_seeker_id`) REFERENCES `job_seekers` (`job_seeker_id`)
+=======
+  `job_seeker_status` int(1) NOT NULL,
+  `employer_status` int(1) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+>>>>>>> main
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -53,6 +59,7 @@ CREATE TABLE `employer` (
   `employer_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `company_name` varchar(255) NOT NULL,
+<<<<<<< HEAD
   `company_logo` varchar(255) DEFAULT NULL,
   `about_company` text DEFAULT NULL,
   `preferential_treatment` text DEFAULT NULL,
@@ -61,6 +68,13 @@ CREATE TABLE `employer` (
   PRIMARY KEY (`employer_id`),
   KEY `employer_to_users` (`user_id`),
   CONSTRAINT `employer_to_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+=======
+  `company_logo` varchar(255) NOT NULL,
+  `about_company` text NOT NULL,
+  `preferential_treatment` varchar(255) NOT NULL,
+  `company_benefits` text NOT NULL,
+  `email` varchar(100) NOT NULL
+>>>>>>> main
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -178,9 +192,70 @@ ALTER TABLE `users`
 -- Constraints for tables
 --
 
+<<<<<<< HEAD
 -- Constraints have been included within the table definitions.
 
 -- --------------------------------------------------------
 
+=======
+--
+-- AUTO_INCREMENT for table `applications`
+--
+ALTER TABLE `applications`
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `employer`
+--
+ALTER TABLE `employer`
+  MODIFY `employer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `job_posting`
+--
+ALTER TABLE `job_posting`
+  MODIFY `job_posting_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `job_seekers`
+--
+ALTER TABLE `job_seekers`
+  MODIFY `job_seeker_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `applications`
+--
+ALTER TABLE `applications`
+  ADD CONSTRAINT `applications_to_job_postings` FOREIGN KEY (`job_posting_id`) REFERENCES `job_posting` (`job_posting_id`),
+  ADD CONSTRAINT `applications_to_job_seekers` FOREIGN KEY (`job_seeker_id`) REFERENCES `job_seekers` (`job_seeker_id`);
+
+--
+-- Constraints for table `employer`
+--
+ALTER TABLE `employer`
+  ADD CONSTRAINT `employer_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `job_seekers`
+--
+ALTER TABLE `job_seekers`
+  ADD CONSTRAINT `job_seekers_to_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+>>>>>>> main
 COMMIT;
 

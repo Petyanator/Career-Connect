@@ -9,14 +9,64 @@
   border-radius: 8px;
   width: 300px;
   margin: 0 auto;
+  transition: box-shadow 0.3s ease;
+  /* Smooth transition for shadow */
 }
 
-.job-navigation {
-  margin-top: 20px;
+.job-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Darker shadow on hover */
 }
 
-.job-navigation button {
-  margin: 5px;
-  padding: 10px;
+.job-card-info h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #323838;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.job-card-info p {
+  font-size: 16px;
+  color: #58a9a7;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.job-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-left: 0;
+  list-style-type: none;
+  margin-top: 10px;
+}
+
+.job-card-tags li {
+  flex: 1 1 calc(50% - 10px);
+  padding: 7px;
+  border-radius: 4px;
+  color: #58a9a7;
+  font-weight: 500;
+  background-color: #f1f7f5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.job-card-tags li:hover {
+  background-color: #58a9a7;
+  color: white;
+}
+
+.icon-group {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 34px;
+  align-items: center;
+}
+
+.edit-icon,
+.delete-icon {
   cursor: pointer;
 }
