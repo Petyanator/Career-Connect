@@ -1,9 +1,11 @@
-import "./Dashboard.css";
+
 import { useState, useEffect } from "react";
 import CreateProfilePage from "../Profile/CreateProfilePage";
 import CreateProfileView from "../Profile/CreateProfileView";
 import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem";
 import SeekerActivity from "../SeekerActivity/SeekerActivity";
+// import "./Dashboard.css";
+import './JobSeekerDashboard.scss'
 
 function JobSeekerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData); // Set loading state based on profileData

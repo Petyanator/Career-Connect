@@ -1,4 +1,4 @@
-@import "../../assets/styles/util/variables.scss";
+@import '../../assets/styles/util/variables.scss'; // Importing global variables
 
 .profile-settings-container {
   margin-top: 3rem;
@@ -14,7 +14,7 @@
   .sidebar {
     width: 20vw;
     max-width: 150px;
-    background-color: $input-bg;
+    background-color: $primary-color; // Using color from variables.scss
     padding: 20px;
     color: white;
     border-radius: 20px 0px 0px 20px;
@@ -22,19 +22,17 @@
     .sidebar-menu {
       list-style-type: none;
       padding: 0;
-      display: flex;
-      flex-direction: column;
 
       li {
         cursor: pointer;
         margin: 10px 0;
         padding: 8px;
-        background-color: $input-bg;
+        background-color: lighten($primary-color, 10%);
         border-radius: 5px;
         text-align: left;
 
         &.active {
-          background-color: lighten($input-bg,10%);
+          background-color: lighten($primary-color, 15%);
           font-weight: bold;
         }
       }
@@ -44,7 +42,7 @@
   .content-area {
     flex-grow: 1;
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: $bg-color;
     border-radius: 0px 20px 20px 0px;
   }
 }
