@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import "./EmployerCreateProfile.css"; // Similar to JobSeekerProfileCreate.css
 // import { FaPlus } from 'react-icons/fa';
 import EmployerProfileView from "./EmployerProfileView";

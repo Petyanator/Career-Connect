@@ -211,14 +211,6 @@ def get_job_seeker_notifications():
 
 
 
-
-
-
-
-
-
-
-
 @app.route("/api/update_employer_profile", methods = ["PUT"])
 @jwt_required()
 def update_employer():
