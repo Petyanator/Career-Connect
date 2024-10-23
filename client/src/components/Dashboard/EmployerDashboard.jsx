@@ -84,8 +84,8 @@ function EmployerDashboard({ profileData, setProfileData }) {
             notification <NotificationsComponent />
           </div>
         );
-      case "help":
-        return <div>Help Content</div>;
+      case "my-job-posts":
+        return <div>My Job Posts</div>;
       default:
         return "profile";
     }
@@ -125,10 +125,10 @@ function EmployerDashboard({ profileData, setProfileData }) {
             Notification
           </li>
           <li
-            onClick={() => setActiveTab("help")}
-            className={activeTab === "help" ? "active" : ""}
+            onClick={() => setActiveTab("my-job-posts")}
+            className={activeTab === "my-job-posts" ? "active" : ""}
           >
-            Help
+            My Job Posts
           </li>
         </ul>
       </aside>
