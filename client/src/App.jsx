@@ -23,14 +23,13 @@ import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
 import Footer from "./components/Footer/Footer";
 import UpdateJobSeekerProfile from "./components/UpdateAndDelete/UpdateJobSeekerProfile";
 import DeleteJobSeekerProfile from "./components/UpdateAndDelete/DeleteJobSeekerProfile";
-import DeleteEmployerProfile from "./components/UpdateAndDelete/DeleteEmployerProfile";
+// import DeleteEmployerProfile from "./components/UpdateAndDelete/DeleteEmployerProfile";
 import UpdateEmployerProfile from "./components/UpdateAndDelete/UpdateEmployerProfile";
-import SearchForEmployers from "./components/SearchForEmployers/SearchForEmployers";
-import NotificationsComponent from "./components/NotificationsComponents/NotificationsComponents";
+// import SearchForEmployers from "./components/SearchForEmployers/SearchForEmployers";
+// import NotificationsComponent from "./components/NotificationsComponents/NotificationsComponents";
 
 function App() {
   const [profileData, setProfileData] = useState(null);
-  // const [employerProfileData, setEmployerProfileData] = useState(null);
   const { token, setToken } = UserToken(); // State for user token
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState(
@@ -144,12 +143,12 @@ function App() {
             path="/update-employer-profile"
             element={<UpdateEmployerProfile />}
           />
-          <Route
+          {/* <Route
             path="/delete-employer-profile"
             element={<DeleteEmployerProfile />}
-          />
-          <Route path="/find-jobseekers" element={<SearchForEmployers />} />
-          <Route path="/notifications" element={<NotificationsComponent />} />
+          /> */}
+          {/* <Route path="/find-jobseekers" element={<SearchForEmployers />} /> */}
+          {/* <Route path="/notifications" element={<NotificationsComponent />} /> */}
         </Routes>
       </BrowserRouter>
     </>

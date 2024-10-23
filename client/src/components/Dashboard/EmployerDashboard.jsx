@@ -6,6 +6,7 @@ import EmployerProfileView from "../Profile/EmployerProfileView";
 import SearchForEmployers from "../SearchForEmployers/SearchForEmployers";
 import DeleteEmployerProfile from "../UpdateAndDelete/DeleteEmployerProfile";
 import UpdateEmployerProfile from "../UpdateAndDelete/UpdateEmployerProfile";
+import NotificationsComponent from "../NotificationsComponents/NotificationsComponents";
 
 function EmployerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData);
@@ -66,7 +67,6 @@ function EmployerDashboard({ profileData, setProfileData }) {
       case "create job post":
         return (
           <div>
-            {" "}
             Create a job post <JobPosting></JobPosting>
           </div>
         );
@@ -78,8 +78,12 @@ function EmployerDashboard({ profileData, setProfileData }) {
             <UpdateEmployerProfile />
           </div>
         );
-      case "appearance":
-        return <div>Appearance Settings Content</div>;
+      case "notification":
+        return (
+          <div>
+            notification <NotificationsComponent />
+          </div>
+        );
       case "help":
         return <div>Help Content</div>;
       default:
@@ -115,10 +119,10 @@ function EmployerDashboard({ profileData, setProfileData }) {
             Security
           </li>
           <li
-            onClick={() => setActiveTab("appearance")}
-            className={activeTab === "appearance" ? "active" : ""}
+            onClick={() => setActiveTab("notification")}
+            className={activeTab === "notification" ? "active" : ""}
           >
-            Appearance
+            Notification
           </li>
           <li
             onClick={() => setActiveTab("help")}
