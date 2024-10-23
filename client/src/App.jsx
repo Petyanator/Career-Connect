@@ -14,13 +14,13 @@ import Login from "./components/RegisterAndLogin/Login";
 import UserToken from "./components/Token/UserToken";
 
 // import SearchAndFilterSystem from "./components/SearchAndFilterSystem/SearchAndFilterSystem";
-import SearchAndFilterSystem from "./components/SearchForJobSeekers/SearchAndFilterSystem"
+// import SearchAndFilterSystem from "./components/SearchForJobSeekers/SearchAndFilterSystem";
 import JobPosting from "./components/JobPosting/JobPosting";
 import JobViewer from "./components/JobViewer/JobViewer";
-import JobSeekerNotification from "./components/JobSeekerNotification/JobSeekerNotification"
+import JobSeekerNotification from "./components/JobSeekerNotification/JobSeekerNotification";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard";
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
-import Footer from "./components/Footer/Footer"
+import Footer from "./components/Footer/Footer";
 import UpdateJobSeekerProfile from "./components/UpdateAndDelete/UpdateJobSeekerProfile";
 import DeleteJobSeekerProfile from "./components/UpdateAndDelete/DeleteJobSeekerProfile";
 import DeleteEmployerProfile from "./components/UpdateAndDelete/DeleteEmployerProfile";
@@ -53,6 +53,7 @@ function App() {
     localStorage.removeItem("userType"); // Update the login state
     localStorage.removeItem("accessToken");
     localStorage.removeItem("fullName");
+    localStorage.removeItem("access_token");
   };
   return (
     <>
@@ -107,7 +108,10 @@ function App() {
             }
           />
           <Route path="/register" element={<Register />} />
-          <Route path="/jobseeker-notification" element={<JobSeekerNotification />} />
+          <Route
+            path="/jobseeker-notification"
+            element={<JobSeekerNotification />}
+          />
           <Route
             path="/job-seeker-dashboard"
             element={
@@ -128,19 +132,25 @@ function App() {
               />
             }
           />
-          <Route path="/update-jobseeker-profile" element={<UpdateJobSeekerProfile />} />
-          <Route path="/delete-jobseeker-profile" element={<DeleteJobSeekerProfile />} />
-          <Route path="/update-employer-profile" element={<UpdateEmployerProfile />} />
-          <Route path="/delete-employer-profile" element={<DeleteEmployerProfile />} />
+          <Route
+            path="/update-jobseeker-profile"
+            element={<UpdateJobSeekerProfile />}
+          />
+          <Route
+            path="/delete-jobseeker-profile"
+            element={<DeleteJobSeekerProfile />}
+          />
+          <Route
+            path="/update-employer-profile"
+            element={<UpdateEmployerProfile />}
+          />
+          <Route
+            path="/delete-employer-profile"
+            element={<DeleteEmployerProfile />}
+          />
           <Route path="/find-jobseekers" element={<SearchForEmployers />} />
           <Route path="/notifications" element={<NotificationsComponent />} />
-          
-          
-
         </Routes>
-
-
-
       </BrowserRouter>
     </>
   );

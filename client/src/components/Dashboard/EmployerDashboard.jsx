@@ -1,8 +1,11 @@
 import "./Dashboard.css";
 import { useState, useEffect } from "react";
-// import JobPosting from "../JobPosting/JobPosting";
+import JobPosting from "../JobPosting/JobPosting";
 import EmployerCreateProfile from "../Profile/EmployerCreateProfile";
 import EmployerProfileView from "../Profile/EmployerProfileView";
+import SearchForEmployers from "../SearchForEmployers/SearchForEmployers";
+import DeleteEmployerProfile from "../UpdateAndDelete/DeleteEmployerProfile";
+import UpdateEmployerProfile from "../UpdateAndDelete/UpdateEmployerProfile";
 
 function EmployerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData);
@@ -44,21 +47,37 @@ function EmployerDashboard({ profileData, setProfileData }) {
   const renderContent = () => {
     switch (activeTab) {
       case "profile": {
-        const hasProfileData = profileData;
-        return hasProfileData ? (
-          <EmployerProfileView profileData={profileData}></EmployerProfileView>
-        ) : (
+        const hasProfileData =
+          profileData && profileData.company_name && profileData.about_company;
+        return !hasProfileData ? (
           <EmployerCreateProfile
             setProfileData={setProfileData}
           ></EmployerCreateProfile>
+        ) : (
+          <EmployerProfileView profileData={profileData}></EmployerProfileView>
         );
       }
       case "search":
-        return <div>Look through jobseekers</div>;
-      case "activity":
-        return <div> Create a job post </div>;
+        return (
+          <div>
+            <SearchForEmployers></SearchForEmployers>
+          </div>
+        );
+      case "create job post":
+        return (
+          <div>
+            {" "}
+            Create a job post <JobPosting></JobPosting>
+          </div>
+        );
       case "security":
-        return <div>Current job postings</div>;
+        return (
+          <div>
+            <DeleteEmployerProfile />
+
+            <UpdateEmployerProfile />
+          </div>
+        );
       case "appearance":
         return <div>Appearance Settings Content</div>;
       case "help":
@@ -84,10 +103,10 @@ function EmployerDashboard({ profileData, setProfileData }) {
             Search
           </li>
           <li
-            onClick={() => setActiveTab("activity")}
-            className={activeTab === "activity" ? "active" : ""}
+            onClick={() => setActiveTab("create job post")}
+            className={activeTab === "create job post" ? "active" : ""}
           >
-            Activity
+            Create Job Post
           </li>
           <li
             onClick={() => setActiveTab("security")}
@@ -130,11 +149,3 @@ function EmployerDashboard({ profileData, setProfileData }) {
 }
 
 export default EmployerDashboard;
-
-//  <div className="dashboard4">
-//         <h1>you are logged in as an employer</h1>
-//         <JobPosting></JobPosting>
-//         <Link className="navbar-link" to="/">
-//           Home
-//         </Link>
-// </div>
