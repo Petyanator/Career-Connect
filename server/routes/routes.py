@@ -256,9 +256,24 @@ def get_employer_notifications():
     if not employer:
         return jsonify({"message": "Employer not found"}), 404
 
-    notifications = Notification.query.filter_by(employer_id=employer.employer_id, send_notification=True).all()
+    notifications = (
+        db.session.query(Notification, Application.employer_status)
+        .join(Application, Notification.application_id == Application.application_id)
+        .filter(Notification.employer_id == employer.employer_id, Notification.send_notification)
+        .all()
+    )
+    result = [
+        {
+            **n.Notification.to_json(),  # Include notification data
+            "employer_status": n.employer_status  # Add employer status from the Application
+        }
+        for n in notifications
+    ]
 
-    return jsonify([n.to_json() for n in notifications]), 200
+    return jsonify(result), 200
+
+
+
 
 
 @app.route('/api/employer/update_application', methods=['PUT'])
@@ -287,3 +302,5 @@ def update_employer_application():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred while updating the application"}), 500
+
+
