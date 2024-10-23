@@ -4,7 +4,7 @@ import os
 import base64
 from datetime import datetime
 from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
-from models.models import db, JobSeeker, Application, Employer, User
+from models.models import db, JobSeeker, Application, Employer, JobPosting
 from app import app
 import json
 
@@ -114,83 +114,59 @@ def get_job_seeker_profile(job_seeker_id):
 @app.route("/api/update_job_seeker_profile", methods=["PUT"])
 @jwt_required()
 def update_job_seeker_profile():
-    try:
-        user_id = get_jwt_identity()
-        job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
 
-        if not job_seeker:
-            return jsonify({"message": "Job seeker not found."}), 404
+    user_id = get_jwt_identity()
+    job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
+    if not job_seeker:
+        return jsonify({"message": "Job seeker not found."}), 404
+    data = request.get_json()
 
-        data = request.get_json()
+    # Handle education (ensure it's stored as valid JSON)
+    education = data.get('education')
+    if isinstance(education, list):
+        education = json.dumps(education)  # Convert list to JSON string
+    # Handle skills (ensure it's stored as valid JSON)
+    skills = data.get('skills')
+    if isinstance(skills, list):
+        skills = json.dumps(skills)  # Convert list to JSON string
+    profile_pic = data.get('profile_pic')
+    # Handle profile picture (if provided)
+    profile_pic_path = None
+    if profile_pic and profile_pic.startswith('data:image/'):
+        img_data = profile_pic.split(',')[1]
+        img_data = base64.b64decode(img_data)
+        filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        with open(filepath, 'wb') as f:
+            f.write(img_data)
+        profile_pic_path = filepath
+    elif profile_pic:
+        profile_pic_path = profile_pic
 
-        # Retrieve basic information from the request
-        first_name = data.get("first_name")
-        last_name = data.get("last_name")
-        dob_str = data.get("dob")  # Date of birth as a string
-        gender = data.get("gender")
-        nationality = data.get("nationality")
+    job_seeker.first_name = data.get("first_name", job_seeker.first_name)
+    job_seeker.last_name = data.get("last_name", job_seeker.last_name)
+    job_seeker.dob = data.get("dob", job_seeker.dob)
+    job_seeker.gender = data.get("gender", job_seeker.gender)
+    job_seeker.nationality = data.get("nationality", job_seeker.nationality)
 
-        # Handle education (stored as JSON)
-        education = data.get('education')
-        if isinstance(education, str):
-            education = json.loads(education)  # Convert from JSON string to list
-
-        # Handle skills (ensure it's stored as valid JSON)
-        skills = data.get('skills')
-        if isinstance(skills, str):
-            skills = json.loads(skills)  # Convert from JSON string to list
-
-        # Handle profile picture upload
-        profile_pic_path = job_seeker.profile_pic  # Keep the existing one by default
-        if 'profile_pic' in request.files:
-            pic = request.files['profile_pic']
-            filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            pic.save(filepath)
-            profile_pic_path = filepath
-
-        # Update the job seeker object with new data
-        job_seeker.first_name = first_name if first_name else job_seeker.first_name
-        job_seeker.last_name = last_name if last_name else job_seeker.last_name
-
-        # Update date of birth if provided
-        if dob_str:
-            job_seeker.dob = datetime.fromisoformat(dob_str)  # Convert string to date
-
-        job_seeker.gender = gender if gender else job_seeker.gender
-        job_seeker.nationality = nationality if nationality else job_seeker.nationality
-        
-        # Save skills and education as JSON strings
-        job_seeker.skills = json.dumps(skills) if skills else job_seeker.skills
-        job_seeker.education = json.dumps(education) if education else job_seeker.education
-        
-        # Update profile picture path
-        job_seeker.profile_pic = profile_pic_path
-
-        db.session.commit()
-        return jsonify({"message": "Profile updated successfully."}), 200
-
-    except ValueError as ve:
-        return jsonify({"message": f"Invalid date format: {str(ve)}"}), 400
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": str(e)}), 500
+    db.session.commit()
+    return jsonify({"message": "Profile updated successfully."}), 200
 
 
 
 @app.route("/api/delete_job_seeker_profile", methods = ["DELETE"])
 @jwt_required()
 def delete_job_seeker():
-   
+
     user_id = get_jwt_identity()
 
     job_seeker = JobSeeker.query.filter_by(user_id = user_id).first()
-    
+
     if not job_seeker:
         return jsonify({"message": "Job seeker not found"})
-    
+
     job_seeker_id = job_seeker.job_seeker_id
-    
+
     Application.query.filter_by(job_seeker_id=job_seeker_id).delete()
     db.session.commit()
 
@@ -198,7 +174,52 @@ def delete_job_seeker():
     db.session.commit()
     return jsonify({"message": "Job seeker profile was deleted successfully"})
 
-@app.route("/api/update_employer_profile", methods=["PUT"])
+
+@app.route('/api/job_seeker/notifications', methods=['GET'])
+@jwt_required()
+def get_job_seeker_notifications():
+    user_id = get_jwt_identity()
+
+    # Find the job seeker associated with the current user
+    job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
+
+    if not job_seeker:
+        return jsonify({"message": "Job seeker not found"}), 404
+
+    # Get all applications where the job seeker has made a request (job_seeker_status is 1)
+    applications = Application.query.filter_by(job_seeker_id=job_seeker.job_seeker_id, job_seeker_status=1).all()
+
+    if not applications:
+        return jsonify({"message": "No notifications found"}), 404
+
+    # Prepare a response including job posting and employer status info
+    notifications = []
+    for app in applications:
+        job_posting = JobPosting.query.get(app.job_posting_id)
+        notifications.append({
+            "job_posting_title": job_posting.title,
+            "job_posting_description": job_posting.description,
+            "employer_status": app.employer_status,  # 1 = Accepted, 2 = Rejected, None = Pending
+            "created_at": app.created_at.isoformat()
+        })
+
+    return jsonify(notifications), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route("/api/update_employer_profile", methods = ["PUT"])
 @jwt_required()
 def update_employer():
     try:
@@ -253,16 +274,10 @@ def update_employer():
 @app.route("/api/delete_employer_profile", methods = ["DELETE"])
 @jwt_required()
 def delete_employer():
-   
     user_id = get_jwt_identity()
-
     employer = Employer.query.filter_by(user_id = user_id).first()
-    
     if not employer:
         return jsonify({"message": "Employer was not found"})
-    
-    
     db.session.delete(employer)
     db.session.commit()
     return jsonify({"message": "Employer profile was deleted successfully"})
-

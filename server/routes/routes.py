@@ -1,6 +1,6 @@
 from app import app, db, bcrypt
 from flask import jsonify, request
-from models.models import JobPosting, Application, JobSeeker, Employer
+from models.models import JobPosting, Application, JobSeeker, Employer, Notification
 from datetime import datetime
 import re
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -28,7 +28,7 @@ def filter_job_postings():
     # Apply filters if parameters are provided
     if job_title:
         query = query.filter(JobPosting.title.ilike(f"%{job_title}%"))
-    
+
     if salary_range:
         min_salary, max_salary = extract_salary_range(salary_range)
         if min_salary is not None and max_salary is not None:
@@ -75,6 +75,8 @@ def update_application_status():
     db.session.commit()
     return jsonify({"message": "Status updated successfully"}), 200
 
+
+
 @app.route('/api/apply', methods=['POST'])
 @jwt_required()
 def apply_to_job():
@@ -85,15 +87,12 @@ def apply_to_job():
     if not job_posting_id or action not in ['accept', 'reject']:
         return jsonify({"message": "Invalid data"}), 400
 
-    # Get the current user's ID from the JWT token
     user_id = get_jwt_identity()
-
-    # Find the job_seeker_id associated with this user
     job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
     if not job_seeker:
         return jsonify({"message": "Job seeker not found"}), 404
 
-    # Check if the application already exists
+    # Check if the application exists
     application = Application.query.filter_by(
         job_posting_id=job_posting_id, job_seeker_id=job_seeker.job_seeker_id
     ).first()
@@ -103,16 +102,32 @@ def apply_to_job():
         application.job_seeker_status = 1 if action == 'accept' else 2
     else:
         # Create a new application if it doesn't exist
-        new_application = Application(
+        application = Application(
             job_posting_id=job_posting_id,
             job_seeker_id=job_seeker.job_seeker_id,
             job_seeker_status=1 if action == 'accept' else 2,
             created_at=datetime.utcnow()
         )
-        db.session.add(new_application)
+        db.session.add(application)
 
-    db.session.commit()
+    # If job_seeker_status is set to 1 (accepted), trigger a notification
+    if application.job_seeker_status == 1:
+        job_posting = JobPosting.query.get(job_posting_id)
+        employer = Employer.query.get(job_posting.employer_id)
+
+        # Create a notification for the employer
+        new_notification = Notification(
+            application_id=application.application_id,
+            employer_id=employer.employer_id,
+            job_posting_id=job_posting.job_posting_id,
+            job_seeker_id=job_seeker.job_seeker_id,
+            send_notification=True
+        )
+        db.session.add(new_notification)
+        db.session.commit()
+
     return jsonify({"message": f"Job {action}ed successfully"}), 200
+
 
 
 
@@ -230,3 +245,45 @@ def find_jobseekers():
 
     except Exception as e:
         return jsonify({"message": str(e)}), 500
+
+# Route for employers to get notifications
+@app.route('/api/employer/notifications', methods=['GET'])
+@jwt_required()
+def get_employer_notifications():
+    user_id = get_jwt_identity()
+    employer = Employer.query.filter_by(user_id=user_id).first()
+
+    if not employer:
+        return jsonify({"message": "Employer not found"}), 404
+
+    notifications = Notification.query.filter_by(employer_id=employer.employer_id, send_notification=True).all()
+
+    return jsonify([n.to_json() for n in notifications]), 200
+
+
+@app.route('/api/employer/update_application', methods=['PUT'])
+@jwt_required()
+def update_employer_application():
+    try:
+        data = request.json
+        application_id = data.get('application_id')
+        employer_status = data.get('employer_status')
+
+        # Validate the input
+        if not application_id or employer_status not in [1, 2]:
+            return jsonify({"message": "Invalid data"}), 400
+
+        # Find the application by ID
+        application = Application.query.get(application_id)
+        if not application:
+            return jsonify({"message": "Application not found"}), 404
+
+        # Update the employer_status based on employer's decision
+        application.employer_status = employer_status
+        db.session.commit()
+
+        return jsonify({"message": "Employer status updated successfully"}), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while updating the application"}), 500

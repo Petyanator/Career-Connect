@@ -70,22 +70,20 @@ function SearchAndFilterSystem() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ job_posting_id, action }), // No need to pass job_seeker_id
+        body: JSON.stringify({ job_posting_id, action }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.message || "Failed to update application status"
-        );
+        throw new Error(errorData.message || "Failed to update application status");
       }
 
       const data = await response.json();
-      alert(data.message); // Notify user
+      console.log(data.message); // Notify user that the application was successful
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      console.log(`Error: ${error.message}`);
     }
-  };
+};
 
   const handleFilterSubmit = (e) => {
     e.preventDefault();
