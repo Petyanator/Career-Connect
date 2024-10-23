@@ -66,7 +66,7 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
           // Navigate to the appropriate dashboard
           navigate(
             userType === "job_seeker"
-              ? "/job-seeker-dasboard"
+              ? "/job-seeker-dashboard"
               : "/employer-dashboard"
           );
         } else {

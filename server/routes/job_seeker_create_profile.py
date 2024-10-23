@@ -114,14 +114,12 @@ def get_job_seeker_profile(job_seeker_id):
 @app.route("/api/update_job_seeker_profile", methods=["PUT"])
 @jwt_required()
 def update_job_seeker_profile():
-    try:
-        user_id = get_jwt_identity()
-        job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
 
-        if not job_seeker:
-            return jsonify({"message": "Job seeker not found."}), 404
-
-        data = request.get_json()
+    user_id = get_jwt_identity()
+    job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
+    if not job_seeker:
+        return jsonify({"message": "Job seeker not found."}), 404
+    data = request.get_json()
 
     # Handle education (ensure it's stored as valid JSON)
     education = data.get('education')
@@ -151,14 +149,8 @@ def update_job_seeker_profile():
     job_seeker.gender = data.get("gender", job_seeker.gender)
     job_seeker.nationality = data.get("nationality", job_seeker.nationality)
 
-        db.session.commit()
-        return jsonify({"message": "Profile updated successfully."}), 200
-
-    except ValueError as ve:
-        return jsonify({"message": f"Invalid date format: {str(ve)}"}), 400
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": str(e)}), 500
+    db.session.commit()
+    return jsonify({"message": "Profile updated successfully."}), 200
 
 
 

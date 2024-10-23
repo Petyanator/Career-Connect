@@ -26,7 +26,7 @@ import DeleteJobSeekerProfile from "./components/UpdateAndDelete/DeleteJobSeeker
 import DeleteEmployerProfile from "./components/UpdateAndDelete/DeleteEmployerProfile";
 import UpdateEmployerProfile from "./components/UpdateAndDelete/UpdateEmployerProfile";
 import SearchForEmployers from "./components/SearchForEmployers/SearchForEmployers";
-
+import NotificationsComponent from "./components/NotificationsComponents/NotificationsComponents";
 
 function App() {
   const [profileData, setProfileData] = useState(null);
@@ -133,6 +133,7 @@ function App() {
           <Route path="/update-employer-profile" element={<UpdateEmployerProfile />} />
           <Route path="/delete-employer-profile" element={<DeleteEmployerProfile />} />
           <Route path="/find-jobseekers" element={<SearchForEmployers />} />
+          <Route path="/notifications" element={<NotificationsComponent />} />
           
           
 
