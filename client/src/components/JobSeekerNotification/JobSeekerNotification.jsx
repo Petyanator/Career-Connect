@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';  // Ensure Bootstrap is imported
-import './JobSeekerNotification.scss'
-
+import './JobSeekerNotification.scss';  // Import your custom SCSS
 
 function JobSeekerNotification() {
   const [notifications, setNotifications] = useState([]);
