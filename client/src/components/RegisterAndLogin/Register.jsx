@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import '../RegisterAndLogin/Register.scss'
+import "../RegisterAndLogin/Register.scss";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -62,8 +62,8 @@ function Register() {
       if (response.status === 201) {
         setRegistrationSuccess(true);
         setErrorMessage("");
-        const { access_token } = response.data;
-        localStorage.setItem("access_token", access_token);
+        // const { access_token } = response.data;
+        // localStorage.setItem("access_token", access_token);
       }
     } catch (error) {
       if (error.response) {
@@ -89,7 +89,9 @@ function Register() {
       <div className="register-form">
         <h2 className="text-center mb-4">Register</h2>
         {registrationSuccess ? (
-          <p className="alert alert-success">Registration successful! You can now log in.</p>
+          <p className="alert alert-success">
+            Registration successful! You can now log in.
+          </p>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -102,7 +104,9 @@ function Register() {
                 onChange={handleChange}
                 required
               />
-              {usernameTaken && <p className="text-danger">Username is already taken!</p>}
+              {usernameTaken && (
+                <p className="text-danger">Username is already taken!</p>
+              )}
             </div>
 
             <div className="mb-3">
@@ -115,7 +119,9 @@ function Register() {
                 onChange={handleChange}
                 required
               />
-              {emailTaken && <p className="text-danger">Email is already registered!</p>}
+              {emailTaken && (
+                <p className="text-danger">Email is already registered!</p>
+              )}
             </div>
 
             <div className="mb-3">
@@ -131,7 +137,9 @@ function Register() {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="user_type" className="form-label">User Type:</label>
+              <label htmlFor="user_type" className="form-label">
+                User Type:
+              </label>
               <select
                 name="user_type"
                 className="form-select"
@@ -155,12 +163,16 @@ function Register() {
                 onChange={handleChange}
                 required
               />
-              <span className="toggle-password" onClick={togglePasswordVisibility}>
+              <span
+                className="toggle-password"
+                onClick={togglePasswordVisibility}
+              >
                 {showPassword ? "Hide" : "Show"}
               </span>
               {!isPasswordValid && (
                 <p className="text-danger">
-                  Password must be at least 8 characters long and contain at least one letter, one number, and one special character.
+                  Password must be at least 8 characters long and contain at
+                  least one letter, one number, and one special character.
                 </p>
               )}
             </div>
@@ -175,10 +187,15 @@ function Register() {
                 onChange={handleChange}
                 required
               />
-              <span className="toggle-password" onClick={togglePasswordVisibility}>
+              <span
+                className="toggle-password"
+                onClick={togglePasswordVisibility}
+              >
                 {showPassword ? "Hide" : "Show"}
               </span>
-              {!passwordMatch && <p className="text-danger">Passwords do not match!</p>}
+              {!passwordMatch && (
+                <p className="text-danger">Passwords do not match!</p>
+              )}
             </div>
 
             <button type="submit" className="btn btn-primary w-100">
