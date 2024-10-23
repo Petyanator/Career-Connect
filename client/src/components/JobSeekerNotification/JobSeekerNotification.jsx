@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';  // Ensure Bootstrap is imported
 import './JobSeekerNotification.scss';  // Import your custom SCSS
+import JobSeekerNotificationDelete from './JobSeekerNotificationDelete';
+
+
 
 function JobSeekerNotification() {
   const [notifications, setNotifications] = useState([]);
@@ -22,9 +25,14 @@ function JobSeekerNotification() {
     fetchNotifications();
   }, []);
 
+  const handleDeleteNotification = (applicationId) => {
+    // Filter out the deleted notification from the state
+    setNotifications(notifications.filter(notification => notification.application_id !== applicationId));
+  };
+
   return (
     <div className="container my-5 jobseeker-notifications">
-      <h1 className="text-center text-light">Your Notifications</h1>
+      <h1 className="text-center text-light">Your Connection Requests</h1>
 
       {notifications.length > 0 ? (
         notifications.map((notification, index) => (
@@ -47,6 +55,10 @@ function JobSeekerNotification() {
                   Submitted on {new Date(notification.created_at).toLocaleDateString()}
                 </small>
               </p>
+              <JobSeekerNotificationDelete
+                applicationId={notification.application_id}
+                onDelete={handleDeleteNotification}
+              />
             </div>
           </div>
         ))

@@ -197,6 +197,7 @@ def get_job_seeker_notifications():
     for app in applications:
         job_posting = JobPosting.query.get(app.job_posting_id)
         notifications.append({
+            "application_id": app.application_id,  # Add the application_id here
             "job_posting_title": job_posting.title,
             "job_posting_description": job_posting.description,
             "employer_status": app.employer_status,  # 1 = Accepted, 2 = Rejected, None = Pending
@@ -206,23 +207,29 @@ def get_job_seeker_notifications():
     return jsonify(notifications), 200
 
 
-# This route deletes specific applications for the jobseeker's notification. AKA their accept/reject notices.
 @app.route('/api/job_seeker/delete_application/<int:application_id>', methods=['DELETE'])
 @jwt_required()
 def delete_application(application_id):
-    user_id = get_jwt_identity
-    application = Application.query.filter_by(application_id=application_id, job_seeker_id=user_id).first()
-    try:
-        application = Application.query.get(application_id)
-        if not application:
-            return jsonify({"message": "Application not found"}), 404
+    user_id = get_jwt_identity()
+    print(f"{user_id}")
+    # Find the job seeker associated with the current user
+    job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
+    print(f"{job_seeker}")
 
-        db.session.delete(application)
-        db.session.commit()
+    if not job_seeker:
+        return jsonify({"message": "Unauthorized or Job seeker not found"}), 404
 
-        return jsonify({"message": "Application deleted successfully"}), 200
-    except Exception as e:
-        return jsonify({"error": "An error occurred while deleting the application"}), 500
+    # Find the application to delete
+    application = Application.query.filter_by(application_id=application_id, job_seeker_id=job_seeker.job_seeker_id).first()
+
+    if not application:
+        return jsonify({"message": "Application not found or unauthorized"}), 404
+
+    db.session.delete(application)
+    db.session.commit()
+
+    return jsonify({"message": "Application deleted successfully"}), 200
+
 
 
 

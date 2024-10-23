@@ -27,7 +27,7 @@ function JobSeekerNotificationDelete({ applicationId, onDelete }) {
   };
 
   return (
-    <button className="btn btn-danger float-right" onClick={handleDelete}>
+    <button className="btn btn-danger" onClick={handleDelete}>
       Delete
     </button>
   );
