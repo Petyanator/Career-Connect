@@ -21,6 +21,7 @@ def get_user_data():
 
     # Create response data
     response_data = {
+        "user_id": user_id,
         "full_name": user.full_name,
         "user_type": user.user_type,
         "employer_profile": employer_profile.to_json() if employer_profile else None,
