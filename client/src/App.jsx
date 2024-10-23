@@ -16,7 +16,8 @@ import UserToken from "./components/Token/UserToken";
 // import SearchAndFilterSystem from "./components/SearchAndFilterSystem/SearchAndFilterSystem";
 import SearchAndFilterSystem from "./components/SearchForJobSeekers/SearchAndFilterSystem"
 import JobPosting from "./components/JobPosting/JobPosting";
-// import JobViewer from "./components/JobViewer/JobViewer";
+import JobViewer from "./components/JobViewer/JobViewer";
+import JobSeekerNotification from "./components/JobSeekerNotification/JobSeekerNotification"
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard";
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
 import Footer from "./components/Footer/Footer"
@@ -69,7 +70,7 @@ function App() {
           {/* <Route path="/searchbar" element={<SearchAndFilterSystem />} /> */}
           <Route path="/jobposting" element={<JobPosting />} />
           {/* <Route path="/jobviewer" element={<JobViewer />} /> */}
-
+          <Route path="/jobviewer" element={<JobViewer />} />
           {/* <Route
             path="/profile"
             element={<CreateProfileView profileData={profileData} />}
@@ -106,6 +107,7 @@ function App() {
             }
           />
           <Route path="/register" element={<Register />} />
+          <Route path="/jobseeker-notification" element={<JobSeekerNotification />} />
           <Route
             path="/job-seeker-dashboard"
             element={

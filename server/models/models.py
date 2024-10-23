@@ -24,16 +24,23 @@ class User(db.Model):
 
 class Notification(db.Model):
     __tablename__ = "notifications"
-    notification_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
-    application_id = db.Column(db.Integer)
-    employer_id = db.Column(db.Integer)
-
+    notification_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    application_id = db.Column(db.Integer, db.ForeignKey("applications.application_id"))
+    employer_id = db.Column(db.Integer, db.ForeignKey("employer.employer_id"))
+    job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
+    job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
+    send_notification = db.Column(db.Boolean, default=False)  # Field to track if notification should be sent
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.now())
 
     def to_json(self):
         return {
             "notification_id": self.notification_id,
             "application_id": self.application_id,
             "employer_id": self.employer_id,
+            "job_posting_id": self.job_posting_id,
+            "job_seeker_id": self.job_seeker_id,
+            "send_notification": self.send_notification,
+            "created_at": self.created_at.isoformat()
         }
 
 class JobSeeker(db.Model):
@@ -131,8 +138,8 @@ class Application(db.Model):
     application_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     job_posting_id = db.Column(db.Integer, db.ForeignKey("job_posting.job_posting_id"))
     job_seeker_id = db.Column(db.Integer, db.ForeignKey("job_seekers.job_seeker_id"))
-    job_seeker_status = db.Column(db.Integer)
-    employer_status = db.Column(db.Integer)
+    job_seeker_status = db.Column(db.Integer) # When set to 1, that means job seeker has sent a request.
+    employer_status = db.Column(db.Integer) # When set to 1, that means employer has accepted. If 2, then they had rejected.
     created_at = db.Column(db.TIMESTAMP, server_default = db.func.now())
 
     def to_json(self):

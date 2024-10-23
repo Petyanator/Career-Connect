@@ -67,3 +67,11 @@ def get_job_postings():
     except Exception as e:
         return jsonify({'message': f'Error occurred: {str(e)}'}), 500
 
+
+@app.route('/api/job_posting/<int:job_posting_id>', methods=['GET'])
+@jwt_required()
+def get_job_posting(job_posting_id):
+    job_posting = JobPosting.query.get(job_posting_id)
+    if job_posting:
+        return jsonify(job_posting.to_json()), 200
+    return jsonify({"message": "Job posting not found"}), 404
