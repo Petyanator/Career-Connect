@@ -111,15 +111,17 @@ def get_job_seeker_profile(job_seeker_id):
         return jsonify(job_seeker.to_json()), 200
     return jsonify({"message": "Profile not found"}), 404
 
-@app.route("/api/update_job_seeker_profile",methods = ["PUT"])
+@app.route("/api/update_job_seeker_profile", methods=["PUT"])
 @jwt_required()
-def update_job_seeker():
+def update_job_seeker_profile():
+    try:
+        user_id = get_jwt_identity()
+        job_seeker = JobSeeker.query.filter_by(user_id=user_id).first()
 
-    user_id = get_jwt_identity()
+        if not job_seeker:
+            return jsonify({"message": "Job seeker not found."}), 404
 
-    job_seeker = JobSeeker.query.filter_by(user_id= user_id).first()
-
-    data = request.get_json()
+        data = request.get_json()
 
     # Handle education (ensure it's stored as valid JSON)
     education = data.get('education')
@@ -149,8 +151,16 @@ def update_job_seeker():
     job_seeker.gender = data.get("gender", job_seeker.gender)
     job_seeker.nationality = data.get("nationality", job_seeker.nationality)
 
-    db.session.commit()
-    return jsonify({"message": "Profile was updated successfully"})
+        db.session.commit()
+        return jsonify({"message": "Profile updated successfully."}), 200
+
+    except ValueError as ve:
+        return jsonify({"message": f"Invalid date format: {str(ve)}"}), 400
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": str(e)}), 500
+
+
 
 @app.route("/api/delete_job_seeker_profile", methods = ["DELETE"])
 @jwt_required()
@@ -220,16 +230,53 @@ def get_job_seeker_notifications():
 @app.route("/api/update_employer_profile", methods = ["PUT"])
 @jwt_required()
 def update_employer():
-    user_id = get_jwt_identity()
-    employer = Employer.query.filter_by(user_id=user_id).first()
+    try:
+        # Get the user ID from JWT
+        user_id = get_jwt_identity()
 
-    data = request.get_json()
+        # Fetch the existing employer profile from the database
+        employer = Employer.query.filter_by(user_id=user_id).first()
 
-    employer.company_name = data.get("company_namez", employer.company_name)
+        if not employer:
+            return jsonify({"message": "Employer not found."}), 404
 
-    db.session.commit()
+        # Get JSON data from the request
+        data = request.get_json()
+        
+        # Extract fields from request data
+        company_name = data.get('company_name')
+        about_company = data.get('about_company')
+        preferential_treatment = data.get('preferential_treatment')
+        company_benefits = data.get('company_benefits')
+        email = data.get('email')
 
-    return jsonify({"message": "Profile was successfully updated"})
+        # Handle company logo (keep existing if no new one is uploaded)
+        company_logo_path = employer.company_logo
+        if 'company_logo' in request.files:
+            logo_file = request.files['company_logo']
+            filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            logo_file.save(filepath)
+            company_logo_path = filepath
+
+        # Update the employer object with the provided or existing data
+        employer.company_name = company_name if company_name else employer.company_name
+        employer.about_company = about_company if about_company else employer.about_company
+        employer.preferential_treatment = preferential_treatment if preferential_treatment else employer.preferential_treatment
+        employer.company_benefits = company_benefits if company_benefits else employer.company_benefits
+        employer.email = email if email else employer.email
+        employer.company_logo = company_logo_path
+
+        # Commit changes to the database
+        db.session.commit()
+        
+        return jsonify({"message": "Employer profile updated successfully."}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error: {e}")
+        return jsonify({"message": str(e)}), 500
+
 
 
 @app.route("/api/delete_employer_profile", methods = ["DELETE"])

@@ -128,7 +128,7 @@ class Employer(db.Model):
             "company_name": self.company_name,
             "company_logo": self.company_logo,
             "about_company": self.about_company,
-            "preferential_treat": self.preferential_treatment,
+            "preferential_treatment": self.preferential_treatment,
             "company_benefits": json.loads(self.company_benefits),
             "email": self.email
         }

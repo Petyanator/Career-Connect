@@ -7,6 +7,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import base64
 from werkzeug.utils import secure_filename
 import os
+import json
 
 @app.route("/")
 def testing():
@@ -142,6 +143,7 @@ def create_employer_profile():
         # Get JSON data from request
         data = request.get_json()
         print(f"Received data: {data}")
+
         # Get user_id from JWT
         user_id = get_jwt_identity()
 
@@ -155,28 +157,37 @@ def create_employer_profile():
         company_name = data.get('company_name')
         about_company = data.get('about_company')
         preferential_treatment = data.get('preferential_treatment')
-        company_benefits = data.get('company_benefits')
         email = data.get('email')
+        company_benefits = data.get('company_benefits')
+
+        if isinstance(company_benefits, list):
+            company_benefits = json.dumps(company_benefits)
 
         # Handle company logo (if provided)
         company_logo = data.get('company_logo')
-        company_logo_path = None
+        company_logo_path = None  # Default to None
+
         if company_logo and company_logo.startswith('data:image/'):
-            img_data = company_logo.split(',')[1]
-            img_data = base64.b64decode(img_data)
-            filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            with open(filepath, 'wb') as f:
-                f.write(img_data)
-            company_logo_path = filepath
+            try:
+                # Decode base64 logo and save it
+                img_data = company_logo.split(',')[1]
+                img_data = base64.b64decode(img_data)
+                filename = secure_filename(f"{user_id}_{datetime.now().strftime('%Y%m%d%H%M%S')}.png")
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                with open(filepath, 'wb') as f:
+                    f.write(img_data)
+                company_logo_path = filepath
+            except (IndexError, binascii.Error) as decode_error:
+                print(f"Error decoding company logo: {decode_error}")
+                company_logo_path = None  # Keep it None if decoding fails
         elif company_logo:
-            company_logo_path = company_logo  # If it's a URL or existing file path
+            company_logo_path = company_logo  # Assume it’s a URL or valid path
 
         # Create a new Employer object
         new_employer = Employer(
             user_id=user_id,
             company_name=company_name,
-            company_logo=company_logo_path or '',
+            company_logo=company_logo_path,  # This will be None if not provided
             about_company=about_company,
             preferential_treatment=preferential_treatment,
             company_benefits=company_benefits,
@@ -187,11 +198,15 @@ def create_employer_profile():
         db.session.add(new_employer)
         db.session.commit()
 
-        return jsonify({'message': 'Employer profile created successfully', 'profile': new_employer.to_json()}), 201
+        return jsonify({
+            'message': 'Employer profile created successfully',
+            'profile': new_employer.to_json()
+        }), 201
 
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({'error': 'An error occurred while creating the employer profile.'}), 500
+
 
 
 # Route for employers to view their own profile
@@ -213,6 +228,23 @@ def get_employer_profile(employer_id):
     if employer:
         return jsonify(employer.to_json()), 200
     return jsonify({"message": "Employer profile not found"}), 404
+
+
+
+@app.route("/api/job_seekers_search", methods=["GET"])
+@jwt_required()
+def find_jobseekers():
+    try:
+        jobseekers = JobSeeker.query.all()
+        people = [person.to_json() for person in jobseekers]
+
+        if not people:
+            return jsonify({"message": "No job seekers found"}), 404
+
+        return jsonify(people), 200
+
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
 
 # Route for employers to get notifications
 @app.route('/api/employer/notifications', methods=['GET'])

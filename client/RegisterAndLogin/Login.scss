@@ -1,0 +1,70 @@
+@import '../../assets/styles/util/variables.scss';  // Import variables
+
+.login-container {
+  background-color: $primary-color;
+  height: 100vh;
+  display: flex; /* Apply flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.login-form {
+  margin: 0;
+  width: 320px;
+  box-shadow: $box-shadow;
+  text-align: center;
+  color: $text-color;
+  padding: 20px; /* Add padding for a cleaner look */
+  border-radius: 8px; /* Add border-radius for nicer edges */
+  background-color: $form-bg-color; /* Set background color if needed */
+
+  h2 {
+    color: Black;
+    margin-bottom: 30px;
+    font-size: 24px;
+  }
+
+  .input-container {
+    width: 100%; /* Ensure the input containers take full width */
+    margin-bottom: 20px;
+    position: relative;
+
+    input {
+      width: 100%; /* Full width for inputs */
+      padding: 12px;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      background-color: $input-bg;
+      color: $text-color;
+      font-size: 16px;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 5px $secondary-color;
+      }
+    }
+  }
+
+  .login-btn,
+  .register-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background-color: $button-bg-color;
+    color: $text-color;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $button-hover-color;
+    }
+  }
+}
