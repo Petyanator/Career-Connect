@@ -206,10 +206,12 @@ def get_job_seeker_notifications():
     return jsonify(notifications), 200
 
 
-# This route deletes specific applications for the jobseeker's notification
+# This route deletes specific applications for the jobseeker's notification. AKA their accept/reject notices.
 @app.route('/api/job_seeker/delete_application/<int:application_id>', methods=['DELETE'])
 @jwt_required()
 def delete_application(application_id):
+    user_id = get_jwt_identity
+    application = Application.query.filter_by(application_id=application_id, job_seeker_id=user_id).first()
     try:
         application = Application.query.get(application_id)
         if not application:
