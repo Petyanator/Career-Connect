@@ -53,39 +53,23 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
           localStorage.setItem("userType", userType);
           localStorage.setItem("fullName", fullName);
 
-          // Fetch profile data
-          const profileResponse = await fetch("http://localhost:5000/dashboard", {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-
-          if (profileResponse.ok) {
-            const profileData = await profileResponse.json();
-            // Set the profile data depending on the user type
-            if (userType === "job_seeker") {
-              setProfileData(profileData.job_seeker_profile || {});
-            } else if (userType === "employer") {
-              setProfileData(profileData.employer_profile || {});
-            }
-          } else {
-            console.error("Failed to fetch profile data:", profileResponse.status);
-            setLoginError("Failed to retrieve profile data.");
+          // Navigate based on user type
+          if (userType === "job_seeker") {
+            navigate("/dashboard");
+          } else if (userType === "employer") {
+            navigate("/employer/dashboard");
           }
-
-          // Navigate to the appropriate dashboard
-          navigate(userType === "job_seeker" ? "/job-seeker-dashboard" : "/employer-dashboard");
         } else {
-          setLoginError("Failed to retrieve access token.");
+          setLoginError("Invalid credentials");
         }
       } else {
-        setLoginError("Invalid username or password.");
+        const { error } = await response.json();
+        setLoginError(error);
       }
     } catch (error) {
-      console.error("Login error:", error);
-      setLoginError("An error occurred. Please try again.");
+      setLoginError("An error occurred while logging in.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false); // End loading
     }
   };
 
@@ -102,6 +86,7 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
               placeholder="Username"
               value={formData.username}
               onChange={handleChange}
+              maxLength={30}  // Limit the username input to 30 characters
               required
             />
           </div>
@@ -114,6 +99,7 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
+              maxLength={50}  // Limit the password input to 50 characters
               required
             />
             <span className="toggle-password" onClick={togglePasswordVisibility}>
@@ -122,7 +108,7 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
           </div>
 
           <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-            {loading ? 'Loading...' : 'Login'}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         {loginError && <p className="text-danger">{loginError}</p>}

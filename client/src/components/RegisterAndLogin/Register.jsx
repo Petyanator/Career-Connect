@@ -100,6 +100,7 @@ function Register() {
                 placeholder="Username"
                 value={formData.username}
                 onChange={handleChange}
+                maxLength={30}  // Limit the username input to 30 characters
                 required
               />
               {usernameTaken && (
@@ -115,6 +116,7 @@ function Register() {
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleChange}
+                maxLength={50}  // Limit the email input to 50 characters
                 required
               />
               {emailTaken && (
@@ -130,6 +132,7 @@ function Register() {
                 placeholder="Full Name"
                 value={formData.full_name}
                 onChange={handleChange}
+                maxLength={50}  // Limit the full name input to 50 characters
                 required
               />
             </div>
@@ -142,6 +145,7 @@ function Register() {
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
+                maxLength={50}  // Limit the password input to 50 characters
                 required
               />
               <span className="toggle-password" onClick={togglePasswordVisibility}>
@@ -163,6 +167,7 @@ function Register() {
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
+                maxLength={50}  // Limit the confirm password input to 50 characters
                 required
               />
               <span className="toggle-password" onClick={toggleConfirmPasswordVisibility}>
