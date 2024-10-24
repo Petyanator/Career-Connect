@@ -15,40 +15,34 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
   const [activeTab, setActiveTab] = useState("profile");
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("http://localhost:5000/dashboard", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    if (!profileData && token) {
+      const fetchUserData = async () => {
+        setIsLoading(true);
+        try {
+          const response = await fetch("http://localhost:5000/dashboard", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
-        if (response.ok) {
-          const data = await response.json();
-          const profile = data.job_seeker_profile || null;
-
-          if (profile) {
+          if (response.ok) {
+            const data = await response.json();
+            const profile = data.job_seeker_profile || null;
             setProfileData(profile);
             setFullName(`${profile.first_name} ${profile.last_name}`);
+          } else {
+            console.error("Failed to fetch job seeker data.");
           }
-        } else {
-          console.error("Failed to fetch job seeker data.");
+        } catch (error) {
+          console.error("An error occurred while fetching job seeker data:", error);
+        } finally {
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.error("An error occurred while fetching job seeker data:", error);
-      } finally {
-        setIsLoading(false);
       }
-    };
-
-    if (token) {
-      fetchUserData();
-    } else {
-      setIsLoading(false);
+      fetchUserData()
     }
-  }, [token, setProfileData]);
+  }, [profileData, token, setProfileData]);
 
   const handleProfileUpdate = (updatedProfile) => {
     setProfileData(updatedProfile);

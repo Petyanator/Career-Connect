@@ -176,10 +176,9 @@ function CreateProfilePage({ setProfileData, onProfileUpdate }) {
 
       if (response.ok) {
         console.log("Server response:", data);
-          setShowForm(false);
-          setShowOverlay(true);
-          setIsSubmitted(true);
-        
+        setShowForm(false);
+        setShowOverlay(true);
+        setIsSubmitted(true);
         onProfileUpdate(data.jobseeker_profile)
         
       } else {
