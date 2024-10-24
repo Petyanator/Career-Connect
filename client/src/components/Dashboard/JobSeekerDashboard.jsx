@@ -5,6 +5,7 @@ import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem"
 import SeekerActivity from "../SeekerActivity/SeekerActivity";
 import UpdateJobSeekerProfile from "../UpdateAndDelete/UpdateJobSeekerProfile";
 import DeleteJobSeekerProfile from "../UpdateAndDelete/DeleteJobSeekerProfile";
+import JobSeekerNotifications from "../JobSeekerNotification/JobSeekerNotification";
 import './JobSeekerDashboard.scss'
 
 
@@ -96,7 +97,9 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
           </div>
         );
       case "notifications":
-        return <div>Notifications</div>;
+        return <div>Notifications
+              <JobSeekerNotifications/>
+              </div>;
       case "help":
         return <div>Help Content</div>;
       default:
