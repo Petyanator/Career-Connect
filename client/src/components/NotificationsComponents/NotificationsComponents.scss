@@ -1,0 +1,60 @@
+@import '../../assets/styles/util/variables.scss';
+
+.notifications-container {
+  background-color: $bg-color;
+  color: $text-color;
+  font-family: $font-family;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: $box-shadow;
+
+  h2 {
+    color: $text-color;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    background-color: $form-bg-color;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    box-shadow: $box-shadow;
+
+    .job-posting-title {
+      font-weight: bold;
+      color: $primary-color;
+      margin-bottom: 8px;
+    }
+
+    .job-seeker-name {
+      color: $button-bg-color;
+      font-weight: bold;
+    }
+
+    .job-description {
+      color: $text-color;
+      margin-bottom: 10px;
+    }
+
+    .skills-list {
+      color: $text-hover-color;
+      font-style: italic;
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    padding: 10px;
+
+    li {
+      padding: 10px;
+    }
+  }
+}

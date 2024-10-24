@@ -1,0 +1,50 @@
+@import "../../assets/styles/util/variables.scss";
+
+.profile-settings-container {
+  margin-top: 3rem;
+  margin-bottom: 5rem;
+  display: flex;
+  width: 90vw;
+  height: 90vh;
+
+  .welcome-message {
+    font-size: xx-large;
+  }
+
+  .sidebar {
+    width: 20vw;
+    max-width: 150px;
+    background-color: $input-bg;
+    padding: 20px;
+    color: white;
+    border-radius: 20px 0px 0px 20px;
+
+    .sidebar-menu {
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+
+      li {
+        cursor: pointer;
+        margin: 10px 0;
+        padding: 8px;
+        background-color: $input-bg;
+        border-radius: 5px;
+        text-align: left;
+
+        &.active {
+          background-color: lighten($input-bg,10%);
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .content-area {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 0px 20px 20px 0px;
+  }
+}

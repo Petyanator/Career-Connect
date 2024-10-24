@@ -1,137 +1,87 @@
-// import React from "react";
-// import Notification from "./components/Notifications/Notification";
-// import { useState } from "react";
-// import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import "./App.css";
-// import "@fortawesome/fontawesome-free/css/all.min.css";
-// import NavBar from "./components/shared/NavBar";
-// import Landing from "./pages/Landing";
-// import Home from "./pages/Home";
-// import AboutUs from "./pages/AboutUs";
-// import CreateProfilePage from "./pages/CreateProfilePage";
-// import CreateProfileView from "./pages/CreateProfileView";
-// import Register from "./components/auth/Register";
-// import Login from "./components/auth/Login";
-// import Logout from "./components/auth/Logout";
-// import UserToken from "./components/Token/UserToken";
-// import SearchAndFilterSystem from "./components/SearchBar/SearchBar";
-// import JobPosting from "./components/JobPosting/JobPosting";
-// import JobViewer from "./components/JobViewer/JobViewer";
-// import EmployerCreateProfile from "./pages/EmployerCreateProfile";
-// import EmployerProfileView from "./pages/EmployerProfileView";
-
-// function App() {
-//   const [profileData, setProfileData] = useState(null);
-//   const [employerProfileData, setEmployerProfileData] = useState(null);
-//   const { token, setToken, removeToken } = UserToken(); // State for user token
-//   return (
-//     <>
-//       <BrowserRouter>
-//         <NavBar />
-//         <Routes>
-//           <Route path="/" element={<Landing />} />
-//           <Route path="/home" element={<Home />} />
-//           <Route path="/aboutus" element={<AboutUs />} />
-//           <Route path="/searchbar" element={<SearchAndFilterSystem />} />
-//           <Route path="/jobposting" element={<JobPosting />} />
-//           <Route path="/jobviewer" element={<JobViewer />} />
-//           <Route
-//             path="/create-profile"
-//             element={<CreateProfilePage setProfileData={setProfileData} />}
-//           />
-//           <Route
-//             path="/profile"
-//             element={<CreateProfileView profileData={profileData} />}
-//           />
-//           <Route
-//             path="/employer-create-profile"
-//             element={
-//               <EmployerCreateProfile
-//                 setEmployerProfileData={setEmployerProfileData}
-//               />
-//             }
-//           />
-//           <Route
-//             path="/employer-profile"
-//             element={
-//               <EmployerProfileView employerProfileData={employerProfileData} />
-//             }
-//           />
-//           <Route path="/login" element={<Login setToken={setToken} />} />
-//           <Route path="/register" element={<Register />} />
-//           <Route
-//             path="/logout"
-//             element={<Logout removeToken={removeToken} />}
-
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Notification from "./components/Notifications/Notification";
-import "./App.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import NavBar from "./components/shared/NavBar";
-import Landing from "./pages/Landing";
-import Home from "./pages/Home";
-import AboutUs from "./pages/AboutUs";
-import CreateProfilePage from "./pages/CreateProfilePage";
-import CreateProfileView from "./pages/CreateProfileView";
-import Register from "./components/auth/Register";
-import Login from "./components/auth/Login";
-import Logout from "./components/auth/Logout";
+import "bootstrap/dist/css/bootstrap.min.css";
 import UserToken from "./components/Token/UserToken";
-import SearchAndFilterSystem from "./components/SearchBar/SearchBar";
-import JobPosting from "./components/JobPosting/JobPosting";
-import JobViewer from "./components/JobViewer/JobViewer";
-import EmployerCreateProfile from "./pages/EmployerCreateProfile";
-import EmployerProfileView from "./pages/EmployerProfileView";
+
+import NavBar from "./components/NavBar/NavBar";
+import Landing from "./components/Landing/Landing";
+import Team from "./components/Team/Team";
+
+import Register from "./components/RegisterAndLogin/Register";
+import Login from "./components/RegisterAndLogin/Login";
+import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard";
+import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
 
 function App() {
   const [profileData, setProfileData] = useState(null);
-  const [employerProfileData, setEmployerProfileData] = useState(null);
-  const { token, setToken, removeToken } = UserToken(); // State for user token
+  const { token, setToken } = UserToken(); // State for user token
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userType, setUserType] = useState(
+    localStorage.getItem("userType") || null
+  );
+  const [fullName, setFullName] = useState(
+    localStorage.getItem("fullName") || null
+  );
 
+  useEffect(() => {
+    setIsLoggedIn(!!token); // Update state based on whether a token exists
+    const storedUserType = localStorage.getItem("userType");
+    setUserType(storedUserType);
+  }, [token]);
+
+  const handleLogout = () => {
+    setToken(null); // Clear the token
+    setIsLoggedIn(false);
+    setUserType(null);
+    localStorage.removeItem("userType"); // Update the login state
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("fullName");
+    localStorage.removeItem("access_token");
+  };
   return (
     <>
       <BrowserRouter>
-        <NavBar />
+        <NavBar
+          isLoggedIn={isLoggedIn}
+          userType={userType}
+          handleLogout={handleLogout}
+        />
         <Routes>
           {/* Main routes */}
           <Route path="/" element={<Landing />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/aboutus" element={<AboutUs />} />
-          <Route path="/searchbar" element={<SearchAndFilterSystem />} />
-          <Route path="/jobposting" element={<JobPosting />} />
-          <Route path="/jobviewer" element={<JobViewer />} />
+          <Route path="/the-team" element={<Team />} />
+          <Route path="/register" element={<Register />} />
           <Route
-            path="/create-profile"
-            element={<CreateProfilePage setProfileData={setProfileData} />}
-          />
-          <Route
-            path="/profile"
-            element={<CreateProfileView profileData={profileData} />}
-          />
-          <Route
-            path="/employer-create-profile"
+            path="/login"
             element={
-              <EmployerCreateProfile
-                setEmployerProfileData={setEmployerProfileData}
+              <Login
+                setIsLoggedIn={setIsLoggedIn}
+                setUserType={setUserType}
+                setFullName={setFullName}
+                setProfileData={setProfileData}
               />
             }
           />
           <Route
-            path="/employer-profile"
+            path="/job-seeker-dashboard"
             element={
-              <EmployerProfileView employerProfileData={employerProfileData} />
+              <JobSeekerDashboard
+                userType={userType}
+                fullName={fullName}
+                profileData={profileData}
+                setProfileData={setProfileData}
+              />
             }
           />
-          <Route path="/login" element={<Login setToken={setToken} />} />
-          <Route path="/register" element={<Register />} />
           <Route
-            path="/logout"
-            element={<Logout removeToken={removeToken} />}
+            path="/employer-dashboard"
+            element={
+              <EmployerDashboard
+                profileData={profileData}
+                setProfileData={setProfileData}
+              />
+            }
           />
-
-          {/* Notifications Route */}
-          <Route path="/notifications" element={<Notification />} />
         </Routes>
       </BrowserRouter>
     </>

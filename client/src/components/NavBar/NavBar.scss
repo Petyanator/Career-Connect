@@ -1,0 +1,61 @@
+/* Styling for the navigation bar */
+@import '../../assets/styles/util/variables.scss';  // Import the variables.scss
+
+
+nav {
+  background-color: transparent; /* Initially transparent */
+  padding: .5rem;
+  position: fixed; /* Fixes the navbar at the top */
+  top: 0;
+  left: 0;
+  width: 100%; /* Navbar will take up the screen width*/
+  z-index: 1000; /* Ensures the navbar is always on top of other elements */
+  transition: background-color 0.3s ease; /* Smooth transition effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for depth */
+}
+
+/* When scrolled, we will add a new class `.navbar-scrolled` */
+.navbar-scrolled {
+  background-color: #212529; /* Darker background after scrolling */
+  transition: background-color 0.4s ease;
+}
+
+/* Remove default list styling */
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: end; /* Center the navigation links */
+}
+
+/* Navigation links styling */
+li {
+  margin-left: 20px;
+}
+
+.navbar-link {
+  color: #ecf0f1; /* Light color for text */
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 5px;
+}
+
+/* Hover effect for links */
+.navbar-link:hover {
+  background-color: #34495e; /* Darker shade for hover */
+  color: #fff;
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+  nav {
+    text-align: center;
+  }
+
+  li {
+    margin: 10px 0;
+  }
+}
