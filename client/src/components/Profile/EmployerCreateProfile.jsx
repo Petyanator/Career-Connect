@@ -1,9 +1,8 @@
 import { useState } from "react";
 import "./EmployerCreateProfile.css"; // Similar to JobSeekerProfileCreate.css
-// import { FaPlus } from 'react-icons/fa';
 import EmployerProfileView from "./EmployerProfileView";
 
-function EmployerProfileCreate({ setProfileData }) {
+function EmployerProfileCreate({ setProfileData, onProfileUpdate }) {
   const [companyName, setCompanyName] = useState("");
   const [aboutCompany, setAboutCompany] = useState("");
   const [companyLogo, setCompanyLogo] = useState(null);
@@ -20,7 +19,6 @@ function EmployerProfileCreate({ setProfileData }) {
   const [showForm, setShowForm] = useState(true);
   const [isButtonShrinking, setIsButtonShrinking] = useState(false);
 
-  // const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Handle benefit input
@@ -117,33 +115,27 @@ function EmployerProfileCreate({ setProfileData }) {
       if (response.ok) {
         console.log("Server response:", data);
         // Success
-        setTimeout(() => {
-          setShowForm(false);
-          setShowOverlay(true);
-        }, 800);
+        setShowForm(false);
+        setShowOverlay(true);
+        setIsSubmitted(true);
 
-        setTimeout(() => {
-          setIsSubmitted(true);
-        }, 4000);
+        // Update the profile data in the parent component
+        onProfileUpdate(data.employer_profile); // Pass the updated profile data to the parent
       } else {
         alert(`An error occurred: ${data.message}`);
-        setIsButtonShrinking(false);
       }
     } catch (error) {
       console.error("Error creating profile:", error);
       alert("An error occurred while creating your profile.");
-      setIsButtonShrinking(false);
     }
   };
+
   if (isSubmitted) {
     return <EmployerProfileView setProfileData={setProfileData} />;
   }
+
   return (
     <div>
-      {/* Particle effect container */}
-      {/* <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div> */}
-
-      {/* Form section */}
       <div className={`create-profile-page ${showForm ? "" : "hidden-form"}`}>
         {showForm && (
           <form onSubmit={handleSubmit}>

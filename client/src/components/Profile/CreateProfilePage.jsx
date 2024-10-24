@@ -3,7 +3,7 @@ import "./CreateProfilePage.css";
 import { FaPlus } from "react-icons/fa";
 import CreateProfileView from "./CreateProfileView";
 
-function CreateProfilePage({ setProfileData }) {
+function CreateProfilePage({ setProfileData, onProfileUpdate }) {
   const [skills, setSkills] = useState([]);
   const [inputSkill, setInputSkill] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
@@ -184,6 +184,9 @@ function CreateProfilePage({ setProfileData }) {
         setTimeout(() => {
           setIsSubmitted(true);
         }, 4000);
+        
+        onProfileUpdate(data.jobseeker_profile)
+        
       } else {
         alert(`An error occurred: ${data.message}`);
         setIsButtonShrinking(false);
