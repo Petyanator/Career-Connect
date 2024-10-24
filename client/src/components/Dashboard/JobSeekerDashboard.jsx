@@ -72,7 +72,6 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       profileData.skills.length > 0;
 
     switch (activeTab) {
- jobseeker_auto_update
       case "profile":
 
         return hasProfileData ? (
