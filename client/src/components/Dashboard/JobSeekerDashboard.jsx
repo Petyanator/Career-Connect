@@ -85,7 +85,6 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       case "search":
         return <SearchAndFilterSystem />;
       case "activity":
- jobseeker_auto_update
         return <SeekerActivity />;
 
       case "security":
