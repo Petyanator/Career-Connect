@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import "./CreateProfilePage.css";
 import { FaPlus } from "react-icons/fa";
 import CreateProfileView from "./CreateProfileView";
 
-function CreateProfilePage({ setProfileData }) {
+function CreateProfilePage({ setProfileData, onProfileUpdate }) {
   const [skills, setSkills] = useState([]);
   const [inputSkill, setInputSkill] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
@@ -129,7 +128,7 @@ function CreateProfilePage({ setProfileData }) {
         institution,
       };
     });
-    
+
     // const education = educationFields.map((field) => {
     //   return `${education} in ${degreeDetails} at ${institution}`;
     // });
@@ -185,6 +184,9 @@ function CreateProfilePage({ setProfileData }) {
         setTimeout(() => {
           setIsSubmitted(true);
         }, 4000);
+        
+        onProfileUpdate(data.jobseeker_profile)
+        
       } else {
         alert(`An error occurred: ${data.message}`);
         setIsButtonShrinking(false);
@@ -200,9 +202,6 @@ function CreateProfilePage({ setProfileData }) {
   }
   return (
     <div>
-      {/* Particle effect container */}
-      {/* <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div> */}
-
       {/* Form section */}
       <div className={`create-profile-page ${showForm ? "" : "hidden-form"}`}>
         {showForm && (
