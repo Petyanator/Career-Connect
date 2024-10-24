@@ -16,7 +16,7 @@ client.*.local
 
 # Server environment files
 server/.env
-venv
+.venv
 __pycache__
 .env
 
