@@ -1,18 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserToken from "../Token/UserToken.jsx";
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 import "../RegisterAndLogin/Login.scss";
 
 function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false); // Added loading state
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const { setToken } = UserToken();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword); // Toggle password visibility
   };
 
   const handleSubmit = async (e) => {
@@ -39,7 +45,7 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
           // Save the token and user information
           setToken(accessToken);
           setIsLoggedIn(true);
-          setUserType(userType);
+          setUserType();
           setFullName(fullName);
 
           // Save user data to local storage
@@ -48,27 +54,27 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
           localStorage.setItem("fullName", fullName);
 
           // Fetch profile data
-          const profileResponse = await fetch(
-            "http://localhost:5000/dashboard",
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
+          const profileResponse = await fetch("http://localhost:5000/dashboard", {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
 
           if (profileResponse.ok) {
             const profileData = await profileResponse.json();
-            setProfileData(profileData.job_seeker_profile || {});
-            setProfileData(profileData.employer_profile || {}); // Set profile data or an empty object
+            // Set the profile data depending on the user type
+            if (userType === "job_seeker") {
+              setProfileData(profileData.job_seeker_profile || {});
+            } else if (userType === "employer") {
+              setProfileData(profileData.employer_profile || {});
+            }
+          } else {
+            console.error("Failed to fetch profile data:", profileResponse.status);
+            setLoginError("Failed to retrieve profile data.");
           }
 
           // Navigate to the appropriate dashboard
-          navigate(
-            userType === "job_seeker"
-              ? "/job-seeker-dashboard"
-              : "/employer-dashboard"
-          );
+          navigate(userType === "job_seeker" ? "/job-seeker-dashboard" : "/employer-dashboard");
         } else {
           setLoginError("Failed to retrieve access token.");
         }
@@ -84,10 +90,9 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-form-container d-flex justify-content-center align-items-center">
       <div className="login-form">
-        <h2 className="mb-4 text-center">Login</h2>
-        {loginError && <div className="alert alert-danger">{loginError}</div>}
+        <h2 className="text-center mb-4">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input
@@ -98,29 +103,29 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
               value={formData.username}
               onChange={handleChange}
               required
-              disabled={loading} // Disable input while loading
             />
           </div>
-          <div className="mb-3">
+
+          <div className="mb-3 password-container">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               className="form-control"
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
               required
-              disabled={loading} // Disable input while loading
             />
+            <span className="toggle-password" onClick={togglePasswordVisibility}>
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={loading} // Disable button while loading
-          >
-            {loading ? "Logging in..." : "Login"} {/* Show loading text */}
+
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            {loading ? 'Loading...' : 'Login'}
           </button>
         </form>
+        {loginError && <p className="text-danger">{loginError}</p>}
       </div>
     </div>
   );

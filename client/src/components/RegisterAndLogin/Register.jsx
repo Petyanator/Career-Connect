@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Import eye icons
-import '../RegisterAndLogin/Register.scss'
+import '../RegisterAndLogin/Register.scss';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -62,8 +62,6 @@ function Register() {
       if (response.status === 201) {
         setRegistrationSuccess(true);
         setErrorMessage("");
-        // const { access_token } = response.data;
-        // localStorage.setItem("access_token", access_token);
       }
     } catch (error) {
       if (error.response) {

@@ -1,14 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-body {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100vh;
-  overflow-y: auto;
-}
-
 .job-posting-container{
   padding-top:100px;
   width: 40rem; /* Ensures the navbar spans the full width of the page */ /* Makes sure the navbar is always on top of other elements */

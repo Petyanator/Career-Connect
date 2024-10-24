@@ -1,70 +1,98 @@
-@import '../../assets/styles/util/variables.scss';  // Import variables
+@import '../../assets/styles/util/variables.scss';
 
-.login-container {
-  background-color: $primary-color;
-  height: 100vh;
-  display: flex; /* Apply flexbox */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-}
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: $bg-color; // Use imported background color
+  padding: 2rem;
 
-.login-form {
-  margin: 0;
-  width: 320px;
-  box-shadow: $box-shadow;
-  text-align: center;
-  color: $text-color;
-  padding: 20px; /* Add padding for a cleaner look */
-  border-radius: 8px; /* Add border-radius for nicer edges */
-  background-color: $form-bg-color; /* Set background color if needed */
+  .login-form {
+    max-width: 400px;
+    width: 100%;
+    background-color: $form-bg-color; // Use imported form background color
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: $box-shadow; // Use imported box shadow
+    font-family: $font-family; // Use imported font family
 
-  h2 {
-    color: Black;
-    margin-bottom: 30px;
-    font-size: 24px;
-  }
+    h2 {
+      text-align: center;
+      color: $primary-color; // Use imported primary color
+      margin-bottom: 1.5rem;
+      font-size: 1.75rem;
+    }
 
-  .input-container {
-    width: 100%; /* Ensure the input containers take full width */
-    margin-bottom: 20px;
-    position: relative;
+    .form-group {
+      margin-bottom: 1.5rem;
 
-    input {
-      width: 100%; /* Full width for inputs */
-      padding: 12px;
-      border: 1px solid $border-color;
-      border-radius: 8px;
-      background-color: $input-bg;
-      color: $text-color;
-      font-size: 16px;
+      .form-control {
+        background-color: $input-bg; // Use imported input background color
+        border: 1px solid $border-color; // Use imported border color
+        padding: 0.75rem 1rem;
+        border-radius: 5px;
+        font-size: 1rem;
+        color: $text-color; // Use imported text color
+        width: 100%;
+        transition: border-color 0.3s ease;
 
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.6);
+        &:focus {
+          border-color: $primary-color; // Use primary color for focus state
+          outline: none;
+        }
       }
 
-      &:focus {
-        outline: none;
-        border-color: $secondary-color;
-        box-shadow: 0 0 5px $secondary-color;
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: $text-color; // Use imported text color
+        font-size: 1rem;
       }
     }
-  }
 
-  .login-btn,
-  .register-btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background-color: $button-bg-color;
-    color: $text-color;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    .password-container {
+      position: relative;
 
-    &:hover {
-      background-color: $button-hover-color;
+      .form-control {
+        padding-right: 2.5rem; // Space for eye icon
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-hover-color; // Use imported text hover color
+        cursor: pointer;
+
+        &:hover {
+          color: $text-color; // Use imported text color
+        }
+      }
+    }
+
+    .btn-primary {
+      background-color: $button-bg-color; // Use imported button background color
+      border: none;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: $button-hover-color; // Use imported button hover color
+      }
+    }
+
+    .text-danger {
+      color: $border-color; // Use imported border color
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
     }
   }
 }

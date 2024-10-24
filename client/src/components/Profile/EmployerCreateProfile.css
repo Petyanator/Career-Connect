@@ -1,26 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-* {
-    font-family: 'Montserrat', sans-serif;
-}
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    height: 100vh;
-    overflow-y: auto;
-    position: relative;
-    background-color: #092734;
-}
 
 #particles-js {
     position: fixed;

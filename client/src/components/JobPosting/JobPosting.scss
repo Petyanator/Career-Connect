@@ -6,12 +6,6 @@ $background-light: #FFFFFA;
 $font-stack: 'Montserrat', sans-serif;
 
 
-body {
-  margin: 0;
-  font-family: $font-stack;
-  background-color: $secondary-color;
-}
-
 .container {
   width: 40rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
