@@ -12,11 +12,6 @@ import Login from "./components/RegisterAndLogin/Login";
 import JobSeekerDashboard from "./components/Dashboard/JobSeekerDashboard";
 import EmployerDashboard from "./components/Dashboard/EmployerDashboard";
 
-import JobViewer from "./components/JobViewer/JobViewer";
-import JobSeekerNotification from "./components/JobSeekerNotification/JobSeekerNotification";
-import UpdateJobSeekerProfile from "./components/UpdateAndDelete/UpdateJobSeekerProfile";
-import DeleteJobSeekerProfile from "./components/UpdateAndDelete/DeleteJobSeekerProfile";
-
 function App() {
   const [profileData, setProfileData] = useState(null);
   const { token, setToken } = UserToken(); // State for user token
@@ -85,20 +80,6 @@ function App() {
                 setProfileData={setProfileData}
               />
             }
-          />
-
-          <Route
-            path="/update-jobseeker-profile"
-            element={<UpdateJobSeekerProfile />}
-          />
-          <Route
-            path="/delete-jobseeker-profile"
-            element={<DeleteJobSeekerProfile />}
-          />
-          <Route path="/jobviewer" element={<JobViewer />} />
-          <Route
-            path="/jobseeker-notification"
-            element={<JobSeekerNotification />}
           />
         </Routes>
       </BrowserRouter>

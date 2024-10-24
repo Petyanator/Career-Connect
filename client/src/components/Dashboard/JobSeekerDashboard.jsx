@@ -4,7 +4,8 @@ import CreateProfilePage from "../Profile/CreateProfilePage";
 import CreateProfileView from "../Profile/CreateProfileView";
 import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem";
 import SeekerActivity from "../SeekerActivity/SeekerActivity";
-// import "./Dashboard.css";
+import UpdateJobSeekerProfile from "../UpdateAndDelete/UpdateJobSeekerProfile";
+import DeleteJobSeekerProfile from "../UpdateAndDelete/DeleteJobSeekerProfile";
 import './JobSeekerDashboard.scss'
 
 function JobSeekerDashboard({ profileData, setProfileData }) {
@@ -28,7 +29,7 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
 
           if (response.ok) {
             const data = await response.json();
-            setProfileData(data.job_seeker_profile || {}); // Set profile data or empty object
+            setProfileData(data.job_seeker_profile); // Set profile data or empty object
           } else {
             console.error("Failed to fetch user data");
           }
@@ -53,10 +54,7 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
     switch (activeTab) {
       case "profile": {
         const hasProfileData =
-          profileData &&
-          Object.keys(profileData).length > 0 &&
-          profileData.skills &&
-          profileData.skills.length > 0;
+          profileData && Object.keys(profileData).length > 0;
         return hasProfileData ? (
           <CreateProfileView profileData={profileData}></CreateProfileView>
         ) : (
@@ -75,13 +73,19 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       case "activity":
         return (
           <div>
-            <SeekerActivity></SeekerActivity>
+            <SeekerActivity />
           </div>
         );
       case "security":
-        return <div>Security Settings Content</div>;
-      case "appearance":
-        return <div>Appearance Settings Content</div>;
+        return (
+          <div>
+            Security Settings
+            <DeleteJobSeekerProfile />
+            <UpdateJobSeekerProfile />
+          </div>
+        );
+      case "notifications":
+        return <div>Notifications</div>;
       case "help":
         return <div>Help Content</div>;
       default:
@@ -117,10 +121,10 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
             Security
           </li>
           <li
-            onClick={() => setActiveTab("appearance")}
-            className={activeTab === "appearance" ? "active" : ""}
+            onClick={() => setActiveTab("notifications")}
+            className={activeTab === "notifications" ? "active" : ""}
           >
-            Appearance
+            Notifications
           </li>
           <li
             onClick={() => setActiveTab("help")}
