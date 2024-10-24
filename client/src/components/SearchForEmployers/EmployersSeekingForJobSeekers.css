@@ -3,7 +3,7 @@
     margin: auto;
     text-align: center;
   }
-  
+
   .result-card {
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -11,14 +11,14 @@
     margin: 20px 0;
     background-color: #f9f9f9;
   }
-  
+
   .profile-pic {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     margin-bottom: 10px;
   }
-  
+
   .button-group button {
     margin: 5px;
     padding: 10px 20px;
@@ -26,19 +26,18 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  
+
   .previous-button {
     background-color: #3498db;
     color: white;
   }
-  
+
   .next-button {
     background-color: #2ecc71;
     color: white;
   }
-  
+
   .error {
     color: red;
     font-weight: bold;
   }
-  

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import "./SearchForEmployers.css"
-function SearchForEmployers() {
+import "./EmployersSeekingForJobSeekers.css"
+function EmployersSeekingForJobSeekers() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -100,4 +100,4 @@ function SearchForEmployers() {
   );
 }
 
-export default SearchForEmployers;
+export default EmployersSeekingForJobSeekers;
