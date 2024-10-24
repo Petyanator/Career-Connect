@@ -43,6 +43,7 @@ function CreateProfilePage({ setProfileData, onProfileUpdate }) {
     }
   };
 
+
   const handleDeleteSkill = (skillToDelete) => {
     const updatedSkills = skills.filter((skill) => skill !== skillToDelete);
     setSkills(updatedSkills);
@@ -175,17 +176,11 @@ function CreateProfilePage({ setProfileData, onProfileUpdate }) {
 
       if (response.ok) {
         console.log("Server response:", data);
-        // Success
-        setTimeout(() => {
           setShowForm(false);
           setShowOverlay(true);
-        }, 800);
-
-        setTimeout(() => {
           setIsSubmitted(true);
-        }, 4000);
         
-        onProfileUpdate(data.jobseeker_profile)
+        onProfileUpdate(data.job_seeker_profile)
         
       } else {
         alert(`An error occurred: ${data.message}`);
