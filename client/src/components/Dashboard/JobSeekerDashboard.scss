@@ -34,8 +34,21 @@
         text-align: left;
 
         &.active {
-          background-color: lighten($input-bg,10%);
+          background-color: lighten($input-bg, 10%);
           font-weight: bold;
+        }
+        .counter {
+          position: absolute;
+          top: 190px;
+          left: 120px;
+          background-color: red;
+          color: white;
+          font-size: 0.75rem;
+          padding: 2px 6px;
+          border-radius: 50%;
+          display: inline-block;
+          min-width: 20px;
+          text-align: center;
         }
       }
     }

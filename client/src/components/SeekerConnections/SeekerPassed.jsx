@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import "./SeekerApplied.scss";
 
-function SeekerActivity() {
-  const [activeTab, setActiveTab] = useState("accepted");
+function SeekerPassed() {
   const [applications, setApplications] = useState([]);
 
   // Fetch applications from the server
@@ -26,40 +26,29 @@ function SeekerActivity() {
     fetchApplications();
   }, []);
 
-  // Filter applications based on the active tab (Accepted or Rejected)
-  const filteredApplications = applications.filter((app) =>
-    activeTab === "accepted"
-      ? app.job_seeker_status === 1
-      : app.job_seeker_status === 2
-  );
+  // Filter applications to show only rejected ones (job_seeker_status === 2)
+  const applied = applications.filter((app) => app.job_seeker_status === 2);
 
   return (
-    <div>
+    <div className="applied-container">
       <div>
-        <button onClick={() => setActiveTab("accepted")}>Accepted</button>
-        <button onClick={() => setActiveTab("rejected")}>Rejected</button>
-      </div>
-      <div>
-        {filteredApplications.length > 0 ? (
-          filteredApplications.map((application) => (
-            <div key={application.application_id}>
+        {applied.length > 0 ? (
+          applied.map((application) => (
+            <div className="job-listing" key={application.application_id}>
               <p>Job Title: {application.job_title}</p>
               <p>Company Name: {application.company_name}</p>
-              <p>
-                Status:{" "}
-                {application.job_seeker_status === 1 ? "Accepted" : "Rejected"}
-              </p>
-              <p>
+
+              {/* <p>
                 Applied on: {new Date(application.created_at).toLocaleString()}
-              </p>
+              </p> */}
             </div>
           ))
         ) : (
-          <p>No applications found.</p>
+          <p className="no-applications">You have not passed on any offers.</p>
         )}
       </div>
     </div>
   );
 }
 
-export default SeekerActivity;
+export default SeekerPassed;

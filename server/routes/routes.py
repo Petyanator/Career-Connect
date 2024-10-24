@@ -99,16 +99,20 @@ def apply_to_job():
 
     if application:
         # Update the existing application status
-        application.job_seeker_status = 1 if action == 'accept' else 2
+        if action == 'accept':
+            application.job_seeker_status = 1  # Status 1 = Accepted
+        elif action == 'reject':
+            application.job_seeker_status = 2  # Status 2 = Rejected
     else:
         # Create a new application if it doesn't exist
         application = Application(
             job_posting_id=job_posting_id,
             job_seeker_id=job_seeker.job_seeker_id,
-            job_seeker_status=1 if action == 'accept' else 2,
+            job_seeker_status=2 if action == 'reject' else 1,
             created_at=datetime.utcnow()
         )
         db.session.add(application)
+        db.session.commit()
 
     # If job_seeker_status is set to 1 (accepted), trigger a notification
     if application.job_seeker_status == 1:

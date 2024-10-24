@@ -192,17 +192,18 @@ def get_job_seeker_notifications():
     if not applications:
         return jsonify({"message": "No notifications found"}), 404
 
-    # Prepare a response including job posting and employer status info
+     # Prepare a response including job posting and employer status info, filter out pending/null statuses
     notifications = []
     for app in applications:
-        job_posting = JobPosting.query.get(app.job_posting_id)
-        notifications.append({
-            "application_id": app.application_id,  # Add the application_id here
-            "job_posting_title": job_posting.title,
-            "job_posting_description": job_posting.description,
-            "employer_status": app.employer_status,  # 1 = Accepted, 2 = Rejected, None = Pending
-            "created_at": app.created_at.isoformat()
-        })
+        if app.employer_status in [1, 2]:  # Only include Accepted (1) or Rejected (2) statuses
+            job_posting = JobPosting.query.get(app.job_posting_id)
+            notifications.append({
+                "application_id": app.application_id,
+                "job_posting_title": job_posting.title,
+                "job_posting_description": job_posting.description,
+                "employer_status": app.employer_status,  # 1 = Accepted, 2 = Rejected
+                "created_at": app.created_at.isoformat()
+            })
 
     return jsonify(notifications), 200
 

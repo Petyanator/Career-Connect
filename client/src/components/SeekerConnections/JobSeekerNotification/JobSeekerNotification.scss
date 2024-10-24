@@ -1,10 +1,11 @@
-@import "../../assets/styles/util/variables.scss";
-
+@import "../../../assets/styles/util/variables.scss";
 
 .jobseeker-notifications {
   background-color: $primary-color;
   padding: 2rem;
   border-radius: 10px;
+  height: 300px;
+  overflow-y: auto;
 }
 
 // Card styling for individual notifications
@@ -13,6 +14,7 @@
   border: 1px solid $border-color;
   border-radius: 8px;
   padding: 1rem;
+  width: 300px;
 
   .card-title {
     font-family: $font-family;
