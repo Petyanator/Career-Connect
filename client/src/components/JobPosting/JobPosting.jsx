@@ -64,7 +64,7 @@ const JobPosting = () => {
 
   return (
     <div className="job-posting-container">
-      <div className="job-posting-title">Create a Job Post</div>
+      <div className="job-posting-title"><h3>Create a Job Post</h3></div>
       <form onSubmit={handleSubmit} className="formJobPosting">
         <div className="form-group">
           <label>Job Title:</label>
@@ -125,7 +125,7 @@ const JobPosting = () => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+        <button type="submit" className="button btn btn-primary" disabled={isSubmitting}>
           {isSubmitting ? "Posting..." : "Post Job"}
         </button>
       </form>
