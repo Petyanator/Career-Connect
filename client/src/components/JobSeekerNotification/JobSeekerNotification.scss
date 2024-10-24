@@ -1,0 +1,47 @@
+@import "../../assets/styles/util/variables.scss";
+
+
+.jobseeker-notifications {
+  background-color: $primary-color;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+// Card styling for individual notifications
+.notification-card {
+  background-color: $form-bg-color;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 1rem;
+
+  .card-title {
+    font-family: $font-family;
+    font-weight: bold;
+    color: $secondary-color;
+  }
+
+  .card-text {
+    color: $primary-color;
+  }
+
+  .card-text strong {
+    color: $secondary-color;
+  }
+
+  .text-muted {
+    color: $text-color;
+  }
+
+  &:hover {
+    box-shadow: $box-shadow;
+  }
+}
+
+// Text styles
+.text-light {
+  color: $text-color;
+}
+
+.text-center {
+  text-align: center;
+}

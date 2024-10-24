@@ -3,7 +3,10 @@ import CreateProfilePage from "../Profile/CreateProfilePage";
 import CreateProfileView from "../Profile/CreateProfileView";
 import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem";
 import SeekerActivity from "../SeekerActivity/SeekerActivity";
-import './JobSeekerDashboard.scss';
+import UpdateJobSeekerProfile from "../UpdateAndDelete/UpdateJobSeekerProfile";
+import DeleteJobSeekerProfile from "../UpdateAndDelete/DeleteJobSeekerProfile";
+import './JobSeekerDashboard.scss'
+
 
 function JobSeekerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(true); // Start with loading state
@@ -69,7 +72,9 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       profileData.skills.length > 0;
 
     switch (activeTab) {
+ jobseeker_auto_update
       case "profile":
+
         return hasProfileData ? (
           <CreateProfileView profileData={profileData} />
         ) : (
@@ -81,11 +86,19 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       case "search":
         return <SearchAndFilterSystem />;
       case "activity":
+ jobseeker_auto_update
         return <SeekerActivity />;
+
       case "security":
-        return <div>Security Settings Content</div>;
-      case "appearance":
-        return <div>Appearance Settings Content</div>;
+        return (
+          <div>
+            Security Settings
+            <DeleteJobSeekerProfile />
+            <UpdateJobSeekerProfile />
+          </div>
+        );
+      case "notifications":
+        return <div>Notifications</div>;
       case "help":
         return <div>Help Content</div>;
       default:
@@ -122,10 +135,10 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
             Security
           </li>
           <li
-            onClick={() => setActiveTab("appearance")}
-            className={activeTab === "appearance" ? "active" : ""}
+            onClick={() => setActiveTab("notifications")}
+            className={activeTab === "notifications" ? "active" : ""}
           >
-            Appearance
+            Notifications
           </li>
           <li
             onClick={() => setActiveTab("help")}

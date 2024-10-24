@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import "./CreateProfilePage.css";
 import { FaPlus } from "react-icons/fa";
 import CreateProfileView from "./CreateProfileView";
@@ -130,7 +129,7 @@ function CreateProfilePage({ setProfileData, onProfileUpdate }) {
         institution,
       };
     });
-    
+
     // const education = educationFields.map((field) => {
     //   return `${education} in ${degreeDetails} at ${institution}`;
     // });
@@ -198,9 +197,6 @@ function CreateProfilePage({ setProfileData, onProfileUpdate }) {
   }
   return (
     <div>
-      {/* Particle effect container */}
-      {/* <div id="particles-js" style={{ position: 'absolute', width: '100%', height: '100%', zIndex: -1 }}></div> */}
-
       {/* Form section */}
       <div className={`create-profile-page ${showForm ? "" : "hidden-form"}`}>
         {showForm && (
