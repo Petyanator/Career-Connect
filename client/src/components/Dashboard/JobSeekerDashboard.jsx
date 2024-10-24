@@ -42,6 +42,11 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       fetchUserData();
     }
   }, [profileData, token, setProfileData]); // Include setProfileData in dependencies
+  
+  const handleProfileUpdate = (updatedProfile) => {
+    setProfileData(updatedProfile)
+  }
+  
 
   const [activeTab, setActiveTab] = useState("profile");
   const renderContent = () => {
@@ -57,6 +62,7 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
         ) : (
           <CreateProfilePage
             setProfileData={setProfileData}
+            onProfileUpdate={handleProfileUpdate}
           ></CreateProfilePage>
         );
       }
