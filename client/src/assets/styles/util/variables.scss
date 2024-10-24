@@ -1,29 +1,30 @@
 // _variables.scss
 
-$bg-color: #EAEAEA; // Light gray for backgrounds
-$primary-color: #4B4B4D; // Charcoal gray for primary elements
-$secondary-color: #7D7F81; // Slate gray for accents
+$bg-color: #212529;
+// Primary color scheme
+$primary-color: #212529; // Used for main backgrounds, buttons
+$secondary-color: #4ECDC4; // Accent color
 
 // Text colors
-$text-color: #2C2C2C; // Dark gray for text
-$text-hover-color: #4B4B4D; // Charcoal gray for hover effects
+$text-color: #ffffff;
+$text-hover-color: #FF6B6B;
 
 // Button colors
-$button-bg-color: #AFAFAF; // Medium gray for buttons
-$button-hover-color: #8B8B8D; // Darker gray for button hover effects
+$button-bg-color: #fe3c72;
+$button-hover-color: #ef4a75;
+$input-bg: #335C67;
 
-// Input colors
-$input-bg: #FFFFFF; // White for input backgrounds
-$input-border-color: #B0B0B0; // Light gray for input borders
+// Form Colors
+$form-bg-color:#FFFFFF;
 
-// Form colors
-$form-bg-color: #FFFFFF; // White for form backgrounds
+
 
 // Other colors (for borders, highlights, etc.)
-$border-color: #B0B0B0; // Light gray for borders
+$border-color: #E63946;
+$input-border-color: #B0B0B0; // Light gray for input borders
 
-// Font style
-$font-family: 'Arial', sans-serif; // Clean font family
+//Font Style
+$font-family: 'Times Roman', sans-serif;
 
-// Shadow style
-$box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); // Box shadow style
+//Shadow Style
+$box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
