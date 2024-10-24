@@ -1,4 +1,4 @@
-import "./Dashboard.css";
+// import "./Dashboard.css";
 import { useState, useEffect } from "react";
 import JobPosting from "../JobPosting/JobPosting";
 import EmployerCreateProfile from "../Profile/EmployerCreateProfile";
@@ -6,10 +6,13 @@ import EmployerProfileView from "../Profile/EmployerProfileView";
 import SearchForEmployers from "../SearchForEmployers/SearchForEmployers";
 import DeleteEmployerProfile from "../UpdateAndDelete/DeleteEmployerProfile";
 import UpdateEmployerProfile from "../UpdateAndDelete/UpdateEmployerProfile";
+import './JobSeekerDashboard.scss';
+import NotificationsComponent from "../NotificationsComponents/NotificationsComponents";
+import EmployerViewJobPost from "../JobViewer/EmployerViewJobPost";
+
 
 function EmployerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData);
-
   const [fullName] = useState(localStorage.getItem("fullName") || "User");
   const [userType] = useState(localStorage.getItem("userType") || "job_seeker");
   const token = localStorage.getItem("accessToken");
@@ -41,32 +44,35 @@ function EmployerDashboard({ profileData, setProfileData }) {
 
       fetchUserData();
     }
-  }, [profileData, token, setProfileData]); // Include setProfileData in dependencies
+  }, [profileData, token, setProfileData]);
+
+  const handleProfileUpdate = (updatedProfile) => {
+    setProfileData(updatedProfile); // Update profile data in the dashboard
+  };
 
   const [activeTab, setActiveTab] = useState("profile");
   const renderContent = () => {
+    if (isLoading) {
+      return <p>Loading user data...</p>; // Loading state
+    }
+
+    // Determine if the user has a complete profile
+    const hasProfileData = profileData && profileData.company_name && profileData.about_company;
+
     switch (activeTab) {
-      case "profile": {
-        const hasProfileData =
-          profileData && profileData.company_name && profileData.about_company;
-        return !hasProfileData ? (
-          <EmployerCreateProfile
-            setProfileData={setProfileData}
-          ></EmployerCreateProfile>
+      case "profile":
+        return hasProfileData ? (
+          <EmployerProfileView profileData={profileData} />
         ) : (
-          <EmployerProfileView profileData={profileData}></EmployerProfileView>
+          <EmployerCreateProfile setProfileData={setProfileData} onProfileUpdate={handleProfileUpdate} />
         );
-      }
       case "search":
-        return (
-          <div>
-            <SearchForEmployers></SearchForEmployers>
-          </div>
-        );
+        return <SearchForEmployers />;
       case "create job post":
+
+
         return (
           <div>
-            {" "}
             Create a job post <JobPosting></JobPosting>
           </div>
         );
@@ -74,73 +80,63 @@ function EmployerDashboard({ profileData, setProfileData }) {
         return (
           <div>
             <DeleteEmployerProfile />
-
             <UpdateEmployerProfile />
           </div>
         );
-      case "appearance":
-        return <div>Appearance Settings Content</div>;
-      case "help":
-        return <div>Help Content</div>;
+      case "notification":
+        return (
+          <div>
+            notification <NotificationsComponent />
+          </div>
+        );
+      case "my-job-posts":
+        return (
+          <div>
+            My Job Posts
+            <EmployerViewJobPost />
+          </div>
+        );
       default:
-        return "profile";
+        return <EmployerProfileView profileData={profileData} />;
     }
   };
+
   return (
     <div className="profile-settings-container">
       <aside className="sidebar">
         <ul className="sidebar-menu">
-          <li
-            onClick={() => setActiveTab("profile")}
-            className={activeTab === "profile" ? "active" : ""}
-          >
+          <li onClick={() => setActiveTab("profile")} className={activeTab === "profile" ? "active" : ""}>
             Profile
           </li>
-          <li
-            onClick={() => setActiveTab("search")}
-            className={activeTab === "search" ? "active" : ""}
-          >
+          <li onClick={() => setActiveTab("search")} className={activeTab === "search" ? "active" : ""}>
             Search
           </li>
-          <li
-            onClick={() => setActiveTab("create job post")}
-            className={activeTab === "create job post" ? "active" : ""}
-          >
+          <li onClick={() => setActiveTab("create job post")} className={activeTab === "create job post" ? "active" : ""}>
             Create Job Post
           </li>
-          <li
-            onClick={() => setActiveTab("security")}
-            className={activeTab === "security" ? "active" : ""}
-          >
+          <li onClick={() => setActiveTab("security")} className={activeTab === "security" ? "active" : ""}>
             Security
           </li>
           <li
-            onClick={() => setActiveTab("appearance")}
-            className={activeTab === "appearance" ? "active" : ""}
+            onClick={() => setActiveTab("notification")}
+            className={activeTab === "notification" ? "active" : ""}
           >
-            Appearance
+            Notification
           </li>
           <li
-            onClick={() => setActiveTab("help")}
-            className={activeTab === "help" ? "active" : ""}
+            onClick={() => setActiveTab("my-job-posts")}
+            className={activeTab === "my-job-posts" ? "active" : ""}
           >
-            Help
+            My Job Posts
           </li>
         </ul>
       </aside>
       <main className="content-area">
         <div className="welcome-message">
-          {isLoading ? (
-            <p>Loading user data...</p> // Show a loading message while fetching data
-          ) : (
-            <>
-              <h1>Welcome, {fullName ? fullName : "User"}!</h1>
-              <p>
-                You are logged in as{" "}
-                {userType === "job_seeker" ? "a Job Seeker" : "an Employer"}.
-              </p>
-            </>
-          )}
+          <h1>Welcome, {fullName}!</h1>
+          <p>
+            You are logged in as {userType === "job_seeker" ? "a Job Seeker" : "an Employer"}.
+          </p>
         </div>
         {renderContent()}
       </main>

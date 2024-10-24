@@ -1,9 +1,11 @@
-import "./Dashboard.css";
+
 import { useState, useEffect } from "react";
 import CreateProfilePage from "../Profile/CreateProfilePage";
 import CreateProfileView from "../Profile/CreateProfileView";
 import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem";
 import SeekerActivity from "../SeekerActivity/SeekerActivity";
+// import "./Dashboard.css";
+import './JobSeekerDashboard.scss'
 
 function JobSeekerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData); // Set loading state based on profileData
@@ -40,6 +42,11 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       fetchUserData();
     }
   }, [profileData, token, setProfileData]); // Include setProfileData in dependencies
+  
+  const handleProfileUpdate = (updatedProfile) => {
+    setProfileData(updatedProfile)
+  }
+  
 
   const [activeTab, setActiveTab] = useState("profile");
   const renderContent = () => {
@@ -55,6 +62,7 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
         ) : (
           <CreateProfilePage
             setProfileData={setProfileData}
+            onProfileUpdate={handleProfileUpdate}
           ></CreateProfilePage>
         );
       }

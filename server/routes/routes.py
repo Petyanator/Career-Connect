@@ -304,3 +304,25 @@ def update_employer_application():
         return jsonify({"error": "An error occurred while updating the application"}), 500
 
 
+# Route for employer to see their own postings
+@app.route('/api/employer/jobs', methods=['GET'])
+@jwt_required()  
+def get_employer_job_postings():
+    try:
+        current_user_id = get_jwt_identity()
+
+        employer = Employer.query.filter_by(user_id=current_user_id).first()
+        if not employer:
+            return jsonify({"message": "Employer not found"}), 404
+        
+        # Query the job postings created by the logged-in employer
+        jobs = JobPosting.query.filter_by(employer_id=employer.employer_id).all()
+
+        # Serialize job postings to JSON
+        jobs_list = [job.to_json() for job in jobs]
+
+        # Return the list of jobs posted by the employer
+        return jsonify(jobs_list), 200
+
+    except Exception as e:
+        return jsonify({'message': f'Error occurred: {str(e)}'}), 500
