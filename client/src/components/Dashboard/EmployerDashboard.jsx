@@ -1,4 +1,4 @@
-import "./Dashboard.css";
+// import "./Dashboard.css";
 import { useState, useEffect } from "react";
 import JobPosting from "../JobPosting/JobPosting";
 import EmployerCreateProfile from "../Profile/EmployerCreateProfile";
@@ -6,6 +6,10 @@ import EmployerProfileView from "../Profile/EmployerProfileView";
 import SearchForEmployers from "../SearchForEmployers/SearchForEmployers";
 import DeleteEmployerProfile from "../UpdateAndDelete/DeleteEmployerProfile";
 import UpdateEmployerProfile from "../UpdateAndDelete/UpdateEmployerProfile";
+import './JobSeekerDashboard.scss';
+import NotificationsComponent from "../NotificationsComponents/NotificationsComponents";
+import EmployerViewJobPost from "../JobViewer/EmployerViewJobPost";
+
 
 function EmployerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData);
@@ -65,7 +69,13 @@ function EmployerDashboard({ profileData, setProfileData }) {
       case "search":
         return <SearchForEmployers />;
       case "create job post":
-        return <JobPosting />;
+
+
+        return (
+          <div>
+            Create a job post <JobPosting></JobPosting>
+          </div>
+        );
       case "security":
         return (
           <div>
@@ -73,10 +83,19 @@ function EmployerDashboard({ profileData, setProfileData }) {
             <UpdateEmployerProfile />
           </div>
         );
-      case "appearance":
-        return <div>Appearance Settings Content</div>;
-      case "help":
-        return <div>Help Content</div>;
+      case "notification":
+        return (
+          <div>
+            notification <NotificationsComponent />
+          </div>
+        );
+      case "my-job-posts":
+        return (
+          <div>
+            My Job Posts
+            <EmployerViewJobPost />
+          </div>
+        );
       default:
         return <EmployerProfileView profileData={profileData} />;
     }
@@ -98,11 +117,17 @@ function EmployerDashboard({ profileData, setProfileData }) {
           <li onClick={() => setActiveTab("security")} className={activeTab === "security" ? "active" : ""}>
             Security
           </li>
-          <li onClick={() => setActiveTab("appearance")} className={activeTab === "appearance" ? "active" : ""}>
-            Appearance
+          <li
+            onClick={() => setActiveTab("notification")}
+            className={activeTab === "notification" ? "active" : ""}
+          >
+            Notification
           </li>
-          <li onClick={() => setActiveTab("help")} className={activeTab === "help" ? "active" : ""}>
-            Help
+          <li
+            onClick={() => setActiveTab("my-job-posts")}
+            className={activeTab === "my-job-posts" ? "active" : ""}
+          >
+            My Job Posts
           </li>
         </ul>
       </aside>
