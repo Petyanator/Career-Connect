@@ -1,0 +1,35 @@
+@import "../../assets/styles/util/variables.scss";
+
+.applied-container {
+  height: 400px;
+  overflow-y: auto;
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .job-listing {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    p {
+      margin: 0.5rem 0;
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  p.no-applications {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+    margin-top: 2rem;
+  }
+}

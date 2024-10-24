@@ -2,19 +2,22 @@ import { useState, useEffect } from "react";
 import CreateProfilePage from "../Profile/CreateProfilePage";
 import CreateProfileView from "../Profile/CreateProfileView";
 import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem";
-import SeekerActivity from "../SeekerActivity/SeekerActivity";
 import UpdateJobSeekerProfile from "../UpdateAndDelete/UpdateJobSeekerProfile";
 import DeleteJobSeekerProfile from "../UpdateAndDelete/DeleteJobSeekerProfile";
-import JobSeekerNotifications from "../JobSeekerNotification/JobSeekerNotification";
-import './JobSeekerDashboard.scss'
-
+// import SeekerActivity from "../SeekerActivity/SeekerActivity";
+// import JobSeekerNotifications from "../JobSeekerNotification/JobSeekerNotification";
+import SeekerConnections from "../SeekerConnections/SeekerConnections";
+import "./JobSeekerDashboard.scss";
 
 function JobSeekerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(true); // Start with loading state
 
-  const [fullName, setFullName] = useState(localStorage.getItem("fullName") || "User");
+  const [fullName, setFullName] = useState(
+    localStorage.getItem("fullName") || "User"
+  );
   const [userType] = useState(localStorage.getItem("userType") || "job_seeker");
   const token = localStorage.getItem("accessToken");
+  const [connectedCount, setConnectedCount] = useState(5); // Example: 5 employers have connected
 
   useEffect(() => {
     // Fetch job seeker profile data immediately after login
@@ -41,7 +44,10 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
           console.error("Failed to fetch job seeker data.");
         }
       } catch (error) {
-        console.error("An error occurred while fetching job seeker data:", error);
+        console.error(
+          "An error occurred while fetching job seeker data:",
+          error
+        );
       } finally {
         setIsLoading(false); // Stop loading
       }
@@ -74,7 +80,6 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
 
     switch (activeTab) {
       case "profile":
-
         return hasProfileData ? (
           <CreateProfileView profileData={profileData} />
         ) : (
@@ -85,8 +90,8 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
         );
       case "search":
         return <SearchAndFilterSystem />;
-      case "activity":
-        return <SeekerActivity />;
+      case "connections":
+        return <SeekerConnections />;
 
       case "security":
         return (
@@ -96,12 +101,7 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
             <UpdateJobSeekerProfile />
           </div>
         );
-      case "notifications":
-        return <div>Notifications
-              <JobSeekerNotifications/>
-              </div>;
-      case "help":
-        return <div>Help Content</div>;
+
       default:
         return "profile";
     }
@@ -124,28 +124,19 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
             Search
           </li>
           <li
-            onClick={() => setActiveTab("activity")}
-            className={activeTab === "activity" ? "active" : ""}
+            onClick={() => setActiveTab("connections")}
+            className={activeTab === "connections" ? "active" : ""}
           >
-            Activity
+            Connections
+            {connectedCount > 0 && (
+              <span className="counter">{connectedCount}</span>
+            )}
           </li>
           <li
             onClick={() => setActiveTab("security")}
             className={activeTab === "security" ? "active" : ""}
           >
             Security
-          </li>
-          <li
-            onClick={() => setActiveTab("notifications")}
-            className={activeTab === "notifications" ? "active" : ""}
-          >
-            Notifications
-          </li>
-          <li
-            onClick={() => setActiveTab("help")}
-            className={activeTab === "help" ? "active" : ""}
-          >
-            Help
           </li>
         </ul>
       </aside>

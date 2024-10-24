@@ -1,0 +1,50 @@
+@import "../../assets/styles/util/variables.scss";
+
+.seeker-connections {
+  .tab-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+
+    button {
+      position: relative;
+      background-color: $input-bg;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: lighten($input-bg, 10%);
+      }
+
+      &.active {
+        background-color: lighten($input-bg, 20%);
+        color: white;
+      }
+
+      .counter {
+        position: absolute;
+        top: 0;
+        right: -10px;
+        background-color: red;
+        color: white;
+        font-size: 0.75rem;
+        padding: 2px 6px;
+        border-radius: 50%;
+        display: inline-block;
+        min-width: 20px;
+        text-align: center;
+      }
+    }
+  }
+
+  .tab-content {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
