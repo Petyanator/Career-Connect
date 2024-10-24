@@ -3,13 +3,12 @@ import { useState, useEffect } from "react";
 import JobPosting from "../JobPosting/JobPosting";
 import EmployerCreateProfile from "../Profile/EmployerCreateProfile";
 import EmployerProfileView from "../Profile/EmployerProfileView";
-import EmployersSeekingForJobSeekers from "../SearchForEmployers/EmployersSeekingForJobSeekers.jsx";
+import EmployersSeekingForJobSeekers from "../EmployersSeekingForJobSeekers/EmployersSeekingForJobSeekers";
 import DeleteEmployerProfile from "../UpdateAndDelete/DeleteEmployerProfile";
 import UpdateEmployerProfile from "../UpdateAndDelete/UpdateEmployerProfile";
-import './JobSeekerDashboard.scss';
 import NotificationsComponent from "../NotificationsComponents/NotificationsComponents";
 import EmployerViewJobPost from "../JobViewer/EmployerViewJobPost";
-
+import './JobSeekerDashboard.scss';
 
 function EmployerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData);
