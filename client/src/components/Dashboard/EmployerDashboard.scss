@@ -34,7 +34,7 @@
         text-align: left;
 
         &.active {
-          background-color: lighten($input-bg,10%);
+          background-color: lighten($input-bg, 10%);
           font-weight: bold;
         }
       }
@@ -46,5 +46,52 @@
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 0px 20px 20px 0px;
+  }
+}
+
+.profile-dashboard {
+  .profile-card {
+    padding: 20px;
+    margin: 10px 0;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+
+      button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+
+        &.update-button {
+          background-color: #007bff;
+          color: white;
+
+          &:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+          }
+        }
+
+        &.delete-button {
+          background-color: #dc3545;
+          color: white;
+
+          &:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
   }
 }

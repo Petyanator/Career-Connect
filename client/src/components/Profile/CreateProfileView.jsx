@@ -62,7 +62,10 @@ function CreateProfileView({ profileData }) {
               </>
             )}
             <p>
-              <strong>Skills:</strong> {profileData.skills}
+              <strong>Skills:</strong>{" "}
+              {profileData.skills.length > 0
+                ? profileData.skills.join(", ")
+                : "No skills available"}
             </p>
           </div>
         </div>

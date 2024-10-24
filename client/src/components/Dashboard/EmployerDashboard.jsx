@@ -6,10 +6,9 @@ import EmployerProfileView from "../Profile/EmployerProfileView";
 import SearchForEmployers from "../SearchForEmployers/SearchForEmployers";
 import DeleteEmployerProfile from "../UpdateAndDelete/DeleteEmployerProfile";
 import UpdateEmployerProfile from "../UpdateAndDelete/UpdateEmployerProfile";
-import './JobSeekerDashboard.scss';
+import "./JobSeekerDashboard.scss";
 import NotificationsComponent from "../NotificationsComponents/NotificationsComponents";
 import EmployerViewJobPost from "../JobViewer/EmployerViewJobPost";
-
 
 function EmployerDashboard({ profileData, setProfileData }) {
   const [isLoading, setIsLoading] = useState(!profileData);
@@ -57,20 +56,22 @@ function EmployerDashboard({ profileData, setProfileData }) {
     }
 
     // Determine if the user has a complete profile
-    const hasProfileData = profileData && profileData.company_name && profileData.about_company;
+    const hasProfileData =
+      profileData && profileData.company_name && profileData.about_company;
 
     switch (activeTab) {
       case "profile":
         return hasProfileData ? (
           <EmployerProfileView profileData={profileData} />
         ) : (
-          <EmployerCreateProfile setProfileData={setProfileData} onProfileUpdate={handleProfileUpdate} />
+          <EmployerCreateProfile
+            setProfileData={setProfileData}
+            onProfileUpdate={handleProfileUpdate}
+          />
         );
       case "search":
         return <SearchForEmployers />;
       case "create job post":
-
-
         return (
           <div>
             Create a job post <JobPosting></JobPosting>
@@ -78,11 +79,24 @@ function EmployerDashboard({ profileData, setProfileData }) {
         );
       case "security":
         return (
-          <div>
-            <DeleteEmployerProfile />
-            <UpdateEmployerProfile />
+          <div className="profile-dashboard">
+            <div className="profile-card">
+              <h2>Update</h2>
+              <div className="button-container">
+                <UpdateEmployerProfile />
+                <button className="update-button">Update Profile</button>
+              </div>
+            </div>
+            <div className="profile-card">
+              <h2>Delete</h2>
+              <div className="button-container">
+                <DeleteEmployerProfile />
+                <button className="delete-button">Delete Profile</button>
+              </div>
+            </div>
           </div>
         );
+
       case "notification":
         return (
           <div>
@@ -105,28 +119,34 @@ function EmployerDashboard({ profileData, setProfileData }) {
     <div className="profile-settings-container">
       <aside className="sidebar">
         <ul className="sidebar-menu">
-          <li onClick={() => setActiveTab("profile")} className={activeTab === "profile" ? "active" : ""}>
+          <li
+            onClick={() => setActiveTab("profile")}
+            className={activeTab === "profile" ? "active" : ""}>
             Profile
           </li>
-          <li onClick={() => setActiveTab("search")} className={activeTab === "search" ? "active" : ""}>
+          <li
+            onClick={() => setActiveTab("search")}
+            className={activeTab === "search" ? "active" : ""}>
             Search
           </li>
-          <li onClick={() => setActiveTab("create job post")} className={activeTab === "create job post" ? "active" : ""}>
+          <li
+            onClick={() => setActiveTab("create job post")}
+            className={activeTab === "create job post" ? "active" : ""}>
             Create Job Post
           </li>
-          <li onClick={() => setActiveTab("security")} className={activeTab === "security" ? "active" : ""}>
+          <li
+            onClick={() => setActiveTab("security")}
+            className={activeTab === "security" ? "active" : ""}>
             Security
           </li>
           <li
             onClick={() => setActiveTab("notification")}
-            className={activeTab === "notification" ? "active" : ""}
-          >
+            className={activeTab === "notification" ? "active" : ""}>
             Notification
           </li>
           <li
             onClick={() => setActiveTab("my-job-posts")}
-            className={activeTab === "my-job-posts" ? "active" : ""}
-          >
+            className={activeTab === "my-job-posts" ? "active" : ""}>
             My Job Posts
           </li>
         </ul>
@@ -135,7 +155,8 @@ function EmployerDashboard({ profileData, setProfileData }) {
         <div className="welcome-message">
           <h1>Welcome, {fullName}!</h1>
           <p>
-            You are logged in as {userType === "job_seeker" ? "a Job Seeker" : "an Employer"}.
+            You are logged in as{" "}
+            {userType === "job_seeker" ? "a Job Seeker" : "an Employer"}.
           </p>
         </div>
         {renderContent()}
