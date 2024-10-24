@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "./EmployersSeekingForJobSeekers.scss"; // Assume SCSS is used for styling.
+import placeholderImage from '../../assets/placeholder.jpeg'
+
 
 function EmployersSeekingForJobSeekers() {
   const [results, setResults] = useState([]);
@@ -89,7 +91,7 @@ function EmployersSeekingForJobSeekers() {
       {results.length > 0 && (
         <div className="result-card">
           <img
-            src={results[currentIndex].profile_pic || "/default-profile.png"}
+            src={results[currentIndex].profile_pic ? results[currentIndex].profile_pic : placeholderImage}
             alt={`${results[currentIndex].first_name} ${results[currentIndex].last_name}`}
             className="profile-pic"
           />
