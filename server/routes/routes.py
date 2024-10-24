@@ -130,7 +130,6 @@ def apply_to_job():
 
 
 
-
 # -------------------------------------------
 # Employer Profile Routes
 # -------------------------------------------
@@ -246,6 +245,8 @@ def find_jobseekers():
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
+
+
 # Route for employers to get notifications
 @app.route('/api/employer/notifications', methods=['GET'])
 @jwt_required()
@@ -306,7 +307,7 @@ def update_employer_application():
 
 # Route for employer to see their own postings
 @app.route('/api/employer/jobs', methods=['GET'])
-@jwt_required()  
+@jwt_required()
 def get_employer_job_postings():
     try:
         current_user_id = get_jwt_identity()
@@ -314,7 +315,7 @@ def get_employer_job_postings():
         employer = Employer.query.filter_by(user_id=current_user_id).first()
         if not employer:
             return jsonify({"message": "Employer not found"}), 404
-        
+
         # Query the job postings created by the logged-in employer
         jobs = JobPosting.query.filter_by(employer_id=employer.employer_id).all()
 
