@@ -1,65 +1,62 @@
+@import '../../assets/styles/util/variables.scss';
 
 
-$primary-color: #0B3142;
-$secondary-color: #092734;
-$background-light: #FFFFFA;
-$font-stack: 'Montserrat', sans-serif;
-
-
-body {
-  margin: 0;
-  font-family: $font-stack;
-  background-color: $secondary-color;
-}
-
-.container {
-  width: 40rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
-  margin-top: 80px;
-}
-
-.formJobPosting {
-  background-color: $background-light;
-  padding: 24px;
+.job-posting-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #f8f9fa; // Light background for the form
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); // Slight shadow for depth
 
-  label {
-    font-weight: 700;
-    color: $primary-color;
-    margin-bottom: 8px;
-  }
+  .formJobPosting {
+    .form-group {
+      margin-bottom: 20px;
 
-  input[type="text"],
-  textarea {
-    @include form-control(); /* Use Bootstrap's form-control mixin */
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 20px;
-  }
+      label {
+        font-weight: 600;
+        color: #343a40;
+        display: block;
+        margin-bottom: 5px;
+      }
 
-  textarea {
-    resize: none;
-    height: 150px;
-  }
+      .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
 
-  button {
-    @include button-variant($primary-color, $secondary-color); /* Use Bootstrap's button mixin */
-    display: inline-block;
-    width: 100%;
-    padding: 12px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+        &:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+      }
+    }
 
-    &:hover {
-      background-color: $secondary-color;
+    // Textarea specific styling
+    textarea.form-control {
+      height: 150px;
+      resize: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        background-color: darken(#007bff, 10%);
+        box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.2);
+      }
+
+      &:disabled {
+        background-color: lighten(#007bff, 20%);
+        cursor: not-allowed;
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import "./JobPosting.scss"; // Import your new SCSS file
+import './JobPosting.scss'
 
 const JobPosting = () => {
   const [formData, setFormData] = useState({
@@ -64,6 +64,7 @@ const JobPosting = () => {
 
   return (
     <div className="job-posting-container">
+      <div className="job-posting-title">Create a Job Post</div>
       <form onSubmit={handleSubmit} className="formJobPosting">
         <div className="form-group">
           <label>Job Title:</label>

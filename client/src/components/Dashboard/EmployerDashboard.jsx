@@ -72,7 +72,7 @@ function EmployerDashboard({ profileData, setProfileData }) {
 
         return (
           <div>
-            Create a job post <JobPosting></JobPosting>
+            <JobPosting></JobPosting>
           </div>
         );
       case "security":
