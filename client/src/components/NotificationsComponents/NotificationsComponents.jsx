@@ -23,7 +23,13 @@ function NotificationsComponent() {
       }
 
       const data = await response.json();
-      setNotifications(data);
+
+      const pendingNotifications = data.filter(
+        (notification) => notification.employer_status === null
+      )
+
+
+      setNotifications(pendingNotifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
@@ -81,12 +87,10 @@ function NotificationsComponent() {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to update employer status");
       }
-
-      const data = await response.json();
-      alert(data.message); // Show confirmation to the employer
-
+      setDetailedNotifications((prevNotifications) =>
+      prevNotifications.filter((notification) => notification.application_id !== applicationId)
+    )
       // Refetch notifications after updating the status
-      fetchNotifications();
     } catch (error) {
       alert(`Error: ${error.message}`);
     }
