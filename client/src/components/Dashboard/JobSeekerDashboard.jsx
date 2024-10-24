@@ -3,20 +3,20 @@ import CreateProfilePage from "../Profile/CreateProfilePage";
 import CreateProfileView from "../Profile/CreateProfileView";
 import SearchAndFilterSystem from "../SearchForJobSeekers/SearchAndFilterSystem";
 import SeekerActivity from "../SeekerActivity/SeekerActivity";
-import './JobSeekerDashboard.scss';
+import UpdateJobSeekerProfile from "../UpdateAndDelete/UpdateJobSeekerProfile";
+import DeleteJobSeekerProfile from "../UpdateAndDelete/DeleteJobSeekerProfile";
+import "./JobSeekerDashboard.scss";
 
 function JobSeekerDashboard({ profileData, setProfileData }) {
-  const [isLoading, setIsLoading] = useState(true); // Start with loading state
-
+  const [isLoading, setIsLoading] = useState(true);
   const [fullName, setFullName] = useState(localStorage.getItem("fullName") || "User");
   const [userType] = useState(localStorage.getItem("userType") || "job_seeker");
   const token = localStorage.getItem("accessToken");
+  const [activeTab, setActiveTab] = useState("profile");
 
   useEffect(() => {
-    // Fetch job seeker profile data immediately after login
     const fetchUserData = async () => {
-      setIsLoading(true); // Start loading
-
+      setIsLoading(true);
       try {
         const response = await fetch("http://localhost:5000/dashboard", {
           method: "GET",
@@ -30,8 +30,8 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
           const profile = data.job_seeker_profile || null;
 
           if (profile) {
-            setProfileData(profile); // Store profile data in state
-            setFullName(`${profile.first_name} ${profile.last_name}`); // Set full name from profile
+            setProfileData(profile);
+            setFullName(`${profile.first_name} ${profile.last_name}`);
           }
         } else {
           console.error("Failed to fetch job seeker data.");
@@ -39,27 +39,25 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       } catch (error) {
         console.error("An error occurred while fetching job seeker data:", error);
       } finally {
-        setIsLoading(false); // Stop loading
+        setIsLoading(false);
       }
     };
 
     if (token) {
-      fetchUserData(); // Fetch profile data if the user has a valid token
+      fetchUserData();
     } else {
-      setIsLoading(false); // Stop loading if no token
+      setIsLoading(false);
     }
   }, [token, setProfileData]);
 
   const handleProfileUpdate = (updatedProfile) => {
     setProfileData(updatedProfile);
-    setFullName(`${updatedProfile.first_name} ${updatedProfile.last_name}`);
+    setActiveTab("profile"); // Switch to the profile view after update
   };
-
-  const [activeTab, setActiveTab] = useState("profile");
 
   const renderContent = () => {
     if (isLoading) {
-      return <p>Loading user data...</p>; // Loading message while fetching data
+      return <p>Loading user data...</p>;
     }
 
     const hasProfileData =
@@ -83,9 +81,15 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
       case "activity":
         return <SeekerActivity />;
       case "security":
-        return <div>Security Settings Content</div>;
-      case "appearance":
-        return <div>Appearance Settings Content</div>;
+        return (
+          <div>
+            Security Settings
+            <DeleteJobSeekerProfile />
+            <UpdateJobSeekerProfile />
+          </div>
+        );
+      case "notifications":
+        return <div>Notifications</div>;
       case "help":
         return <div>Help Content</div>;
       default:
@@ -122,10 +126,10 @@ function JobSeekerDashboard({ profileData, setProfileData }) {
             Security
           </li>
           <li
-            onClick={() => setActiveTab("appearance")}
-            className={activeTab === "appearance" ? "active" : ""}
+            onClick={() => setActiveTab("notifications")}
+            className={activeTab === "notifications" ? "active" : ""}
           >
-            Appearance
+            Notifications
           </li>
           <li
             onClick={() => setActiveTab("help")}
