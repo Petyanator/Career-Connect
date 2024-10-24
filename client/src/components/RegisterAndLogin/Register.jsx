@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import "../RegisterAndLogin/Register.scss";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';  // Import eye icons
+import '../RegisterAndLogin/Register.scss'
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ function Register() {
   const [usernameTaken, setUsernameTaken] = useState(false);
   const [emailTaken, setEmailTaken] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);  // For confirm password visibility
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -24,9 +26,12 @@ function Register() {
     setShowPassword(!showPassword);
   };
 
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);  // Handle confirm password separately
+  };
+
   const validatePassword = (password) => {
-    const passwordRegex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
   };
 
@@ -48,17 +53,12 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!passwordMatch || !isPasswordValid) {
-      setErrorMessage(
-        "Please ensure the password criteria are met and passwords match."
-      );
+      setErrorMessage("Please ensure the password criteria are met and passwords match.");
       return;
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/register",
-        formData
-      );
+      const response = await axios.post("http://localhost:5000/register", formData);
       if (response.status === 201) {
         setRegistrationSuccess(true);
         setErrorMessage("");
@@ -136,23 +136,6 @@ function Register() {
               />
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="user_type" className="form-label">
-                User Type:
-              </label>
-              <select
-                name="user_type"
-                className="form-select"
-                value={formData.user_type}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select User Type</option>
-                <option value="job_seeker">Job Seeker</option>
-                <option value="employer">Employer</option>
-              </select>
-            </div>
-
             <div className="mb-3 password-container">
               <input
                 type={showPassword ? "text" : "password"}
@@ -163,11 +146,8 @@ function Register() {
                 onChange={handleChange}
                 required
               />
-              <span
-                className="toggle-password"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword ? "Hide" : "Show"}
+              <span className="toggle-password" onClick={togglePasswordVisibility}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
               {!isPasswordValid && (
                 <p className="text-danger">
@@ -179,7 +159,7 @@ function Register() {
 
             <div className="mb-3 password-container">
               <input
-                type={showPassword ? "text" : "password"}
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 className="form-control"
                 placeholder="Confirm Password"
@@ -187,15 +167,25 @@ function Register() {
                 onChange={handleChange}
                 required
               />
-              <span
-                className="toggle-password"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword ? "Hide" : "Show"}
+              <span className="toggle-password" onClick={toggleConfirmPasswordVisibility}>
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
-              {!passwordMatch && (
-                <p className="text-danger">Passwords do not match!</p>
-              )}
+              {!passwordMatch && <p className="text-danger">Passwords do not match!</p>}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="user_type" className="form-label">User Type:</label>
+              <select
+                name="user_type"
+                className="form-select"
+                value={formData.user_type}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select User Type</option>
+                <option value="job_seeker">Job Seeker</option>
+                <option value="employer">Employer</option>
+              </select>
             </div>
 
             <button type="submit" className="btn btn-primary w-100">
