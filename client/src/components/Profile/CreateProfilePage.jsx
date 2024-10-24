@@ -149,46 +149,25 @@ function CreateProfilePage({ setProfileData, onProfileUpdate }) {
     console.log("Submitting profile data:", profileData);
 
     try {
-      // Retrieve JWT token from storage
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("No token found");
-        return;
-      }
+      const token = localStorage.getItem("token")
 
-      console.log("JWT Token:", token);
-      console.log("Payload being sent:", profileData);
-
-      // Send data to the backend using fetch
-      const response = await fetch(
-        "http://localhost:5000/api/job_seeker/create_profile",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(profileData),
-        }
-      );
-
-      const data = await response.json();
-
+      const response = await fetch("http://localhost:5000/api/job_seeker/create_profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Include token if needed
+        },
+        body: JSON.stringify(profileData), // Prepare your profile data
+      });
+  
       if (response.ok) {
-        console.log("Server response:", data);
-        setShowForm(false);
-        setShowOverlay(true);
-        setIsSubmitted(true);
-        onProfileUpdate(data.jobseeker_profile)
-        
+        const updatedProfile = await response.json();
+        onProfileUpdate(updatedProfile.profile); // Call the update handler with the new profile data
       } else {
-        alert(`An error occurred: ${data.message}`);
-        setIsButtonShrinking(false);
+        console.error("Failed to create profile:", response.status);
       }
     } catch (error) {
-      console.error("Error creating profile:", error);
-      alert("An error occurred while creating your profile.");
-      setIsButtonShrinking(false);
+      console.error("An error occurred while creating the profile:", error);
     }
   };
   if (isSubmitted) {

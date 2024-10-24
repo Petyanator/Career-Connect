@@ -48,27 +48,27 @@ function Login({ setIsLoggedIn, setUserType, setFullName, setProfileData }) {
           localStorage.setItem("fullName", fullName);
 
           // Fetch profile data
-          const profileResponse = await fetch(
-            "http://localhost:5000/dashboard",
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
+          const profileResponse = await fetch("http://localhost:5000/dashboard", {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
 
           if (profileResponse.ok) {
             const profileData = await profileResponse.json();
-            setProfileData(profileData.job_seeker_profile || {});
-            setProfileData(profileData.employer_profile || {}); // Set profile data or an empty object
+            // Set the profile data depending on the user type
+            if (userType === "job_seeker") {
+              setProfileData(profileData.job_seeker_profile || {});
+            } else if (userType === "employer") {
+              setProfileData(profileData.employer_profile || {});
+            }
+          } else {
+            console.error("Failed to fetch profile data:", profileResponse.status);
+            setLoginError("Failed to retrieve profile data.");
           }
 
           // Navigate to the appropriate dashboard
-          navigate(
-            userType === "job_seeker"
-              ? "/job-seeker-dashboard"
-              : "/employer-dashboard"
-          );
+          navigate(userType === "job_seeker" ? "/job-seeker-dashboard" : "/employer-dashboard");
         } else {
           setLoginError("Failed to retrieve access token.");
         }
